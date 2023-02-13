@@ -1,8 +1,18 @@
 ﻿<BehaviurTree>
-    <State>
-        <Name>Patroll</Name>
-        <Transition>qwih4o12bdsao</Transition>
-        <Transition>1l2k3hdlkn3ao</Transition>
-        <Transition>aisdhjnoa2sao</Transition>
-    </State>
+    <Name>GuardBehaviour</Name>
+    <States>
+        <State>
+            <Name>Patroll</Name>
+            <Triggers>
+                <Trigger>
+                    <Name>NoticedKrisa</Name>
+                    <ResetTarget>true</ResetTarget>>
+                    <Target>HuntKrisa</Target>
+                </Trigger>
+            </Triggers>
+        </State>
+        <State>
+            <Name>>HuntKrisa</Name>
+        </State>>
+    </States>
 </BehaviurTree>
