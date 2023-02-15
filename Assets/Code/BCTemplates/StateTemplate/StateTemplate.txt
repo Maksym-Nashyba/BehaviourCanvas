@@ -1,0 +1,27 @@
+﻿using System;
+using UnityEngine;
+
+public class #Name# : #BaseClassName#
+{
+    #Fields#
+
+    public override void ResetStateParameters#ResetStateMethodParameters#
+    {
+        #ResetStateBody#
+    }
+
+    public override void Start()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void End()
+    {
+        throw new NotImplementedException();
+    }
+}

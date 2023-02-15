@@ -1,6 +1,4 @@
-﻿using Code.Templates;
-
-namespace Code
+﻿namespace Code
 {
     public interface ITrigger
     {
