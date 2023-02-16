@@ -1,7 +1,7 @@
 ﻿using System;
 using Code.Templates;
 
-namespace Code.BCTemplates
+namespace Code.BCTemplates.StateTemplate
 {
     public class StateTemplateData : TemplateData
     {

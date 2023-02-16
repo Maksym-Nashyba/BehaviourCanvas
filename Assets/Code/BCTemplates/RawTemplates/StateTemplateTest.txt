@@ -1,0 +1,29 @@
+﻿using System;
+using UnityEngine;
+
+public class HuntState : State<NavMeshAgent, Single>
+{
+    private NavMeshAgent _target;
+ private Single _maxDistance;
+
+    public override void ResetStateParameters(NavMeshAgent target, Single maxDistance)
+    {
+        _target = target;
+ _maxDistance = maxDistance;
+    }
+
+    public override void Start()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void End()
+    {
+        throw new NotImplementedException();
+    }
+}

@@ -1,0 +1,43 @@
+using System;
+using Code.BCTemplates;
+using Code.BCTemplates.StateTemplate;
+using NUnit.Framework;
+using UnityEngine.AI;
+
+namespace Code.Tests
+{
+    public class BehaviourCanvasTemplates
+    {
+        [Test]
+        public void TemplatesLoad()
+        {
+            string[] templates =
+            {
+                "StateTemplate",
+                "TriggerTemplate"
+            };
+            foreach (string template in templates)
+            {
+                string text = TemplateLoader.GetRawText("StateTemplate");
+                bool nullOrEmpty = String.IsNullOrEmpty(text);
+                if(nullOrEmpty) Assert.Fail($"Failed to load {template}");
+            }
+
+            string loadedTemplates = String.Empty;
+            foreach (string template in templates)
+            {
+                loadedTemplates += $"\n {template}";
+            }
+            Assert.Pass($"Loaded templates: \n {loadedTemplates}");
+        }
+
+        [Test]
+        public void StateTemplateProcessedCorrectly()
+        {
+            StateTemplateProcessor stateTemplateProcessor = new StateTemplateProcessor();
+            StateTemplateData data = new StateTemplateData("HuntState", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
+            string processed = stateTemplateProcessor.Process(data);
+            Assert.AreEqual(processed.Replace("\r", ""), TemplateLoader.GetRawText("StateTemplateTest").Replace("\r", ""));
+        }
+    }
+}

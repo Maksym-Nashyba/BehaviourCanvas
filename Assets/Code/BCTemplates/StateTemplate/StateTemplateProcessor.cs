@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Code.BCTemplates
+namespace Code.BCTemplates.StateTemplate
 {
-    public class StateTemplateProcessor : TextAssetTemplateProcessor<StateTemplateData>
+    public class StateTemplateProcessor : TemplateProcessor<StateTemplateData>
     {
         protected override void ProcessChunks(StateTemplateData data, out Dictionary<string, string> processedChunks)
         {
@@ -22,7 +22,7 @@ namespace Code.BCTemplates
             
             for (int i = 1; i < data.Parameters.Length; i++)
             {
-                result += $"\n _{data.Parameters[0].NameCamelCase} = {data.Parameters[0].NameCamelCase};";
+                result += $"\n _{data.Parameters[i].NameCamelCase} = {data.Parameters[i].NameCamelCase};";
             }
 
             return result;
