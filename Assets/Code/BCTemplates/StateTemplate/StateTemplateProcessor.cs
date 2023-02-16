@@ -32,10 +32,10 @@ namespace Code.BCTemplates.StateTemplate
         {
             string result = "(";
 
-            result += $"{data.Parameters[0].Type.Name} {data.Parameters[0].NameCamelCase}";
+            result += $"{data.Parameters[0].Type.Name} param0";
             for (int i = 1; i < data.Parameters.Length; i++)
             {
-                result += $", {data.Parameters[i].Type.Name} {data.Parameters[i].NameCamelCase}";
+                result += $", {data.Parameters[i].Type.Name} param{i}";
             }
             
             return result+")";

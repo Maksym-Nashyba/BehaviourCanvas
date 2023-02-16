@@ -1,1 +1,23 @@
-﻿#TriggerTemplate#
+﻿using System;
+using UnityEngine;
+
+public class #Name# : Trigger#BaseClassGenericParameters#
+{
+    #TargetStateField#
+    #ParameterFields#
+
+    public override bool IsHit()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Reset()
+    {
+        throw new NotImplementedException();
+    }
+    
+    public override IState PrepareTarget#PrepareTargetsParameters#
+    {
+        #PrepareTargetsBody#
+    }
+}
