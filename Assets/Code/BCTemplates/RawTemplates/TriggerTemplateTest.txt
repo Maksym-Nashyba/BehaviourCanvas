@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class #Name# : Trigger#BaseClassGenericParameters#
+public class NoticedKrisaTrigger : Trigger<NavMeshAgent, Single>
 {
-    #TargetStateField#
-    #ParameterFields#
+    private State<NavMeshAgent, Single> _targetState;
+    private NavMeshAgent _target;
+ private Single _maxDistance;
 
     public override bool IsHit()
     {
@@ -18,7 +19,7 @@ public class #Name# : Trigger#BaseClassGenericParameters#
     
     public override IState PrepareTarget()
     {
-        _target.ResetStateParameters#ResetTargetParameters#;
+        _target.ResetStateParameters(_target, _maxDistance);
         return _target;
     }
 }

@@ -8,13 +8,15 @@ namespace Code.BCTemplates.StateTemplate
         {
             processedChunks = new Dictionary<string, string>
             {
-                { "Name", data.Name },
+                { "Name", data.Name + "State" },
                 { "BaseClassName", BuildBaseClassName(data) },
                 { "Fields", BuildFields(data) },
                 { "ResetStateMethodParameters", BuildResetStateMethodParameters(data) },
                 { "ResetStateBody", BuildResetStateBody(data) }
             };
         }
+
+        #region ChunkProcessors
 
         private string BuildResetStateBody(StateTemplateData data)
         {
@@ -65,6 +67,8 @@ namespace Code.BCTemplates.StateTemplate
             
             return result+">";
         }
+
+        #endregion
 
         protected override string GetTemplateNameNoExtension()
         {

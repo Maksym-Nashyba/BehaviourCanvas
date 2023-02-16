@@ -1,7 +1,9 @@
 using System;
 using Code.BCTemplates;
 using Code.BCTemplates.StateTemplate;
+using Code.BCTemplates.TriggerTemplate;
 using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Code.Tests
@@ -35,9 +37,21 @@ namespace Code.Tests
         public void StateTemplateProcessedCorrectly()
         {
             StateTemplateProcessor stateTemplateProcessor = new StateTemplateProcessor();
-            StateTemplateData data = new StateTemplateData("HuntState", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
+            StateTemplateData data = new StateTemplateData("Hunt", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
             string processed = stateTemplateProcessor.Process(data);
-            Assert.AreEqual(processed.Replace("\r", ""), TemplateLoader.GetRawText("StateTemplateTest").Replace("\r", ""));
+            Assert.AreEqual(processed.Replace("\r", ""), 
+                TemplateLoader.GetRawText("StateTemplateTest").Replace("\r", ""));
+        }
+        
+        [Test]
+        public void TriggerTemplateProcessedCorrectly()
+        {
+            TriggerTemplateProcessor stateTemplateProcessor = new TriggerTemplateProcessor();
+            TriggerTemplateData data = new TriggerTemplateData("NoticedKrisa", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
+            string processed = stateTemplateProcessor.Process(data);
+            Debug.Log(processed);
+            Assert.AreEqual(processed.Replace("\r", ""), 
+                TemplateLoader.GetRawText("TriggerTemplateTest").Replace("\r", ""));
         }
     }
 }
