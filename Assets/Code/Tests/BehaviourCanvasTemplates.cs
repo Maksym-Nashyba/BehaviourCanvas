@@ -49,7 +49,6 @@ namespace Code.Tests
             TriggerTemplateProcessor stateTemplateProcessor = new TriggerTemplateProcessor();
             TriggerTemplateData data = new TriggerTemplateData("NoticedKrisa", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
             string processed = stateTemplateProcessor.Process(data);
-            Debug.Log(processed);
             Assert.AreEqual(processed.Replace("\r", ""), 
                 TemplateLoader.GetRawText("TriggerTemplateTest").Replace("\r", ""));
         }
