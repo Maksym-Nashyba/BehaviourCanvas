@@ -9,7 +9,12 @@
             <Code.Editor.InspectorView />
         </ui:VisualElement>
         <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <Code.Editor.BehaviourCanvasView focusable="true" style="flex-grow: 1;" />
+            <Code.Editor.SplitView fixed-pane-initial-dimension="800">
+                <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+                    <Code.Editor.BehaviourCanvasView focusable="true" style="flex-grow: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);" />
+            </Code.Editor.SplitView>
         </ui:VisualElement>
     </Code.Editor.SplitView>
 </ui:UXML>

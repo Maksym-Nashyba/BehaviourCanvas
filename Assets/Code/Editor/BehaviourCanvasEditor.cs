@@ -6,10 +6,10 @@ namespace Code.Editor
 {
     public class BehaviourCanvasEditor : EditorWindow
     {
-        [SerializeField]
-        private VisualTreeAsset m_VisualTreeAsset = default;
+        [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
+        private BehaviourCanvasView _canvasView;
 
-        [MenuItem("Window/UI Toolkit/BehaviourCanvasEditor")]
+        [MenuItem("Window/BehaviourCanvasEditor")]
         public static void OpenWindow()
         {
             BehaviourCanvasEditor wnd = GetWindow<BehaviourCanvasEditor>();
@@ -18,12 +18,13 @@ namespace Code.Editor
 
         public void CreateGUI()
         {
-            // Each editor window contains a root VisualElement object
             VisualElement root = rootVisualElement;
-            m_VisualTreeAsset.CloneTree(root);
+            _visualTreeAsset.CloneTree(root);
 
             StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/BehaviourCanvasEditor.uss");
             root.styleSheets.Add(stylesheet);
+
+            _canvasView = root.Q<BehaviourCanvasView>();
         }
     }
 }
