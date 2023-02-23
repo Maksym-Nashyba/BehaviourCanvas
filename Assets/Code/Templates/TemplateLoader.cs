@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Code.BCTemplates
+namespace Code.Templates
 {
     public static class TemplateLoader
     {
@@ -14,7 +14,7 @@ namespace Code.BCTemplates
 
         private static string GetFullPath(string templateNameNoExtension)
         {
-            return $"Assets/Code/BCTemplates/RawTemplates/{templateNameNoExtension}.txt";//TODO get rid from hard-coded path. Use Editor prefs instead.
+            return $"Assets/Code/Templates/RawTemplates/{templateNameNoExtension}.txt";//TODO get rid from hard-coded path. Use Editor prefs instead.
         }
     }
 }

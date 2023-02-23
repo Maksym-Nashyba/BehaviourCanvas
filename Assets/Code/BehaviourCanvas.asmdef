@@ -1,7 +1,9 @@
 {
     "name": "BehaviourCanvas",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:eae1ab85a4d8ecb40a073318d06209d2"
+    ],
     "includePlatforms": [
         "Editor"
     ],
