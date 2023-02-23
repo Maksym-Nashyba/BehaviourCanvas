@@ -3,7 +3,6 @@ using Code.BCTemplates;
 using Code.BCTemplates.StateTemplate;
 using Code.BCTemplates.TriggerTemplate;
 using NUnit.Framework;
-using UnityEngine;
 using UnityEngine.AI;
 
 namespace Code.Tests
