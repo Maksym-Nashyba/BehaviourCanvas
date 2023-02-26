@@ -1,5 +1,4 @@
 using System;
-using Code.BCTemplates;
 using Code.BCTemplates.StateTemplate;
 using Code.BCTemplates.TriggerTemplate;
 using Code.Templates;
