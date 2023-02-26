@@ -1,14 +1,10 @@
-﻿using UnityEditor.Experimental.GraphView;
-
-namespace Code.Editor
+﻿namespace Code.Editor
 {
-    public class TriggerView : Node
+    public class TriggerView : NodeView
     {
-        private ITrigger _trigger;
-        
-        public TriggerView(ITrigger trigger)
+        public TriggerView(int id, (string, string)[] parameters, bool resetTarget) : base(id, parameters)
         {
-            _trigger = trigger;
+            //TODO reset target callback
         }
     }
 }

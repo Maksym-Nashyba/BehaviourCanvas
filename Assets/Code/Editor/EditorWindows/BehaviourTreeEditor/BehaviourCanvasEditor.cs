@@ -2,14 +2,17 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor
+namespace Code.Editor.EditorWindows.BehaviourTreeEditor
 {
     public class BehaviourCanvasEditor : EditorWindow
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
+        private BehaviourTreeAsset _treeAsset;
+        private BehaviourCanvasSerializer _serializer;
+        private BehaviourCanvas _canvas;
         private BehaviourCanvasView _canvasView;
 
-        [MenuItem("Window/BehaviourCanvasEditor")]
+        [MenuItem("Window/BehaviourCanvas/BehaviourCanvasEditor")]
         public static void OpenWindow()
         {
             BehaviourCanvasEditor wnd = GetWindow<BehaviourCanvasEditor>();
@@ -21,7 +24,8 @@ namespace Code.Editor
             VisualElement root = rootVisualElement;
             _visualTreeAsset.CloneTree(root);
 
-            StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/BehaviourCanvasEditor.uss");
+            StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/EditorWindows/" +
+                                                                              "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
             root.styleSheets.Add(stylesheet);
 
             _canvasView = root.Q<BehaviourCanvasView>();

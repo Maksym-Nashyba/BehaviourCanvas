@@ -17,7 +17,7 @@ namespace Code.Editor.Builders.StateBuilder
         private TextField _type1;
         private TextField _type2;
         
-        [MenuItem("Window/StateBuilder")]
+        [MenuItem("Window/BehaviourCanvas/StateBuilder")]
         public static void ShowWindow()
         {
             StateBuilder wnd = GetWindow<StateBuilder>();
