@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UIElements;
 
@@ -55,7 +54,7 @@ namespace Code.Editor.EditorWindows.Builders
 
             _customTypeNameField = new TextField();
             _customTypeNameField.label = "Custom Type Name";
-            _customTypeNameField.style.flexGrow = 1f;
+            //_customTypeNameField.style.flexGrow = 1f;
             _customTypeNameField.style.alignItems = Align.FlexStart;
             _customTypesArea.Add(_customTypeNameField);
             _customTypeNameField.RegisterValueChangedCallback(OnInputCustomTypeName);
