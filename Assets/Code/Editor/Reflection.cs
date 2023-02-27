@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Code.Editor
 {
@@ -10,6 +11,11 @@ namespace Code.Editor
         {
             return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
                 .Where(type => type.Name.Contains(name) && !type.FullName.Contains("VisualScripting"));
+        }
+
+        public static Type FromFullName(string fullName)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).First(type => type.FullName == fullName);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using Code.BCTemplates.StateTemplate;
 using Code.BCTemplates.TriggerTemplate;
 using Code.Templates;
+using Code.Templates.StateTemplate;
 using NUnit.Framework;
 using UnityEngine.AI;
 

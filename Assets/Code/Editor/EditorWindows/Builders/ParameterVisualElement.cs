@@ -1,11 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Code.Editor.EditorWindows.Builders
 {
     public class ParameterVisualElement : VisualElement
     {
+        private static readonly Dictionary<string, Type> _simpleTypes = new Dictionary<string, Type>
+        {
+            {"object", typeof(object)},
+            {"int", typeof(Int32)},
+            {"float", typeof(Single)},
+            {"Vector2", typeof(Vector2)},
+            {"Vector3", typeof(Vector3)},
+            {"Transform", typeof(Transform)},
+            {"Rigidbody", typeof(Rigidbody)},
+            {"GameObject", typeof(GameObject)},
+            {"Collider", typeof(Collider)}
+        };
         private readonly VisualElement _simpleTypesArea;
         private readonly VisualElement _customTypesArea;
         private readonly TextField _nameField;
@@ -13,6 +27,7 @@ namespace Code.Editor.EditorWindows.Builders
         private readonly TextField _customTypeNameField;
         private DropdownField _customTypeDropdown;
         public bool IsFilled => HasValidInput();
+        public (string, Type) Value => GetCurrentValue();
 
         public new class UXmlFactory : UxmlFactory<ParameterVisualElement>
         {
@@ -34,27 +49,15 @@ namespace Code.Editor.EditorWindows.Builders
             _simpleTypesArea.Add(_nameField);
             _simpleTypesDropdown = new DropdownField();
             _simpleTypesDropdown.label = "Type";
-            _simpleTypesDropdown.choices = new List<string>
-            {
-                "NONE",
-                "object",
-                "int",
-                "float",
-                "Vector2",
-                "Vector3",
-                "Transform",
-                "Rigidbody",
-                "GameObject",
-                "Collider",
-                "CUSTOM"
-            };
+            List<string> choices = _simpleTypes.Keys.ToList();
+                choices.AddRange(new []{"NONE", "CUSTOM"});
+            _simpleTypesDropdown.choices = choices;
             _simpleTypesDropdown.value = "NONE";
             _simpleTypesDropdown.RegisterValueChangedCallback(OnSimpleTypeChanged);
             _simpleTypesArea.Add(_simpleTypesDropdown);
 
             _customTypeNameField = new TextField();
             _customTypeNameField.label = "Custom Type Name";
-            //_customTypeNameField.style.flexGrow = 1f;
             _customTypeNameField.style.alignItems = Align.FlexStart;
             _customTypesArea.Add(_customTypeNameField);
             _customTypeNameField.RegisterValueChangedCallback(OnInputCustomTypeName);
@@ -90,10 +93,27 @@ namespace Code.Editor.EditorWindows.Builders
             }
         }
 
+        private (string, Type) GetCurrentValue()
+        {
+            string name = _nameField.value;
+            Type type;
+            if (_simpleTypesDropdown.value == "CUSTOM")
+            {
+                type = Reflection.FromFullName(_customTypeDropdown.value);
+            }
+            else
+            {
+                type = _simpleTypes[_simpleTypesDropdown.value];
+            }
+
+            return (name, type);
+        }
+        
         private bool HasValidInput()
         {
             if (_simpleTypesDropdown.value == "NONE") return false;
-
+            if (_simpleTypesDropdown.value == "CUSTOM" && _customTypeDropdown.value is null) return false;
+            if (String.IsNullOrWhiteSpace(_nameField.value)) return false;
             return true;
         }
 

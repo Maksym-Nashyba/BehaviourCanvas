@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Code.BCTemplates;
+using Code.BCTemplates.StateTemplate;
 
-namespace Code.BCTemplates.StateTemplate
+namespace Code.Templates.StateTemplate
 {
     public class StateTemplateProcessor : TemplateProcessor<StateTemplateData>
     {
@@ -20,11 +22,11 @@ namespace Code.BCTemplates.StateTemplate
 
         private string BuildResetStateBody(StateTemplateData data)
         {
-            string result = $"_{data.Parameters[0].NameCamelCase} = {data.Parameters[0].NameCamelCase};";
+            string result = $"_{data.Parameters[0].NameCamelCase} = param0;";
             
             for (int i = 1; i < data.Parameters.Length; i++)
             {
-                result += $"\n _{data.Parameters[i].NameCamelCase} = {data.Parameters[i].NameCamelCase};";
+                result += $"\n _{data.Parameters[i].NameCamelCase} = param{i};";
             }
 
             return result;
