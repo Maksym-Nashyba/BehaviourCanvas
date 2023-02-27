@@ -8,8 +8,8 @@ public class HuntState : State<NavMeshAgent, Single>
 
     public override void ResetStateParameters(NavMeshAgent param0, Single param1)
     {
-        _target = target;
- _maxDistance = maxDistance;
+        _target = param0;
+ _maxDistance = param1;
     }
 
     public override void Start()

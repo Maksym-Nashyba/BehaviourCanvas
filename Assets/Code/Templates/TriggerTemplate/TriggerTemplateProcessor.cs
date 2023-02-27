@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using Code.BCTemplates;
+using Code.BCTemplates.TriggerTemplate;
 
-namespace Code.BCTemplates.TriggerTemplate
+namespace Code.Templates.TriggerTemplate
 {
     public class TriggerTemplateProcessor : TemplateProcessor<TriggerTemplateData>
     {

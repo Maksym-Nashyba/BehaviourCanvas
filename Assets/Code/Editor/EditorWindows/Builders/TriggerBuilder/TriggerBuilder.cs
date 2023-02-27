@@ -1,29 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Code.BCTemplates.StateTemplate;
+using Code.BCTemplates.TriggerTemplate;
 using Code.Editor.EditorWindows.PopUpWindow;
-using Code.Templates.StateTemplate;
+using Code.Templates.TriggerTemplate;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace Code.Editor.EditorWindows.Builders.StateBuilder
+namespace Code.Editor.EditorWindows.Builders.TriggerBuilder
 {
-    public class StateBuilder : EditorWindow
+    public class TriggerBuilder : EditorWindow
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
-        private TextField _stateNameField;
+        private TextField _triggerNameField;
         private List<ParameterVisualElement> _parameterFields;
         private DropdownField _parameterCountDropdown;
         private VisualElement _middleSegment;
 
-        [MenuItem("Window/BehaviourCanvas/StateBuilder")]
+        [MenuItem("Window/BehaviourCanvas/TriggerBuilder")]
         public static void ShowWindow()
         {
-            StateBuilder wnd = GetWindow<StateBuilder>();
-            wnd.titleContent = new GUIContent("StateBuilder");
+            TriggerBuilder wnd = GetWindow<TriggerBuilder>();
+            wnd.titleContent = new GUIContent("TriggerBuilder");
         }
 
         public void CreateGUI()
@@ -31,7 +31,7 @@ namespace Code.Editor.EditorWindows.Builders.StateBuilder
             VisualElement root = rootVisualElement;
             _visualTreeAsset.CloneTree(root);
 
-            _stateNameField = root.Q<TextField>("StateName");
+            _triggerNameField = root.Q<TextField>("TriggerName");
             _middleSegment = root.Q<VisualElement>("Middle");
             _parameterCountDropdown = root.Q<DropdownField>("ParameterCount");
             _parameterCountDropdown.choices = new List<string> {"0", "1", "2", "3"};
@@ -73,26 +73,26 @@ namespace Code.Editor.EditorWindows.Builders.StateBuilder
                 return;
             }
 
-            string stateName = _stateNameField.value;
+            string triggerName = _triggerNameField.value;
             List<(string, Type)> parameters = new List<(string, Type)>();
             foreach (ParameterVisualElement parameterField in _parameterFields)
             {
                 parameters.Add(parameterField.Value);
             }
             
-            CreateStateFiles(stateName, parameters.ToArray());
+            CreateTriggerFiles(triggerName, parameters.ToArray());
         }
 
-        private void CreateStateFiles(string stateName, (string, Type)[] parameters)
+        private void CreateTriggerFiles(string triggerName, (string, Type)[] parameters)
         {
-            StateTemplateData templateData = new StateTemplateData(stateName, parameters);
-            StateTemplateProcessor processor = new StateTemplateProcessor();
+            TriggerTemplateData templateData = new TriggerTemplateData(triggerName, parameters);
+            TriggerTemplateProcessor processor = new TriggerTemplateProcessor();
             string processed = processor.Process(templateData);
-            string path = Application.dataPath.Replace("/Assets", "") + "/" + BehaviourCanvasPaths.StateScripts;
-            File.WriteAllText(path+$"/{stateName}State.cs", processed);
+            string path = Application.dataPath.Replace("/Assets", "") + "/" + BehaviourCanvasPaths.TriggerScripts;
+            File.WriteAllText(path+$"/{triggerName}Trigger.cs", processed);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.StateScripts+$"/{stateName}State.cs"));
+            AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.TriggerScripts+$"/{triggerName}State.cs"));
         }
         
         private void ValidateInputs()
@@ -103,13 +103,13 @@ namespace Code.Editor.EditorWindows.Builders.StateBuilder
                 if (!parameterField.IsFilled) throw new InvalidDataException($"Parameter with index {i} isn't filled correctly");
             }
 
-            if (AssetDatabase.LoadAssetAtPath<Object>(BehaviourCanvasPaths.StateScripts +
-                                                      $"{_stateNameField.value}State.cs") is not null)
+            if (AssetDatabase.LoadAssetAtPath<Object>(BehaviourCanvasPaths.TriggerScripts +
+                                                      $"{_triggerNameField.value}Trigger.cs") is not null)
             {
-                throw new InvalidDataException("State asset with given name already exists");
+                throw new InvalidDataException("Trigger asset with given name already exists");
             }
 
-            if (String.IsNullOrWhiteSpace(_stateNameField.value)) throw new InvalidDataException("State name cannot be null, empty or whitespace");
+            if (String.IsNullOrWhiteSpace(_triggerNameField.value)) throw new InvalidDataException("Trigger name cannot be null, empty or whitespace");
         }
     }
 }

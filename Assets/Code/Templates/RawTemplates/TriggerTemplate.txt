@@ -18,7 +18,7 @@ public class #Name# : Trigger#BaseClassGenericParameters#
     
     public override IState PrepareTarget()
     {
-        _target.ResetStateParameters#ResetTargetParameters#;
-        return _target;
+        _targetState.ResetStateParameters#ResetTargetParameters#;
+        return _targetState;
     }
 }

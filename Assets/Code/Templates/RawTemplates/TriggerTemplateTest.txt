@@ -19,7 +19,7 @@ public class NoticedKrisaTrigger : Trigger<NavMeshAgent, Single>
     
     public override IState PrepareTarget()
     {
-        _target.ResetStateParameters(_target, _maxDistance);
-        return _target;
+        _targetState.ResetStateParameters(_target, _maxDistance);
+        return _targetState;
     }
 }
