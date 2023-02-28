@@ -5,6 +5,7 @@ using Code.Templates;
 using Code.Templates.StateTemplate;
 using Code.Templates.TriggerTemplate;
 using NUnit.Framework;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Code.Tests

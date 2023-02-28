@@ -14,12 +14,28 @@ namespace Code.Templates.TriggerTemplate
                 { "BaseClassGenericParameters", BuildBaseClassGenericParameters(data) },
                 { "TargetStateField", BuildTargetStateField(data) },
                 { "ParameterFields", BuildParameterFields(data) },
+                { "ParameterGetterBody", BuildParameterGetterBody(data) },
                 { "ResetTargetParameters", BuildResetTargetParameters(data) }
             };
         }
 
         #region ChunkProcessors
 
+        private string BuildParameterGetterBody(TriggerTemplateData data)
+        {
+            if (data.Parameters.Length == 0) return "return Array.Empty<(string, Type)>();";
+
+            string result = "return new(string, Type)[]\n        {\n";
+            for (int i = 0; i < data.Parameters.Length; i++)
+            {
+                result += "            (" + "\"" + $"{data.Parameters[i].NameCamelCase}" + "\"";
+                result += $", typeof({data.Parameters[i].Type.Name})),\n";
+            }
+
+            result += "        };";
+            return result;
+        }
+        
         private string BuildResetTargetParameters(TriggerTemplateData data)
         {
             if (data.Parameters.Length == 0) return "()";

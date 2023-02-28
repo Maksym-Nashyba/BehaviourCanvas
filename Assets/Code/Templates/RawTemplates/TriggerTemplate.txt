@@ -21,4 +21,9 @@ public class #Name# : Trigger#BaseClassGenericParameters#
         _targetState.ResetStateParameters#ResetTargetParameters#;
         return _targetState;
     }
+    
+    public static (string,Type) GetParameterList()
+    {
+        #ParameterGetterBody#
+    }
 }

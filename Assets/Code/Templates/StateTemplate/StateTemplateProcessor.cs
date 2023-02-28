@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Code.BCTemplates;
 using Code.BCTemplates.StateTemplate;
 
@@ -14,12 +15,28 @@ namespace Code.Templates.StateTemplate
                 { "BaseClassName", BuildBaseClassName(data) },
                 { "Fields", BuildFields(data) },
                 { "ResetStateMethodParameters", BuildResetStateMethodParameters(data) },
+                { "ParameterGetterBody", BuildParameterGetterBody(data) },
                 { "ResetStateBody", BuildResetStateBody(data) }
             };
         }
 
         #region ChunkProcessors
 
+        private string BuildParameterGetterBody(StateTemplateData data)
+        {
+            if (data.Parameters.Length == 0) return "return Array.Empty<(string, Type)>();";
+
+            string result = "return new(string, Type)[]\n        {\n";
+            for (int i = 0; i < data.Parameters.Length; i++)
+            {
+                result += "            (" + "\"" + $"{data.Parameters[i].NameCamelCase}" + "\"";
+                result += $", typeof({data.Parameters[i].Type.Name})),\n";
+            }
+
+            result += "        };";
+            return result;
+        }
+        
         private string BuildResetStateBody(StateTemplateData data)
         {
             if (data.Parameters.Length == 0) return "";

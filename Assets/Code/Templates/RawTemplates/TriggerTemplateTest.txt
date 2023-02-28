@@ -22,4 +22,13 @@ public class NoticedKrisaTrigger : Trigger<NavMeshAgent, Single>
         _targetState.ResetStateParameters(_target, _maxDistance);
         return _targetState;
     }
+    
+    public static (string,Type) GetParameterList()
+    {
+        return new(string, Type)[]
+        {
+            ("target", typeof(NavMeshAgent)),
+            ("maxDistance", typeof(Single)),
+        };
+    }
 }

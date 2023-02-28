@@ -26,4 +26,13 @@ public class HuntState : State<NavMeshAgent, Single>
     {
         throw new NotImplementedException();
     }
+    
+    public static (string,Type) GetParameterList()
+    {
+        return new(string, Type)[]
+        {
+            ("target", typeof(NavMeshAgent)),
+            ("maxDistance", typeof(Single)),
+        };
+    }
 }

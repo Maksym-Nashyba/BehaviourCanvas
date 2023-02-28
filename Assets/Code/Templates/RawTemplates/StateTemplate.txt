@@ -24,4 +24,9 @@ public class #Name# : State#BaseClassName#
     {
         throw new NotImplementedException();
     }
+    
+    public static (string,Type) GetParameterList()
+    {
+        #ParameterGetterBody#
+    }
 }
