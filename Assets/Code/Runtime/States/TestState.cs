@@ -2,15 +2,13 @@ using System;
 using Code.Runtime;
 using UnityEngine;
 
-public class TestState : State<Vector3, GameObject>
+public class TestState : State
 {
-    private Vector3 _positionA;
-    private GameObject _abobaGameObject;
+    
 
-    public override void ResetStateParameters(Vector3 param0, GameObject param1)
+    public override void ResetStateParameters()
     {
-        _positionA = param0;
-        _abobaGameObject = param1;
+        
     }
 
     public override void Start()
@@ -30,10 +28,6 @@ public class TestState : State<Vector3, GameObject>
     
     public static (string,Type)[] GetParameterList()
     {
-        return new(string, Type)[]
-        {
-            ("positionA", typeof(Vector3)),
-            ("abobaGameObject", typeof(GameObject)),
-        };
+        return Array.Empty<(string, Type)>();
     }
 }

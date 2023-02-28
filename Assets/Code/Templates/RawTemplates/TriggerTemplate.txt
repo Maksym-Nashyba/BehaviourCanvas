@@ -22,7 +22,7 @@ public class #Name# : Trigger#BaseClassGenericParameters#
         return _targetState;
     }
     
-    public static (string,Type) GetParameterList()
+    public static (string,Type)[] GetParameterList()
     {
         #ParameterGetterBody#
     }

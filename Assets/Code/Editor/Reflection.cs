@@ -32,7 +32,7 @@ namespace Code.Editor
         private static Model[] FindAllModels(Type modelType)
         {
             return Assembly.GetAssembly(typeof(StateAssemblyMarker)).GetTypes()
-                .Where(type => type.IsAssignableFrom(modelType)).Select(type =>
+                .Where(type => modelType.IsAssignableFrom(type) && type != modelType && !type.IsAbstract).Select(type =>
                 {
                     Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
                         null,
