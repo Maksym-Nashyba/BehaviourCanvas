@@ -1,5 +1,13 @@
-﻿namespace Code
+﻿namespace Code.Runtime
 {
+    public abstract class State : IState
+    {
+        public abstract void ResetStateParameters();
+        public abstract void Start();
+        public abstract void Update();
+        public abstract void End();
+    }
+
     public abstract class State<T0> : IState
     {
         public abstract void ResetStateParameters(T0 param0);

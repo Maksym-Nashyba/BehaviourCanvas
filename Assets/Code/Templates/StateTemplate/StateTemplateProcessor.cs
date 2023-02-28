@@ -22,6 +22,7 @@ namespace Code.Templates.StateTemplate
 
         private string BuildResetStateBody(StateTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "";
             string result = $"_{data.Parameters[0].NameCamelCase} = param0;";
             
             for (int i = 1; i < data.Parameters.Length; i++)
@@ -34,6 +35,7 @@ namespace Code.Templates.StateTemplate
 
         private string BuildResetStateMethodParameters(StateTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "()";
             string result = "(";
 
             result += $"{data.Parameters[0].Type.Name} param0";
@@ -47,6 +49,7 @@ namespace Code.Templates.StateTemplate
 
         private string BuildFields(StateTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "";
             string result = $"private {data.Parameters[0].Type.Name} _{data.Parameters[0].NameCamelCase};";
             
             for (int i = 1; i < data.Parameters.Length; i++)
@@ -59,6 +62,7 @@ namespace Code.Templates.StateTemplate
 
         private string BuildBaseClassName(StateTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "";
             string result = "<";
 
             result += data.Parameters[0].Type.Name;

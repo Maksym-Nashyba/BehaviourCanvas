@@ -22,6 +22,7 @@ namespace Code.Templates.TriggerTemplate
 
         private string BuildResetTargetParameters(TriggerTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "()";
             string result = "(";
 
             result += $"_{data.Parameters[0].NameCamelCase}";
@@ -40,6 +41,7 @@ namespace Code.Templates.TriggerTemplate
 
         private string BuildParameterFields(TriggerTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "";
             string result = $"private {data.Parameters[0].Type.Name} _{data.Parameters[0].NameCamelCase};";
             
             for (int i = 1; i < data.Parameters.Length; i++)
@@ -52,6 +54,7 @@ namespace Code.Templates.TriggerTemplate
 
         private string BuildBaseClassGenericParameters(TriggerTemplateData data)
         {
+            if (data.Parameters.Length == 0) return "";
             string result = "<";
 
             result += data.Parameters[0].Type.Name;

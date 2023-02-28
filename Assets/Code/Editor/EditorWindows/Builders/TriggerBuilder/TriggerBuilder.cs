@@ -92,7 +92,7 @@ namespace Code.Editor.EditorWindows.Builders.TriggerBuilder
             File.WriteAllText(path+$"/{triggerName}Trigger.cs", processed);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.TriggerScripts+$"/{triggerName}State.cs"));
+            AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.TriggerScripts+$"/{triggerName}Trigger.cs"));
         }
         
         private void ValidateInputs()

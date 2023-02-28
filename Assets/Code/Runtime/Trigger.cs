@@ -1,5 +1,14 @@
-﻿namespace Code 
+﻿namespace Code.Runtime 
 {
+    public abstract class Trigger : ITrigger
+    {
+        public abstract bool IsHit();
+
+        public abstract IState PrepareTarget();
+        
+        public abstract void Reset();
+    }
+    
     public abstract class Trigger<T0> : ITrigger
     {
         public abstract bool IsHit();
