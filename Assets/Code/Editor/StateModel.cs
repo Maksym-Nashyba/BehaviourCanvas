@@ -1,11 +1,7 @@
-﻿using UnityEngine;
-
-namespace Code.Editor
+﻿namespace Code.Editor
 {
-    public class StateModel : Model
+    public class StateModel : TreeModel
     {
-        public StateModel(int id, (string, string)[] parameters, Rect newPos) : base(id, parameters, newPos)
-        {
-        }
+        
     }
 }

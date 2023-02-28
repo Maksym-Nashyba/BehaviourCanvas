@@ -6,8 +6,11 @@ namespace Code.Editor
     public class BehaviourTreeAsset : ScriptableObject
     {
         public TextAsset BehaviourTreeXML => _behaviourTreeXML;
-        public TextAsset EditorTreeXML => _editorTreeXML;
-    
+        
+        #if UNITY_EDITOR
+            public TextAsset EditorTreeXML => _editorTreeXML;
+        #endif
+        
         [SerializeField] private TextAsset _behaviourTreeXML;
         [SerializeField] private TextAsset _editorTreeXML;
 

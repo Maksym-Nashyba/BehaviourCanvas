@@ -7,10 +7,13 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
     public class BehaviourCanvasEditor : EditorWindow
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
+        
         private BehaviourTreeAsset _treeAsset;
-        private BehaviourCanvasSerializer _serializer;
+        private BehaviourCanvasSerializer _behaviourCanvasSerializer;
+        private NodeBuilderSerializer _nodeBuilderSerializer;
         private BehaviourCanvas _canvas;
         private BehaviourCanvasView _canvasView;
+        private NodeBuilder _nodeBuilder;
 
         [MenuItem("Window/BehaviourCanvas/BehaviourCanvasEditor")]
         public static void OpenWindow()
@@ -23,12 +26,22 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
         {
             VisualElement root = rootVisualElement;
             _visualTreeAsset.CloneTree(root);
-
+            
+            AddStylesheets();
+            
+            string behaviourTreeAssetPath = "Assets/Code/Editor/BehaviourTreeAsset.asset";
+            BehaviourTreeAsset asset = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(behaviourTreeAssetPath);
+            _behaviourCanvasSerializer = new BehaviourCanvasSerializer(asset);
+            
+            _canvasView = root.Q<BehaviourCanvasView>();
+            _nodeBuilder = root.Q<NodeBuilder>();
+        }
+        
+        private void AddStylesheets()
+        {
             StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/EditorWindows/" +
                                                                               "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
-            root.styleSheets.Add(stylesheet);
-
-            _canvasView = root.Q<BehaviourCanvasView>();
+            rootVisualElement.styleSheets.Add(stylesheet);
         }
     }
 }

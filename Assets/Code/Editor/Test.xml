@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EditorDatabase>
+    <States>
+        <State>
+            <Name>AbobaState</Name>
+            <ID>1</ID>
+            <Parameters>
+            </Parameters>
+        </State>
+        <State>
+            <Name>BibaState</Name>
+            <ID>2</ID>
+            <Parameters>
+                <Parameter>
+                    <Type>Vector3</Type>
+                    <Name>Deez</Name>
+                </Parameter>
+                <Parameter>
+                    <Type>Vector2</Type>
+                    <Name>Nut</Name>
+                </Parameter>
+            </Parameters>
+        </State>
+    </States>
+    <Triggers>
+        <Trigger>
+            <Name>AbobaTrigger</Name>
+            <ID>3</ID>
+            <ResetTarget>true</ResetTarget>
+            <Parameters>
+                <Parameter>
+                    <Type>Vector3</Type>
+                    <Name>Hui</Name>
+                </Parameter>
+            </Parameters>
+        </Trigger>
+    </Triggers>
+</EditorDatabase>

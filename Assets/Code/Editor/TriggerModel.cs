@@ -1,14 +1,22 @@
-﻿using UnityEngine;
-
-namespace Code.Editor
+﻿namespace Code.Editor
 {
-    public class TriggerModel : Model
+    public class TriggerModel : TreeModel
     {
-        public bool ResetTarget;
+        public bool ResetTarget { get; set; }
     
-        public TriggerModel(int id, (string, string)[] parameters, bool resetTarget, Rect newPos): base(id, parameters, newPos)
+        public TriggerModel() : base()
+        {
+            ResetTarget = false;
+        }
+    
+        public TriggerModel(int id, string name, (string, string)[] parameters, bool resetTarget) : base(id, name, parameters)
         {
             ResetTarget = resetTarget;
+        }
+    
+        public TriggerModel(int id, Model model, bool resetTarget) : this(id, model.Name, model.Parameters, resetTarget)
+        {
+        
         }
     }
 }

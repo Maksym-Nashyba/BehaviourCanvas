@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Editor
 {
-    public class BehaviourCanvasSerializer
+    public class BehaviourCanvasSerializer : ModelSerializer
     {
         private readonly BehaviourTreeAsset _treeAsset;
     
@@ -15,53 +15,83 @@ namespace Code.Editor
             _treeAsset = treeAsset;
         }
         
-        public StateModel DeserializeRootState()
+        public StateModel FindRootState(IReadOnlyList<StateModel> states)
         {
-            //Read from xml _treeAsset.BehaviourTreeXML
-            throw new NotImplementedException();
+            StateModel rootState = new StateModel();
+            foreach (StateModel state in states)
+            {
+                if (state.ID != 0) continue;
+                rootState = state;
+                break;
+            }
+            return rootState;
+        }
+        
+        public IReadOnlyList<StateModel> DeserializeStateModels()
+        {
+            return DeserializeStateModels(_treeAsset.BehaviourTreeXML);
         }
     
-        public List<StateModel> DeserializeStates()
+        public IReadOnlyList<TriggerModel> DeserializeTriggerModels()
         {
-            //Read from xml _treeAsset.BehaviourTreeXML
-            throw new NotImplementedException();
+            return DeserializeTriggerModels(_treeAsset.BehaviourTreeXML);
         }
-    
-        public List<TriggerModel> DeserializeTriggers()
-        {
-            //Read from xml _treeAsset.BehaviourTreeXML
-            throw new NotImplementedException();
-        }
-    
+
         public Rect GetNodePosition(string nodeID)
         {
-            //Read from xml _treeAsset.EditorTreeXML
-            throw new NotImplementedException();
+            return GetNodePosition(nodeID, "Node");
         }
-    
-        public void Serialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView) //TODO take out in a separate class
+
+        public Rect GetTriggerNodePosition(string nodeID)
+        {
+            return GetNodePosition(nodeID, "TriggerNode");
+        }
+
+        public void Serialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView)
         {
             TextAsset behaviourTreeXML = CreateBehaviourTreeXML(canvas);
             TextAsset editorTreeXML = CreateEditorTreeXML(canvasView);
             _treeAsset.UpdateAsset(behaviourTreeXML, editorTreeXML);
+        }
+        
+        private Rect GetNodePosition(string nodeID, string nodeType)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(_treeAsset.EditorTreeXML.text);
+            XmlNodeList nodes = document.GetElementsByTagName(nodeType);
+
+            Rect position = new Rect(0, 0, 200, 100);
+            foreach (XmlNode node in nodes)
+            {
+                foreach (XmlNode nodeField in node.ChildNodes)
+                {
+                    if (nodeField.FirstChild.InnerText != nodeID) continue;
+                    
+                    position.x = Convert.ToSingle(nodeField.ChildNodes[1].InnerText);
+                    position.y = Convert.ToSingle(nodeField.LastChild.InnerText);
+                    break;
+                }
+            }
+
+            return position;
         }
 
         private TextAsset CreateBehaviourTreeXML(BehaviourCanvas canvas)
         {
             XmlDocument document = new XmlDocument();
             
-            XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BT", string.Empty);
+            XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BehaviourTree", string.Empty);
             document.AppendChild(behaviourCanvasXML);
 
-            XmlElement statesXML = CreateStatesXML(document, canvas.States);
-            XmlElement triggersXML = CreateTriggersXML(document, canvas.Triggers);
+            XmlElement statesXML = CreateStatesXML(document, canvas.States, true);
+            XmlElement triggersXML = CreateTriggersXML(document, canvas.Triggers, true);
             
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);
 
             TextAsset xml = new TextAsset(document.OuterXml);
-            AssetDatabase.CreateAsset(xml, ""); //TODO Add path //TODO take out in a separate class
-            AssetDatabase.SaveAssets(); //TODO take out in a separate class
+            AssetDatabase.CreateAsset(xml, ""); //TODO Add path with name.xml
+            AssetDatabase.SaveAssets();
             return xml;
         }
         
@@ -69,7 +99,7 @@ namespace Code.Editor
         {
             XmlDocument document = new XmlDocument();
                     
-            XmlElement editorCanvasXML = document.CreateElement(string.Empty, "Editor", string.Empty);
+            XmlElement editorCanvasXML = document.CreateElement(string.Empty, "NodeTree", string.Empty);
             document.AppendChild(editorCanvasXML);
         
             XmlElement nodesXML = CreateNodesXML(document, canvasView.Nodes);
@@ -77,85 +107,23 @@ namespace Code.Editor
             editorCanvasXML.AppendChild(nodesXML);
         
             TextAsset xml = new TextAsset(document.OuterXml);
-            AssetDatabase.CreateAsset(xml, ""); //TODO Add path //TODO take out in a separate class
-            AssetDatabase.SaveAssets(); //TODO take out in a separate class
+            AssetDatabase.CreateAsset(xml, ""); //TODO Add path with name.xml
+            AssetDatabase.SaveAssets(); 
             return xml;
         }
-        
-        private XmlElement CreateStatesXML(XmlDocument document, IReadOnlyList<StateModel> states)
-        {
-            XmlElement statesXML = document.CreateElement(string.Empty, "States", string.Empty);
-            
-            foreach (StateModel state in states)
-            {
-                XmlElement stateXML = document.CreateElement(string.Empty, "State", string.Empty);
-                
-                XmlElement idXML = CreateAttributeWithContent(document, "ID", state.ID.ToString());
-                XmlElement parametersXML = CreateParametersXml(document, state.Parameters);
-                
-                stateXML.AppendChild(idXML);
-                stateXML.AppendChild(parametersXML);
 
-                statesXML.AppendChild(stateXML);
-            }
-
-            return statesXML;
-        }
-        
-        private XmlElement CreateTriggersXML(XmlDocument document, IReadOnlyList<TriggerModel> triggers)
-        {
-            XmlElement triggersXML = document.CreateElement(string.Empty, "Triggers", string.Empty);
-            
-            foreach (TriggerModel trigger in triggers)
-            {
-                XmlElement triggerXML = document.CreateElement(string.Empty, "Trigger", string.Empty);
-                
-                XmlElement idXML = CreateAttributeWithContent(document, "ID", trigger.ID.ToString());
-                XmlElement resetTargetXML = CreateAttributeWithContent(document, 
-                    "ResetTarget", trigger.ResetTarget.ToString());
-                XmlElement parametersXML = CreateParametersXml(document, trigger.Parameters);
-                
-                triggerXML.AppendChild(idXML);
-                triggerXML.AppendChild(resetTargetXML);
-                triggerXML.AppendChild(parametersXML);
-
-                triggersXML.AppendChild(triggerXML);
-            }
-
-            return triggersXML;
-        }
-
-        private XmlElement CreateParametersXml(XmlDocument document, (string, string)[] parameters)
-        {
-            XmlElement parametersXML = document.CreateElement(string.Empty, "Parameters", string.Empty);
-            
-            foreach ((string, string) parameter in parameters) //TODO check if null
-            {
-                XmlElement parameterXML = document.CreateElement(string.Empty, "Parameter", string.Empty);
-
-                XmlElement typeXML = CreateAttributeWithContent(document, "Type", parameter.Item1);
-                XmlElement nameXML = CreateAttributeWithContent(document, "Name", parameter.Item2);
-                    
-                parameterXML.AppendChild(typeXML);
-                parameterXML.AppendChild(nameXML);
-                    
-                parametersXML.AppendChild(parameterXML);
-            }
-
-            return parametersXML;
-        }
-        
         private XmlElement CreateNodesXML(XmlDocument document, IReadOnlyList<NodeView> nodes)
         {
             XmlElement nodesXML = document.CreateElement(string.Empty, "Nodes", string.Empty);
             
             foreach (NodeView node in nodes)
             {
-                XmlElement nodeXML = document.CreateElement(string.Empty, "Node", string.Empty);
+                string nodeType = node is TriggerView ? "TriggerNode" : "Node";
+                XmlElement nodeXML = document.CreateElement(string.Empty, nodeType, string.Empty);
                 
-                XmlElement idXML = CreateAttributeWithContent(document, "ID", node.ID.ToString());
-                XmlElement xPositionXML = CreateAttributeWithContent(document, "PositionX", node.GetPosition().x.ToString());
-                XmlElement yPositionXML = CreateAttributeWithContent(document, "PositionY", node.GetPosition().y.ToString());
+                XmlElement idXML = CreateElementWithContent(document, "ID", node.ID.ToString());
+                XmlElement xPositionXML = CreateElementWithContent(document, "PositionX", node.GetPosition().x.ToString());
+                XmlElement yPositionXML = CreateElementWithContent(document, "PositionY", node.GetPosition().y.ToString());
                 
                 nodeXML.AppendChild(idXML);
                 nodeXML.AppendChild(xPositionXML);
@@ -165,13 +133,6 @@ namespace Code.Editor
             }
 
             return nodesXML;
-        }
-
-        private XmlElement CreateAttributeWithContent(XmlDocument document, string attributeName, string content)
-        {
-            XmlElement attribute = document.CreateElement(string.Empty, attributeName, string.Empty);
-            attribute.AppendChild(document.CreateTextNode(content));
-            return attribute;
         }
     }
 }

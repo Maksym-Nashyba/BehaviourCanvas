@@ -10,13 +10,13 @@ namespace Code.Editor
     {
         public NodeView RootNode => _rootNode;
         public IReadOnlyList<NodeView> Nodes => _nodes;
-        
+
         private NodeView _rootNode;
         private List<NodeView> _nodes;
         private BehaviourCanvas _behaviourCanvas;
-        
+
         public new class UxmlFactory : UxmlFactory<BehaviourCanvasView, UxmlTraits> { }
-        
+
         public BehaviourCanvasView()
         {
             Insert(0, new GridBackground());
@@ -29,12 +29,13 @@ namespace Code.Editor
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
-            this.AddManipulator(new RectangleSelector());   
+            this.AddManipulator(new RectangleSelector());
         }
-        
+
         private void AddStylesheets()
         {
-            StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/EditorWindows/" + "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
+            StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/EditorWindows/" +
+                                                                              "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
             styleSheets.Add(stylesheet);
         }
 
@@ -44,25 +45,38 @@ namespace Code.Editor
             _nodes = new List<NodeView>(canvas.States.Count + canvas.Triggers.Count + 1);
         }
 
-        public void CreateRootNode(int id, (string, string)[] parameters, Rect position)
+        public void CreateRootNode(string nodeName, int id, (string, string)[] parameters, Rect position)
         {
-            _rootNode = new NodeView(id, parameters);
+            _rootNode = new NodeView(nodeName, id, parameters);
             _rootNode.SetPosition(position);
+            AddElement(_rootNode);
             _nodes.Add(_rootNode);
         }
-        
-        public void CreateNode(int id, (string, string)[] parameters, Rect position)
+
+        public void CreateNode(string nodeName, int id, (string, string)[] parameters, Rect position)
         {
-            NodeView node = new NodeView(id, parameters);
+            NodeView node = new NodeView(nodeName, id, parameters);
             node.SetPosition(position);
+            AddElement(node);
             _nodes.Add(node);
         }
-    
-        public void CreateTriggerNode(int id, (string, string)[] parameters, bool resetTarget, Rect position)
+
+        public void CreateNode(StateModel state, Rect position)
         {
-            NodeView node = new TriggerView(id, parameters, resetTarget);
+            CreateNode(state.Model.Name, state.ID, state.Model.Parameters, position);
+        }
+
+        public void CreateTriggerNode(string nodeName, int id, (string, string)[] parameters, bool resetTarget, Rect position)
+        {
+            NodeView node = new TriggerView(nodeName, id, parameters, resetTarget);
             node.SetPosition(position);
+            AddElement(node);
             _nodes.Add(node);
+        }
+
+        public void CreateTriggerNode(TriggerModel trigger, Rect position)
+        {
+            CreateTriggerNode(trigger.Model.Name, trigger.ID, trigger.Model.Parameters, trigger.ResetTarget, position);
         }
     }
 }

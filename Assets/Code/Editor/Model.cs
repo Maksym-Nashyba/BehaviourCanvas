@@ -1,15 +1,13 @@
-﻿using UnityEngine;
-
-namespace Code.Editor
+﻿namespace Code.Editor
 {
-    public class Model
+    public struct Model
     {
-        public readonly int ID;
-        public readonly (string, string)[] Parameters;
-    
-        public Model(int id, (string, string)[] parameters, Rect newPos)
+        public string Name;
+        public (string, string)[] Parameters;
+
+        public Model(string name, (string, string)[] parameters)
         {
-            ID = id;
+            Name = name;
             Parameters = parameters;
         }
     }

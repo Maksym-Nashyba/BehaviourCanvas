@@ -2,7 +2,7 @@
 {
     public class TriggerView : NodeView
     {
-        public TriggerView(int id, (string, string)[] parameters, bool resetTarget) : base(id, parameters)
+        public TriggerView(string nodeName, int id, (string, string)[] parameters, bool resetTarget) : base(nodeName, id, parameters)
         {
             //TODO reset target callback
         }
