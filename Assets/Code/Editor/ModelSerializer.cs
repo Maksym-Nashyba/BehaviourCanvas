@@ -85,13 +85,14 @@ namespace Code.Editor
             foreach (XmlNode treeModelNode in treeModelNodes)
             {
                 TreeModel deserializedTreeModel = modelKey == "State" ? new StateModel() : new TriggerModel();
+                Model model = new Model();
                 List<(string, string)> parametersList = new List<(string, string)>();
                 foreach (XmlNode treeModelField in treeModelNode.ChildNodes)
                 {
                     switch (treeModelField.Name)
                     {
                         case "Name":
-                            //deserializedTreeModel.Model.Name = treeModelField.InnerText;
+                            model.Name = treeModelField.InnerText;
                             break;
                         case "ID":
                             deserializedTreeModel.ID = Convert.ToInt32(treeModelField.InnerText);
@@ -108,7 +109,8 @@ namespace Code.Editor
                             break;
                     }
                 }
-                //deserializedTreeModel.Model.Parameters = parametersList.ToArray();
+                model.Parameters = parametersList.ToArray();
+                deserializedTreeModel.Model = model;
                 deserializedModels.Add(deserializedTreeModel);
             }
 
