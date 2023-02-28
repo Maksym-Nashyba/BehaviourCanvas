@@ -7,13 +7,13 @@ namespace Code.Editor
 {
     public abstract class ModelSerializer
     {
-        protected IReadOnlyList<StateModel> DeserializeStateModels(TextAsset xml) 
+        protected List<StateModel> DeserializeStateModels(TextAsset xml) 
         {
             List<TreeModel> models = DeserializeTreeModels(xml, "State");
             return models.ConvertAll(m => (StateModel)m);
         }
     
-        protected IReadOnlyList<TriggerModel> DeserializeTriggerModels(TextAsset xml)
+        protected List<TriggerModel> DeserializeTriggerModels(TextAsset xml)
         {
             List<TreeModel> models = DeserializeTreeModels(xml, "Trigger");
             return models.ConvertAll(m => (TriggerModel)m);

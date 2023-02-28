@@ -20,19 +20,19 @@ namespace Code.Editor
             StateModel rootState = new StateModel();
             foreach (StateModel state in states)
             {
-                if (state.ID != 0) continue;
+                if (state.ID != 1) continue;
                 rootState = state;
                 break;
             }
             return rootState;
         }
         
-        public IReadOnlyList<StateModel> DeserializeStateModels()
+        public List<StateModel> DeserializeStateModels()
         {
             return DeserializeStateModels(_treeAsset.BehaviourTreeXML);
         }
     
-        public IReadOnlyList<TriggerModel> DeserializeTriggerModels()
+        public List<TriggerModel> DeserializeTriggerModels()
         {
             return DeserializeTriggerModels(_treeAsset.BehaviourTreeXML);
         }
@@ -50,14 +50,14 @@ namespace Code.Editor
         public void Serialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView)
         {
             TextAsset behaviourTreeXML = CreateBehaviourTreeXML(canvas);
-            TextAsset editorTreeXML = CreateEditorTreeXML(canvasView);
+            TextAsset editorTreeXML = CreateNodeTreeXML(canvasView);
             _treeAsset.UpdateAsset(behaviourTreeXML, editorTreeXML);
         }
         
         private Rect GetNodePosition(string nodeID, string nodeType)
         {
             XmlDocument document = new XmlDocument();
-            document.LoadXml(_treeAsset.EditorTreeXML.text);
+            document.LoadXml(_treeAsset.NodeTreeXML.text);
             XmlNodeList nodes = document.GetElementsByTagName(nodeType);
 
             Rect position = new Rect(0, 0, 200, 100);
@@ -90,12 +90,12 @@ namespace Code.Editor
             behaviourCanvasXML.AppendChild(triggersXML);
 
             TextAsset xml = new TextAsset(document.OuterXml);
-            AssetDatabase.CreateAsset(xml, ""); //TODO Add path with name.xml
+            AssetDatabase.CreateAsset(xml, BehaviourCanvasPaths.BehaviourTreeAssets + "BehaviourTree.xml"); //TODO Add path with name.xml
             AssetDatabase.SaveAssets();
             return xml;
         }
         
-        private TextAsset CreateEditorTreeXML(BehaviourCanvasView canvasView) 
+        private TextAsset CreateNodeTreeXML(BehaviourCanvasView canvasView) 
         {
             XmlDocument document = new XmlDocument();
                     
@@ -107,7 +107,7 @@ namespace Code.Editor
             editorCanvasXML.AppendChild(nodesXML);
         
             TextAsset xml = new TextAsset(document.OuterXml);
-            AssetDatabase.CreateAsset(xml, ""); //TODO Add path with name.xml
+            AssetDatabase.CreateAsset(xml, BehaviourCanvasPaths.BehaviourTreeAssets + "NodeTree.xml"); //TODO Add path with name.xml
             AssetDatabase.SaveAssets(); 
             return xml;
         }

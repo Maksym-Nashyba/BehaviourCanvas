@@ -45,6 +45,8 @@ namespace Code.Editor
             _triggersScrollView = _triggersVisual.Q<ScrollView>();
             _createTriggerButton = _triggersVisual.Q<Button>();
 
+            Model[] states = Reflection.FindAllStates();
+            Model[] triggers = Reflection.FindAllTriggers();
             //UpdateStatesList();
             //UpdateTriggersList();
             SubscribeButtons();

@@ -42,7 +42,7 @@ namespace Code.Editor
         public void Initialize(BehaviourCanvas canvas)
         {
             _behaviourCanvas = canvas;
-            _nodes = new List<NodeView>(canvas.States.Count + canvas.Triggers.Count + 1);
+            _nodes = new List<NodeView>(canvas.States.Count + canvas.Triggers.Count);
         }
 
         public void CreateRootNode(string nodeName, int id, (string, string)[] parameters, Rect position)

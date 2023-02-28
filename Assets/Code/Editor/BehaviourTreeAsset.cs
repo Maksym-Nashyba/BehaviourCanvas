@@ -8,16 +8,16 @@ namespace Code.Editor
         public TextAsset BehaviourTreeXML => _behaviourTreeXML;
         
         #if UNITY_EDITOR
-            public TextAsset EditorTreeXML => _editorTreeXML;
+            public TextAsset NodeTreeXML => _nodeTreeXML;
         #endif
         
         [SerializeField] private TextAsset _behaviourTreeXML;
-        [SerializeField] private TextAsset _editorTreeXML;
+        [SerializeField] private TextAsset _nodeTreeXML;
 
-        public void UpdateAsset(TextAsset behaviourTreeXML, TextAsset editorTreeXML)
+        public void UpdateAsset(TextAsset behaviourTreeXML, TextAsset nodeTreeXML)
         {
             _behaviourTreeXML = behaviourTreeXML;
-            _editorTreeXML = editorTreeXML;
+            _nodeTreeXML = nodeTreeXML;
         }
     }
 }

@@ -30,10 +30,8 @@ namespace Code.Editor
                     
             XmlElement editorDatabaseXML = document.CreateElement(string.Empty, "ModelsDatabase", string.Empty);
             document.AppendChild(editorDatabaseXML);
-            
-            //TODO find states and triggers in assets
 
-            /*XmlElement statesXML = CreateStatesXML(document, );
+            /*XmlElement statesXML = CreateStatesXML(document,);
             XmlElement triggersXML = CreateTriggersXML(document, );
             
             editorDatabaseXML.AppendChild(statesXML);
