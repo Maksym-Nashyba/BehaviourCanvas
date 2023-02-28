@@ -83,8 +83,8 @@ namespace Code.Editor
             XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BehaviourTree", string.Empty);
             document.AppendChild(behaviourCanvasXML);
 
-            XmlElement statesXML = CreateStatesXML(document, canvas.States, true);
-            XmlElement triggersXML = CreateTriggersXML(document, canvas.Triggers, true);
+            XmlElement statesXML = CreateStatesXML(document, canvas.States);
+            XmlElement triggersXML = CreateTriggersXML(document, canvas.Triggers);
             
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);

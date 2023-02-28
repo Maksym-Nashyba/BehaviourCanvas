@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace Code.Editor
 {
-    public class NodeBuilder : VisualElement
+    public class ModelBuilder : VisualElement
     {
         private Button _statesSectionButton;
         private Button _triggersSectionButton;
@@ -20,19 +20,17 @@ namespace Code.Editor
         private Button _createTriggerButton;
 
         private BehaviourCanvasView _canvasView;
-        private NodeBuilderSerializer _serializer;
 
-        public new class UxmlFactory : UxmlFactory<NodeBuilder> { }
+        public new class UxmlFactory : UxmlFactory<ModelBuilder> { }
 
-        public NodeBuilder()
+        public ModelBuilder()
         {
             
         }
 
-        public void Initialize(BehaviourCanvasView canvasView, NodeBuilderSerializer serializer)
+        public void Initialize(BehaviourCanvasView canvasView)
         {
             _canvasView = canvasView;
-            _serializer = serializer;
             
             _statesSectionButton = this.Q<Button>("states-section-button");
             _triggersSectionButton = this.Q<Button>("triggers-section-button");
@@ -45,18 +43,16 @@ namespace Code.Editor
             _triggersScrollView = _triggersVisual.Q<ScrollView>();
             _createTriggerButton = _triggersVisual.Q<Button>();
 
-            Model[] states = Reflection.FindAllStates();
-            Model[] triggers = Reflection.FindAllTriggers();
-            //UpdateStatesList();
-            //UpdateTriggersList();
+            UpdateStatesList();
+            UpdateTriggersList();
             SubscribeButtons();
         }
 
         private void UpdateStatesList()
         {
             _statesScrollView.Clear();
-            IReadOnlyList<StateModel> states = _serializer.DeserializeStateModels();
-            List<Button> buttons = CreateStatesListContentButtons(states);
+            IReadOnlyList<Model> models = Reflection.FindAllStates();
+            List<Button> buttons = CreateStatesListContentButtons(models);
             foreach (Button button in buttons)
             {
                 _statesScrollView.Add(button);
@@ -66,40 +62,41 @@ namespace Code.Editor
         private void UpdateTriggersList()
         {
             _triggersScrollView.Clear();
-            IReadOnlyList<TriggerModel> triggers = _serializer.DeserializeTriggerModels();
-            List<Button> buttons = CreateTriggersListContentButtons(triggers);
+            IReadOnlyList<Model> models = Reflection.FindAllTriggers();
+            List<Button> buttons = CreateTriggersListContentButtons(models);
             foreach (Button button in buttons)
             {
                 _triggersScrollView.Add(button);
             }
         }
 
-        private List<Button> CreateStatesListContentButtons(IReadOnlyList<StateModel> states)
+        private List<Button> CreateStatesListContentButtons(IReadOnlyList<Model> models)
         {
-            List<Button> buttons = new List<Button>(states.Count);
-            foreach (StateModel state in states)
+            List<Button> buttons = new List<Button>(models.Count);
+            foreach (Model model in models)
             {
                 Button button = new Button(() =>
                 {
-                    _canvasView.CreateNode(state, new Rect(100, 100, 200, 100));
+                    _canvasView.CreateNode(new StateModel(1, model), new Rect(100, 100, 200, 100)); //TODO create IdStore
                 });
-                button.text = state.Model.Name;
+                button.text = model.Name;
                 buttons.Add(button);
             }
 
             return buttons;
         }
         
-        private List<Button> CreateTriggersListContentButtons(IReadOnlyList<TriggerModel> triggers)
+        private List<Button> CreateTriggersListContentButtons(IReadOnlyList<Model> models)
         {
-            List<Button> buttons = new List<Button>(triggers.Count);
-            foreach (TriggerModel trigger in triggers)
+            List<Button> buttons = new List<Button>(models.Count);
+            foreach (Model model in models)
             {
                 Button button = new Button(() =>
                 {
-                    _canvasView.CreateTriggerNode(trigger, new Rect(100, 100, 200, 100));
+                    _canvasView.CreateTriggerNode(new TriggerModel(2, model, false), 
+                        new Rect(100, 100, 200, 100)); //TODO create IdStore
                 });
-                button.text = trigger.Model.Name;
+                button.text = model.Name;
                 buttons.Add(button);
             }
 

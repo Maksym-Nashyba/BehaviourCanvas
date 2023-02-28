@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -24,19 +23,16 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             AddStylesheets();
             
             string behaviourTreeAssetPath = BehaviourCanvasPaths.BehaviourTreeAssets +"BehaviourTreeAsset.asset";
-            string modelsDatabaseXMLPath = BehaviourCanvasPaths.BehaviourTreeAssets + "ModelsDatabase.xml";
             BehaviourTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(behaviourTreeAssetPath);
-            TextAsset modelDatabaseXML = AssetDatabase.LoadAssetAtPath<TextAsset>(modelsDatabaseXMLPath);
         
             //BehaviourCanvasSerializer behaviourCanvasSerializer = new BehaviourCanvasSerializer(treeAsset);
-            NodeBuilderSerializer nodeBuilderSerializer = new NodeBuilderSerializer(modelDatabaseXML);
         
             //BehaviourCanvas behaviourCanvas = CreateBehaviourCanvas(behaviourCanvasSerializer);
         
             BehaviourCanvasView canvasView = root.Q<BehaviourCanvasView>();
-            NodeBuilder nodeBuilder = root.Q<NodeBuilder>();
+            ModelBuilder nodeBuilder = root.Q<ModelBuilder>();
             //canvasView.Initialize(behaviourCanvas);
-            nodeBuilder.Initialize(canvasView, nodeBuilderSerializer);
+            nodeBuilder.Initialize(canvasView);
         }
         
         private void AddStylesheets()

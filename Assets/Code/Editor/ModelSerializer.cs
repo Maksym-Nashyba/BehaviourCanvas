@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using UnityEngine;
 
@@ -19,62 +20,6 @@ namespace Code.Editor
             return models.ConvertAll(m => (TriggerModel)m);
         }
         
-        protected XmlElement CreateStatesXML(XmlDocument document, IReadOnlyList<StateModel> states, bool requiresID) 
-        {
-            XmlElement statesXML = document.CreateElement(string.Empty, "States", string.Empty);
-            
-            foreach (StateModel state in states)
-            {
-                XmlElement stateXML = document.CreateElement(string.Empty, "State", string.Empty);
-
-                XmlElement nameXML = CreateElementWithContent(document, "Name", state.Model.Name);
-                stateXML.AppendChild(nameXML);
-                
-                if (requiresID)
-                {
-                    XmlElement idXML = CreateElementWithContent(document, "ID", state.ID.ToString());
-                    stateXML.AppendChild(idXML);
-                }
-                
-                XmlElement parametersXML = CreateParametersXml(document, state.Model.Parameters);
-                stateXML.AppendChild(parametersXML);
-
-                statesXML.AppendChild(stateXML);
-            }
-
-            return statesXML;
-        }
-        
-        protected XmlElement CreateTriggersXML(XmlDocument document, IReadOnlyList<TriggerModel> triggers, bool requiresID)
-        {
-            XmlElement triggersXML = document.CreateElement(string.Empty, "Triggers", string.Empty);
-            
-            foreach (TriggerModel trigger in triggers)
-            {
-                XmlElement triggerXML = document.CreateElement(string.Empty, "Trigger", string.Empty);
-                
-                XmlElement nameXML = CreateElementWithContent(document, "Name", trigger.Model.Name);
-                triggerXML.AppendChild(nameXML);
-                
-                if (requiresID)
-                {
-                    XmlElement idXML = CreateElementWithContent(document, "ID", trigger.ID.ToString());
-                    triggerXML.AppendChild(idXML);
-                }
-                
-                XmlElement resetTargetXML = CreateElementWithContent(document, 
-                    "ResetTarget", trigger.ResetTarget.ToString());
-                triggerXML.AppendChild(resetTargetXML);
-
-                XmlElement parametersXML = CreateParametersXml(document, trigger.Model.Parameters);
-                triggerXML.AppendChild(parametersXML);
-
-                triggersXML.AppendChild(triggerXML);
-            }
-
-            return triggersXML;
-        }
-        
         private List<TreeModel> DeserializeTreeModels(TextAsset xml, string modelKey) 
         {
             XmlDocument document = new XmlDocument();
@@ -82,25 +27,25 @@ namespace Code.Editor
             XmlNodeList treeModelNodes = document.GetElementsByTagName(modelKey);
 
             List<TreeModel> deserializedModels = new List<TreeModel>(treeModelNodes.Count);
-            foreach (XmlNode treeModelNode in treeModelNodes)
+            foreach (XmlNode treeModelNode in treeModelNodes) 
             {
                 TreeModel deserializedTreeModel = modelKey == "State" ? new StateModel() : new TriggerModel();
                 Model model = new Model();
                 List<(string, string)> parametersList = new List<(string, string)>();
-                foreach (XmlNode treeModelField in treeModelNode.ChildNodes)
+                foreach (XmlNode treeModelField in treeModelNode.ChildNodes) 
                 {
-                    switch (treeModelField.Name)
+                    switch (treeModelField.Name) 
                     {
-                        case "Name":
+                        case "Name": 
                             model.Name = treeModelField.InnerText;
                             break;
-                        case "ID":
+                        case "ID": 
                             deserializedTreeModel.ID = Convert.ToInt32(treeModelField.InnerText);
                             break;
-                        case "ResetTarget":
+                        case "ResetTarget": 
                             ((TriggerModel)deserializedTreeModel).ResetTarget = Convert.ToBoolean(treeModelField.InnerText);
                             break;
-                        case "Parameters":
+                        case "Parameters": 
                             parametersList.Capacity = treeModelField.ChildNodes.Count;
                             foreach (XmlNode parameter in treeModelField)
                             {
@@ -115,6 +60,55 @@ namespace Code.Editor
             }
 
             return deserializedModels;
+        }
+        
+        protected XmlElement CreateStatesXML(XmlDocument document, IReadOnlyList<StateModel> states) 
+        {
+            XmlElement statesXML = CreateModelsXML(document, states.Select(state => state.Model).ToList(), "State");
+            
+            for (int i = 0; i < states.Count; i++)
+            {
+                XmlElement idXML = CreateElementWithContent(document, "ID", states[i].ID.ToString());
+                statesXML.ChildNodes[i].AppendChild(idXML);
+            }
+
+            return statesXML;
+        }
+        
+        protected XmlElement CreateTriggersXML(XmlDocument document, IReadOnlyList<TriggerModel> triggers)
+        {
+            XmlElement triggersXML = CreateModelsXML(document, triggers.Select(trigger => trigger.Model).ToList(), "Trigger");
+            
+            for (int i = 0; i < triggers.Count; i++)
+            {
+                XmlElement idXML = CreateElementWithContent(document, "ID", triggers[i].ID.ToString());
+                triggersXML.ChildNodes[i].AppendChild(idXML);
+                
+                XmlElement resetTargetXML = CreateElementWithContent(document, "ResetTarget", triggers[i].ResetTarget.ToString());
+                triggersXML.ChildNodes[i].AppendChild(resetTargetXML);
+            }
+
+            return triggersXML;
+        }
+
+        private XmlElement CreateModelsXML(XmlDocument document, IReadOnlyList<Model> models, string modelKey)
+        {
+            XmlElement modelsXML = document.CreateElement(string.Empty, $"{modelKey}s", string.Empty);
+
+            foreach (Model model in models)
+            {
+                XmlElement modelXML = document.CreateElement(string.Empty, modelKey, string.Empty);
+                
+                XmlElement nameXML = CreateElementWithContent(document, "Name", model.Name);
+                modelXML.AppendChild(nameXML);
+
+                XmlElement parametersXML = CreateParametersXml(document, model.Parameters);
+                modelXML.AppendChild(parametersXML);
+
+                modelsXML.AppendChild(modelXML);
+            }
+
+            return modelsXML;
         }
 
         private XmlElement CreateParametersXml(XmlDocument document, (string, string)[] parameters)
