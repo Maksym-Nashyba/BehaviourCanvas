@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TestState : State
 {
-    
-
     public override void ResetStateParameters()
     {
         

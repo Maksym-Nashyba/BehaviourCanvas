@@ -23,7 +23,7 @@ public class NoticedKrisaTrigger : Trigger<NavMeshAgent, Single>
         return _targetState;
     }
     
-    public static (string,Type) GetParameterList()
+    public static (string,Type)[] GetParameterList()
     {
         return new(string, Type)[]
         {
