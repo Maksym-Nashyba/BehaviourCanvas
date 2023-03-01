@@ -1,4 +1,6 @@
-﻿namespace Code
+﻿using Code.Runtime;
+
+namespace Code
 {
     public interface ITrigger
     {

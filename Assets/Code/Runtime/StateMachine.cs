@@ -1,55 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
 namespace Code.Runtime
 {
-    public abstract class StateMachine : MonoBehaviour
+    public class StateMachine : MonoBehaviour
     {
-        //[SerializeField] private BehaviourTreeAsset _behaviourTreeAsset;
+        [SerializeField] private BehaviourTreeAsset _behaviourTreeAsset;
         [Inject] private BehaviourTreeBuilder _behaviourTreeBuilder;
-        protected BehaviourTree BehaviourTree;
-        protected IState CurrentState { get; private set; }
-
+        private BehaviourTree _behaviourTree;
+        [SerializeReference] private object[] _rootArguments;
+        
         private void Start()
         {
-            //BehaviourTree = _behaviourTreeBuilder.BuildTree(_behaviourTreeAsset);
-            CurrentState = StartRootState();
+            
+            
+            return;
+            _behaviourTree = _behaviourTreeBuilder.BuildTree(_behaviourTreeAsset);
+            _behaviourTree.StartRootState();
         }
 
         private void Update()
         {
-            CurrentState.Update();
+            _behaviourTree.CurrentState.Update();
 
-            IReadOnlyList<ITrigger> currentStateTriggers = BehaviourTree.Triggers[CurrentState];
+            IReadOnlyList<ITrigger> currentStateTriggers = _behaviourTree.TriggersFrom(_behaviourTree.CurrentState);
             for (int i = 0; i < currentStateTriggers.Count; i++)
             {
                 ITrigger trigger = currentStateTriggers[i];
                 if (trigger.IsHit())
                 {
-                    IState beforeTransition = CurrentState;
-                    Transition(trigger.PrepareTarget());
-                    ResetTriggers(beforeTransition);
+                    IState beforeTransition = _behaviourTree.CurrentState;
+                    _behaviourTree.Transition(trigger.PrepareTarget());
+                    _behaviourTree.ResetTriggers(beforeTransition);
                 }
             }
         }
-
-        private void Transition(IState target)
-        {
-            CurrentState.End();
-            target.Start();
-            CurrentState = target;
-        }
-
-        private void ResetTriggers(IState state)
-        {
-            IReadOnlyList<ITrigger> stateTriggers = BehaviourTree.Triggers[state];
-            for (int i = 0; i < stateTriggers.Count; i++)
-            {
-                stateTriggers[i].Reset();
-            }
-        }
-        
-        protected abstract IState StartRootState();
     }
 }

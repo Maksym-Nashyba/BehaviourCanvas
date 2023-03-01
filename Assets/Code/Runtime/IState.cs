@@ -1,4 +1,4 @@
-﻿namespace Code
+﻿namespace Code.Runtime
 {
     public interface IState
     {
