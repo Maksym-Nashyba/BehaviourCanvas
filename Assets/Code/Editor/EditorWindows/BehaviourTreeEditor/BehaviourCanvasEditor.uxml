@@ -4,33 +4,25 @@
         <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Assets" />
         <uie:ToolbarButton text="Save" display-tooltip-when-elided="true" />
     </uie:Toolbar>
-    <Code.Editor.SplitView fixed-pane-initial-dimension="150">
-        <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <ui:Label tabindex="-1" text="Inspector" display-tooltip-when-elided="true" style="height: 19px; font-size: 12px; -unity-text-align: upper-center; color: rgb(104, 104, 104); background-color: rgba(25, 25, 25, 0);" />
-            <Code.Editor.InspectorView />
+    <Code.Editor.SplitView fixed-pane-initial-dimension="900" style="flex-direction: column;">
+        <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: -651px;">
+            <Code.Editor.BehaviourCanvasView focusable="true" style="flex-grow: 1; height: auto; width: auto; flex-shrink: 0;" />
         </ui:VisualElement>
-        <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-            <Code.Editor.SplitView fixed-pane-initial-dimension="800">
-                <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                    <Code.Editor.BehaviourCanvasView focusable="true" style="flex-grow: 1; height: auto; width: auto;" />
+        <ui:VisualElement name="right-panel" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: 30%; flex-shrink: 1;">
+            <Code.Editor.ModelBuilder style="flex-grow: 1; flex-shrink: 0;">
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 10%; flex-direction: row; align-items: stretch; justify-content: space-around; align-self: auto;">
+                    <ui:Button text="States" display-tooltip-when-elided="true" name="states-section-button" style="width: 45%;" />
+                    <ui:Button text="Triggers" display-tooltip-when-elided="true" name="triggers-section-button" style="width: 45%;" />
                 </ui:VisualElement>
-                <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
-                    <Code.Editor.ModelBuilder style="flex-grow: 1; flex-shrink: 0;">
-                        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 10%; flex-direction: row; align-items: stretch; justify-content: space-around; align-self: auto;">
-                            <ui:Button text="States" display-tooltip-when-elided="true" name="states-section-button" style="width: 45%;" />
-                            <ui:Button text="Triggers" display-tooltip-when-elided="true" name="triggers-section-button" style="width: 45%;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="states-visual" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 90%; display: flex; visibility: visible;">
-                            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;" />
-                            <ui:Button text="Create State" display-tooltip-when-elided="true" style="flex-grow: 0; height: 10%;" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="triggers-visual" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 90%; display: none;">
-                            <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;" />
-                            <ui:Button text="Create Trigger" display-tooltip-when-elided="true" style="flex-grow: 0; height: 10%;" />
-                        </ui:VisualElement>
-                    </Code.Editor.ModelBuilder>
+                <ui:VisualElement name="states-visual" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 90%; display: flex; visibility: visible;">
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;" />
+                    <ui:Button text="Create State" display-tooltip-when-elided="true" style="flex-grow: 0; height: 10%;" />
                 </ui:VisualElement>
-            </Code.Editor.SplitView>
+                <ui:VisualElement name="triggers-visual" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 90%; display: none;">
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;" />
+                    <ui:Button text="Create Trigger" display-tooltip-when-elided="true" style="flex-grow: 0; height: 10%;" />
+                </ui:VisualElement>
+            </Code.Editor.ModelBuilder>
         </ui:VisualElement>
     </Code.Editor.SplitView>
 </ui:UXML>
