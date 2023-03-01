@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Code.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,7 +14,6 @@ namespace Code.Editor
 
         private NodeView _rootNode;
         private List<NodeView> _nodes;
-        private BehaviourCanvas _behaviourCanvas;
 
         public new class UxmlFactory : UxmlFactory<BehaviourCanvasView, UxmlTraits> { }
 
@@ -39,10 +39,23 @@ namespace Code.Editor
             styleSheets.Add(stylesheet);
         }
 
-        public void Initialize(BehaviourCanvas canvas)
+        public void Initialize(BehaviourCanvas canvas, BehaviourCanvasSerializer canvasSerializer)
         {
-            _behaviourCanvas = canvas;
             _nodes = new List<NodeView>(canvas.States.Count + canvas.Triggers.Count);
+            CreateBehaviourCanvasGraph(canvas, canvasSerializer);
+        }
+
+        private void CreateBehaviourCanvasGraph(BehaviourCanvas canvas, BehaviourCanvasSerializer canvasSerializer)
+        {
+            DeleteElements(graphElements);
+            foreach (StateModel state in canvas.States)
+            {
+                CreateNode(state, canvasSerializer.GetNodePosition(state.ID.ToString()));
+            }
+            foreach (TriggerModel trigger in canvas.Triggers)
+            {
+                CreateTriggerNode(trigger, canvasSerializer.GetTriggerNodePosition(trigger.ID.ToString()));
+            }
         }
 
         public void CreateRootNode(string nodeName, int id, (string, string)[] parameters, Rect position)

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Xml;
 using UnityEngine;
 
-namespace Code.Editor
+namespace Code.Runtime
 {
-    public abstract class ModelSerializer
+    public class ModelSerializer
     {
         protected List<StateModel> DeserializeStateModels(TextAsset xml) 
         {

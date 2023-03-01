@@ -2,6 +2,7 @@
     <Style src="project://database/Assets/Code/Editor/EditorWindows/BehaviourTreeEditor/BehaviourCanvasEditor.uss?fileID=7433441132597879392&amp;guid=bb679291420b5954f892eb91fe006ba9&amp;type=3#BehaviourCanvasEditor" />
     <uie:Toolbar>
         <uie:ToolbarMenu tabindex="-1" display-tooltip-when-elided="true" text="Assets" />
+        <uie:ToolbarButton text="Save" display-tooltip-when-elided="true" />
     </uie:Toolbar>
     <Code.Editor.SplitView fixed-pane-initial-dimension="150">
         <ui:VisualElement name="left-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">

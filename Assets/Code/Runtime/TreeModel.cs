@@ -1,4 +1,4 @@
-﻿namespace Code.Editor
+﻿namespace Code.Runtime
 {
     public abstract class TreeModel
     {

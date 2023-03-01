@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.Runtime;
 
 namespace Code.Editor
 {
@@ -21,6 +22,36 @@ namespace Code.Editor
             _rootState = rootState;
             _states  = states;
             _triggers = triggers;
+        }
+
+        public void AddRootState(StateModel state)
+        {
+            _rootState = state;
+        }
+
+        public void AddState(StateModel state)
+        {
+            _states.Add(state);
+        }
+        
+        public void AddTrigger(TriggerModel trigger)
+        {
+            _triggers.Add(trigger);
+        }
+        
+        public void RemoveRootState()
+        {
+            _rootState = null;
+        }
+        
+        public void RemoveState(StateModel state)
+        {
+            _states.Remove(state);
+        }
+        
+        public void RemoveTrigger(TriggerModel trigger)
+        {
+            _triggers.Remove(trigger);
         }
     }
 }

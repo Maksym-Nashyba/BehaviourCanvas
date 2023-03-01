@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
+using Code.Runtime;
 using UnityEditor;
 using UnityEngine;
 
@@ -67,8 +69,8 @@ namespace Code.Editor
                 {
                     if (nodeField.FirstChild.InnerText != nodeID) continue;
                     
-                    position.x = Convert.ToSingle(nodeField.ChildNodes[1].InnerText);
-                    position.y = Convert.ToSingle(nodeField.LastChild.InnerText);
+                    position.x = Convert.ToSingle(node.ChildNodes[1].InnerText);
+                    position.y = Convert.ToSingle(node.LastChild.InnerText);
                     break;
                 }
             }
@@ -88,10 +90,9 @@ namespace Code.Editor
             
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);
-
-            TextAsset xml = new TextAsset(document.OuterXml);
-            AssetDatabase.CreateAsset(xml, BehaviourCanvasPaths.BehaviourTreeAssets + "BehaviourTree.xml"); //TODO Add path with name.xml
-            AssetDatabase.SaveAssets();
+            
+            SaveXML("BehaviourTree", document.OuterXml);
+            TextAsset xml = AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.BehaviourTreeAssets + "/BehaviourTree.xml");
             return xml;
         }
         
@@ -106,9 +107,8 @@ namespace Code.Editor
                     
             editorCanvasXML.AppendChild(nodesXML);
         
-            TextAsset xml = new TextAsset(document.OuterXml);
-            AssetDatabase.CreateAsset(xml, BehaviourCanvasPaths.BehaviourTreeAssets + "NodeTree.xml"); //TODO Add path with name.xml
-            AssetDatabase.SaveAssets(); 
+            SaveXML("NodeTree", document.OuterXml);
+            TextAsset xml = AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.BehaviourTreeAssets + "/NodeTree.xml");
             return xml;
         }
 
@@ -133,6 +133,14 @@ namespace Code.Editor
             }
 
             return nodesXML;
+        }
+
+        private void SaveXML(string xmlName, string xmlContent)
+        {
+            string path = Application.dataPath.Replace("/Assets", "") + "/" + BehaviourCanvasPaths.BehaviourTreeAssets;
+            File.WriteAllText(path + $"/{xmlName}.xml", xmlContent);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
         }
     }
 }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Code.Runtime;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,6 +10,7 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
     public class BehaviourCanvasEditor : EditorWindow
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
+        private ToolbarButton _toolbarButton;
 
         [MenuItem("Window/BehaviourCanvas/BehaviourCanvasEditor")]
         public static void OpenWindow()
@@ -22,17 +25,21 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             _visualTreeAsset.CloneTree(root);
             AddStylesheets();
             
-            string behaviourTreeAssetPath = BehaviourCanvasPaths.BehaviourTreeAssets +"BehaviourTreeAsset.asset";
+            string behaviourTreeAssetPath = BehaviourCanvasPaths.BehaviourTreeAssets +"/BehaviourTreeAsset.asset";
             BehaviourTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(behaviourTreeAssetPath);
         
-            //BehaviourCanvasSerializer behaviourCanvasSerializer = new BehaviourCanvasSerializer(treeAsset);
-        
-            //BehaviourCanvas behaviourCanvas = CreateBehaviourCanvas(behaviourCanvasSerializer);
+            BehaviourCanvasSerializer canvasSerializer = new BehaviourCanvasSerializer(treeAsset);
+            BehaviourCanvas canvas = CreateBehaviourCanvas(canvasSerializer);
         
             BehaviourCanvasView canvasView = root.Q<BehaviourCanvasView>();
             ModelBuilder nodeBuilder = root.Q<ModelBuilder>();
-            //canvasView.Initialize(behaviourCanvas);
-            nodeBuilder.Initialize(canvasView);
+            canvasView.Initialize(canvas, canvasSerializer);
+            nodeBuilder.Initialize(canvas, canvasView);
+            _toolbarButton = root.Q<ToolbarButton>();
+            _toolbarButton.clicked += () =>
+            {
+                canvasSerializer.Serialize(canvas, canvasView);
+            };
         }
         
         private void AddStylesheets()
@@ -41,7 +48,7 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
                                                                               "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
             rootVisualElement.styleSheets.Add(stylesheet);
         }
-        
+
         private BehaviourCanvas CreateBehaviourCanvas(BehaviourCanvasSerializer serializer)
         {
             List<StateModel> states = serializer.DeserializeStateModels();

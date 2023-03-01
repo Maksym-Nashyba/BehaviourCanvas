@@ -1,0 +1,1 @@
+<BehaviourTree><States><State><Name>TestState</Name><Parameters /><ID>1</ID></State></States><Triggers><Trigger><Name>TestTrigger</Name><Parameters><Parameter><Type>Single</Type><Name>number</Name></Parameter></Parameters><ID>2</ID><ResetTarget>False</ResetTarget></Trigger></Triggers></BehaviourTree>

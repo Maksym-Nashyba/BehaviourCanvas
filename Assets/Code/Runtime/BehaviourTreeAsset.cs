@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-namespace Code.Editor
+namespace Code.Runtime
 {
-    [CreateAssetMenu(fileName = "BehaviourTreeAsset", menuName = "BehaviourTreeAsset", order = 0)]
     public class BehaviourTreeAsset : ScriptableObject
     {
         public TextAsset BehaviourTreeXML => _behaviourTreeXML;

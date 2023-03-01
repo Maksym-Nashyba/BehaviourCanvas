@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Code.Editor.EditorWindows.Builders.StateBuilder;
 using Code.Editor.EditorWindows.Builders.TriggerBuilder;
+using Code.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,6 +20,7 @@ namespace Code.Editor
         private ScrollView _triggersScrollView;
         private Button _createTriggerButton;
 
+        private BehaviourCanvas _canvas;
         private BehaviourCanvasView _canvasView;
 
         public new class UxmlFactory : UxmlFactory<ModelBuilder> { }
@@ -28,8 +30,9 @@ namespace Code.Editor
             
         }
 
-        public void Initialize(BehaviourCanvasView canvasView)
+        public void Initialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView)
         {
+            _canvas = canvas;
             _canvasView = canvasView;
             
             _statesSectionButton = this.Q<Button>("states-section-button");
@@ -77,7 +80,9 @@ namespace Code.Editor
             {
                 Button button = new Button(() =>
                 {
-                    _canvasView.CreateNode(new StateModel(1, model), new Rect(100, 100, 200, 100)); //TODO create IdStore
+                    StateModel state = new StateModel(1, model);
+                    _canvas.AddState(state);
+                    _canvasView.CreateNode(state, new Rect(100, 100, 200, 100)); //TODO create IdStore
                 });
                 button.text = model.Name;
                 buttons.Add(button);
@@ -91,10 +96,11 @@ namespace Code.Editor
             List<Button> buttons = new List<Button>(models.Count);
             foreach (Model model in models)
             {
-                Button button = new Button(() =>
+                Button button = new Button(() => //TODO method with TreeModel parameters
                 {
-                    _canvasView.CreateTriggerNode(new TriggerModel(2, model, false), 
-                        new Rect(100, 100, 200, 100)); //TODO create IdStore
+                    TriggerModel trigger = new TriggerModel(2, model, false);
+                    _canvas.AddTrigger(trigger);
+                    _canvasView.CreateTriggerNode(trigger, new Rect(100, 100, 200, 100)); //TODO create IdStore
                 });
                 button.text = model.Name;
                 buttons.Add(button);
