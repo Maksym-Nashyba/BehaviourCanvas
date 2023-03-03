@@ -35,6 +35,7 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             ModelBuilder nodeBuilder = root.Q<ModelBuilder>();
             canvasView.Initialize(canvas, canvasSerializer);
             nodeBuilder.Initialize(canvas, canvasView);
+            
             _toolbarButton = root.Q<ToolbarButton>();
             _toolbarButton.clicked += () =>
             {

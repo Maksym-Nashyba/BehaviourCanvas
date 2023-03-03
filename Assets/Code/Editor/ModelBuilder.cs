@@ -41,16 +41,17 @@ namespace Code.Editor
             _canvasView = canvasView;
             QueryAllVisualElements();
 
-            UpdateStatesList();
-            UpdateTriggersList();
+            IdStore idStore = new IdStore();
+            UpdateStatesList(idStore);
+            UpdateTriggersList(idStore);
             SubscribeButtons();
         }
 
-        private void UpdateStatesList()
+        private void UpdateStatesList(IdStore idStore)
         {
             _statesScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllStates();
-            IReadOnlyList<StateModel> states = models.Select(model => new StateModel(1, model)).ToList(); //TODO create IdStore
+            IReadOnlyList<StateModel> states = models.Select(model => new StateModel(idStore.ID, model)).ToList();
             
             List<Button> buttons = CreateTreeModelsButtons(states, treeModel =>
             {
@@ -64,11 +65,11 @@ namespace Code.Editor
             }
         }
         
-        private void UpdateTriggersList()
+        private void UpdateTriggersList(IdStore idStore)
         {
-            _statesScrollView.Clear();
+            _triggersScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllTriggers();
-            IReadOnlyList<TriggerModel> triggers = models.Select(model => new TriggerModel(1, model, false)).ToList(); //TODO create IdStore
+            IReadOnlyList<TriggerModel> triggers = models.Select(model => new TriggerModel(idStore.ID, model, false)).ToList();
             
             List<Button> buttons = CreateTreeModelsButtons(triggers, treeModel =>
             {

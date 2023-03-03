@@ -14,6 +14,7 @@ namespace Code.Editor
 
         private NodeView _rootNode;
         private List<NodeView> _nodes;
+        private IdStore _idStore;
 
         public new class UxmlFactory : UxmlFactory<BehaviourCanvasView, UxmlTraits> { }
 
@@ -42,12 +43,15 @@ namespace Code.Editor
         public void Initialize(BehaviourCanvas canvas, BehaviourCanvasSerializer canvasSerializer)
         {
             _nodes = new List<NodeView>(canvas.States.Count + canvas.Triggers.Count);
+            _idStore = new IdStore();
             CreateBehaviourCanvasGraph(canvas, canvasSerializer);
         }
 
         private void CreateBehaviourCanvasGraph(BehaviourCanvas canvas, BehaviourCanvasSerializer canvasSerializer)
         {
+            graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
+            graphViewChanged += OnGraphViewChanged;
             foreach (StateModel state in canvas.States)
             {
                 CreateNode(state, canvasSerializer.GetNodePosition(state.ID.ToString()));
@@ -58,6 +62,13 @@ namespace Code.Editor
             }
         }
 
+        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
+        {
+            if (graphViewChange.elementsToRemove == null) return graphViewChange;
+            graphViewChange.elementsToRemove.Clear();
+            return graphViewChange;
+        }
+
         public void CreateRootNode(string nodeName, int id, (string, string)[] parameters, Rect position)
         {
             _rootNode = new NodeView(nodeName, id, parameters);
@@ -66,7 +77,17 @@ namespace Code.Editor
             _nodes.Add(_rootNode);
         }
 
-        public void CreateNode(string nodeName, int id, (string, string)[] parameters, Rect position)
+        public void CreateNode(StateModel state, Rect position)
+        {
+            CreateNode(state.Model.Name, state.ID, state.Model.Parameters, position);
+        }
+        
+        public void CreateTriggerNode(TriggerModel trigger, Rect position)
+        {
+            CreateTriggerNode(trigger.Model.Name, trigger.ID, trigger.Model.Parameters, trigger.ResetTarget, position);
+        }
+        
+        private void CreateNode(string nodeName, int id, (string, string)[] parameters, Rect position)
         {
             NodeView node = new NodeView(nodeName, id, parameters);
             node.SetPosition(position);
@@ -74,22 +95,12 @@ namespace Code.Editor
             _nodes.Add(node);
         }
 
-        public void CreateNode(StateModel state, Rect position)
-        {
-            CreateNode(state.Model.Name, state.ID, state.Model.Parameters, position);
-        }
-
-        public void CreateTriggerNode(string nodeName, int id, (string, string)[] parameters, bool resetTarget, Rect position)
+        private void CreateTriggerNode(string nodeName, int id, (string, string)[] parameters, bool resetTarget, Rect position)
         {
             NodeView node = new TriggerView(nodeName, id, parameters, resetTarget);
             node.SetPosition(position);
             AddElement(node);
             _nodes.Add(node);
-        }
-
-        public void CreateTriggerNode(TriggerModel trigger, Rect position)
-        {
-            CreateTriggerNode(trigger.Model.Name, trigger.ID, trigger.Model.Parameters, trigger.ResetTarget, position);
         }
     }
 }

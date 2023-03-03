@@ -15,6 +15,36 @@ namespace Code.Editor
         public BehaviourCanvasSerializer(BehaviourTreeAsset treeAsset)
         {
             _treeAsset = treeAsset;
+            ValidateTreeAsset(treeAsset);
+        }
+        
+        private void ValidateTreeAsset(BehaviourTreeAsset treeAsset)
+        {
+            TextAsset behaviourTreeXml = treeAsset.BehaviourTreeXML;
+            TextAsset nodeTreeXml = treeAsset.NodeTreeXML;
+            try
+            {
+                if (treeAsset.BehaviourTreeXML.bytes is null)
+                {
+                    behaviourTreeXml = CreateBehaviourTreeXML(new List<StateModel>(), new List<TriggerModel>());
+                }
+            }
+            catch (MissingReferenceException ex)
+            {
+                behaviourTreeXml = CreateBehaviourTreeXML(new List<StateModel>(), new List<TriggerModel>());
+            }
+            try
+            {
+                if (treeAsset.NodeTreeXML.bytes is null)
+                {
+                    nodeTreeXml = CreateNodeTreeXML(new List<NodeView>());
+                }
+            }
+            catch (MissingReferenceException ex)
+            {
+                nodeTreeXml = CreateNodeTreeXML(new List<NodeView>());
+            }
+            _treeAsset.UpdateAsset(behaviourTreeXml, nodeTreeXml);
         }
         
         public StateModel FindRootState(IReadOnlyList<StateModel> states)
@@ -51,8 +81,8 @@ namespace Code.Editor
 
         public void Serialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView)
         {
-            TextAsset behaviourTreeXML = CreateBehaviourTreeXML(canvas);
-            TextAsset editorTreeXML = CreateNodeTreeXML(canvasView);
+            TextAsset behaviourTreeXML = CreateBehaviourTreeXML(canvas.States, canvas.Triggers);
+            TextAsset editorTreeXML = CreateNodeTreeXML(canvasView.Nodes);
             _treeAsset.UpdateAsset(behaviourTreeXML, editorTreeXML);
         }
         
@@ -78,15 +108,15 @@ namespace Code.Editor
             return position;
         }
 
-        private TextAsset CreateBehaviourTreeXML(BehaviourCanvas canvas)
+        private TextAsset CreateBehaviourTreeXML(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
         {
             XmlDocument document = new XmlDocument();
             
             XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BehaviourTree", string.Empty);
             document.AppendChild(behaviourCanvasXML);
 
-            XmlElement statesXML = CreateStatesXML(document, canvas.States);
-            XmlElement triggersXML = CreateTriggersXML(document, canvas.Triggers);
+            XmlElement statesXML = CreateStatesXML(document, states);
+            XmlElement triggersXML = CreateTriggersXML(document, triggers);
             
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);
@@ -96,16 +126,16 @@ namespace Code.Editor
             return xml;
         }
         
-        private TextAsset CreateNodeTreeXML(BehaviourCanvasView canvasView) 
+        private TextAsset CreateNodeTreeXML(IReadOnlyList<NodeView> nodeViews) 
         {
             XmlDocument document = new XmlDocument();
                     
-            XmlElement editorCanvasXML = document.CreateElement(string.Empty, "NodeTree", string.Empty);
-            document.AppendChild(editorCanvasXML);
+            XmlElement nodeTreeXML = document.CreateElement(string.Empty, "NodeTree", string.Empty);
+            document.AppendChild(nodeTreeXML);
         
-            XmlElement nodesXML = CreateNodesXML(document, canvasView.Nodes);
+            XmlElement nodesXML = CreateNodesXML(document, nodeViews);
                     
-            editorCanvasXML.AppendChild(nodesXML);
+            nodeTreeXML.AppendChild(nodesXML);
         
             SaveXML("NodeTree", document.OuterXml);
             TextAsset xml = AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.BehaviourTreeAssets + "/NodeTree.xml");
