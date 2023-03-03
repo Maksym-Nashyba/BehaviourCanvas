@@ -13,9 +13,13 @@ namespace Code.Runtime
         [SerializeField] private TextAsset _behaviourTreeXML;
         [SerializeField] private TextAsset _nodeTreeXML;
 
-        public void UpdateAsset(TextAsset behaviourTreeXML, TextAsset nodeTreeXML)
+        public void UpdateBehaviourTreeXML(TextAsset behaviourTreeXML)
         {
             _behaviourTreeXML = behaviourTreeXML;
+        }
+        
+        public void UpdateNodeTreeXML(TextAsset nodeTreeXML)
+        {
             _nodeTreeXML = nodeTreeXML;
         }
     }

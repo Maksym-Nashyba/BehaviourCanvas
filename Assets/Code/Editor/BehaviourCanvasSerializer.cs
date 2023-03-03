@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using Code.Runtime;
 using UnityEditor;
@@ -8,115 +7,53 @@ using UnityEngine;
 
 namespace Code.Editor
 {
-    public class BehaviourCanvasSerializer : ModelSerializer
+    public class BehaviourCanvasSerializer : EditorSerializer
     {
-        private readonly BehaviourTreeAsset _treeAsset;
-    
-        public BehaviourCanvasSerializer(BehaviourTreeAsset treeAsset)
+        public BehaviourCanvasSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset) 
         {
-            _treeAsset = treeAsset;
             ValidateTreeAsset(treeAsset);
         }
-        
-        private void ValidateTreeAsset(BehaviourTreeAsset treeAsset)
+
+        public void Serialize(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
         {
-            TextAsset behaviourTreeXml = treeAsset.BehaviourTreeXML;
-            TextAsset nodeTreeXml = treeAsset.NodeTreeXML;
-            try
-            {
-                if (treeAsset.BehaviourTreeXML.bytes is null)
-                {
-                    behaviourTreeXml = CreateBehaviourTreeXML(new List<StateModel>(), new List<TriggerModel>());
-                }
-            }
-            catch (MissingReferenceException ex)
-            {
-                behaviourTreeXml = CreateBehaviourTreeXML(new List<StateModel>(), new List<TriggerModel>());
-            }
-            try
-            {
-                if (treeAsset.NodeTreeXML.bytes is null)
-                {
-                    nodeTreeXml = CreateNodeTreeXML(new List<NodeView>());
-                }
-            }
-            catch (MissingReferenceException ex)
-            {
-                nodeTreeXml = CreateNodeTreeXML(new List<NodeView>());
-            }
-            _treeAsset.UpdateAsset(behaviourTreeXml, nodeTreeXml);
+            TextAsset xml = CreateXML(states, triggers);
+            TreeAsset.UpdateBehaviourTreeXML(xml);
         }
-        
-        public StateModel FindRootState(IReadOnlyList<StateModel> states)
-        {
-            StateModel rootState = new StateModel();
-            foreach (StateModel state in states)
-            {
-                if (state.ID != 1) continue;
-                rootState = state;
-                break;
-            }
-            return rootState;
-        }
-        
+
         public List<StateModel> DeserializeStateModels()
         {
-            return DeserializeStateModels(_treeAsset.BehaviourTreeXML);
+            return DeserializeStateModels(TreeAsset.BehaviourTreeXML);
         }
     
         public List<TriggerModel> DeserializeTriggerModels()
         {
-            return DeserializeTriggerModels(_treeAsset.BehaviourTreeXML);
+            return DeserializeTriggerModels(TreeAsset.BehaviourTreeXML);
         }
 
-        public Rect GetNodePosition(string nodeID)
+        private protected sealed override void ValidateTreeAsset(BehaviourTreeAsset treeAsset)
         {
-            return GetNodePosition(nodeID, "Node");
-        }
-
-        public Rect GetTriggerNodePosition(string nodeID)
-        {
-            return GetNodePosition(nodeID, "TriggerNode");
-        }
-
-        public void Serialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView)
-        {
-            TextAsset behaviourTreeXML = CreateBehaviourTreeXML(canvas.States, canvas.Triggers);
-            TextAsset editorTreeXML = CreateNodeTreeXML(canvasView.Nodes);
-            _treeAsset.UpdateAsset(behaviourTreeXML, editorTreeXML);
-        }
-        
-        private Rect GetNodePosition(string nodeID, string nodeType)
-        {
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(_treeAsset.NodeTreeXML.text);
-            XmlNodeList nodes = document.GetElementsByTagName(nodeType);
-
-            Rect position = new Rect(0, 0, 200, 100);
-            foreach (XmlNode node in nodes)
+            try
             {
-                foreach (XmlNode nodeField in node.ChildNodes)
+                if (treeAsset.BehaviourTreeXML.bytes is null)
                 {
-                    if (nodeField.FirstChild.InnerText != nodeID) continue;
-                    
-                    position.x = Convert.ToSingle(node.ChildNodes[1].InnerText);
-                    position.y = Convert.ToSingle(node.LastChild.InnerText);
-                    break;
+                    Serialize(new List<StateModel>(), new List<TriggerModel>());
                 }
             }
-
-            return position;
+            catch (MissingReferenceException ex)
+            {
+                Serialize(new List<StateModel>(), new List<TriggerModel>());
+            }
         }
 
-        private TextAsset CreateBehaviourTreeXML(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
+        private TextAsset CreateXML(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
         {
             XmlDocument document = new XmlDocument();
             
             XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BehaviourTree", string.Empty);
             document.AppendChild(behaviourCanvasXML);
 
-            XmlElement statesXML = CreateStatesXML(document, states);
-            XmlElement triggersXML = CreateTriggersXML(document, triggers);
+            XmlElement statesXML = CreateTreeModelsXML(document, states, "State");
+            XmlElement triggersXML = CreateTreeModelsXML(document, triggers, "Trigger");
             
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);
@@ -125,52 +62,23 @@ namespace Code.Editor
             TextAsset xml = AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.BehaviourTreeAssets + "/BehaviourTree.xml");
             return xml;
         }
-        
-        private TextAsset CreateNodeTreeXML(IReadOnlyList<NodeView> nodeViews) 
-        {
-            XmlDocument document = new XmlDocument();
-                    
-            XmlElement nodeTreeXML = document.CreateElement(string.Empty, "NodeTree", string.Empty);
-            document.AppendChild(nodeTreeXML);
-        
-            XmlElement nodesXML = CreateNodesXML(document, nodeViews);
-                    
-            nodeTreeXML.AppendChild(nodesXML);
-        
-            SaveXML("NodeTree", document.OuterXml);
-            TextAsset xml = AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.BehaviourTreeAssets + "/NodeTree.xml");
-            return xml;
-        }
 
-        private XmlElement CreateNodesXML(XmlDocument document, IReadOnlyList<NodeView> nodes)
+        private XmlElement CreateTreeModelsXML(XmlDocument document, IReadOnlyList<TreeModel> treeModels, string modelKey)
         {
-            XmlElement nodesXML = document.CreateElement(string.Empty, "Nodes", string.Empty);
+            //string modelKey = treeModels[0].GetType().Name.Split("Model")[0];
+            XmlElement treeModelsXml = CreateModelsXML(document, treeModels.Select(treeModel => treeModel.Model).ToList(), modelKey);
             
-            foreach (NodeView node in nodes)
+            for (int i = 0; i < treeModels.Count; i++)
             {
-                string nodeType = node is TriggerView ? "TriggerNode" : "Node";
-                XmlElement nodeXML = document.CreateElement(string.Empty, nodeType, string.Empty);
-                
-                XmlElement idXML = CreateElementWithContent(document, "ID", node.ID.ToString());
-                XmlElement xPositionXML = CreateElementWithContent(document, "PositionX", node.GetPosition().x.ToString());
-                XmlElement yPositionXML = CreateElementWithContent(document, "PositionY", node.GetPosition().y.ToString());
-                
-                nodeXML.AppendChild(idXML);
-                nodeXML.AppendChild(xPositionXML);
-                nodeXML.AppendChild(yPositionXML);
+                XmlElement idXML = CreateElementWithContent(document, "ID", treeModels[i].ID.ToString());
+                treeModelsXml.ChildNodes[i].AppendChild(idXML);
 
-                nodesXML.AppendChild(nodeXML);
+                if (treeModels[i] is not TriggerModel triggerModel) continue;
+                XmlElement resetTargetXML = CreateElementWithContent(document, "ResetTarget", 
+                    triggerModel.ResetTarget.ToString());
+                treeModelsXml.ChildNodes[i].AppendChild(resetTargetXML);
             }
-
-            return nodesXML;
-        }
-
-        private void SaveXML(string xmlName, string xmlContent)
-        {
-            string path = Application.dataPath.Replace("/Assets", "") + "/" + BehaviourCanvasPaths.BehaviourTreeAssets;
-            File.WriteAllText(path + $"/{xmlName}.xml", xmlContent);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            return treeModelsXml;
         }
     }
 }

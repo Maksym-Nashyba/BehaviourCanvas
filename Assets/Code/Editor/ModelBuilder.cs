@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Code.Editor.EditorWindows.Builders.StateBuilder;
 using Code.Editor.EditorWindows.Builders.TriggerBuilder;
 using Code.Runtime;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Code.Editor
@@ -23,10 +21,9 @@ namespace Code.Editor
             private ScrollView _triggersScrollView;
             private Button _createTriggerButton;
         #endregion
-        
-        private BehaviourCanvas _canvas;
-        private BehaviourCanvasView _canvasView;
-        private readonly Rect _defaultNodePosition = new Rect(100, 100, 200, 100);
+
+        public event Action<Model> CreateState;
+        public event Action<Model> CreateTrigger;
 
         public new class UxmlFactory : UxmlFactory<ModelBuilder> { }
 
@@ -35,61 +32,43 @@ namespace Code.Editor
             
         }
 
-        public void Initialize(BehaviourCanvas canvas, BehaviourCanvasView canvasView)
+        public void Initialize()
         {
-            _canvas = canvas;
-            _canvasView = canvasView;
             QueryAllVisualElements();
-
-            IdStore idStore = new IdStore();
-            UpdateStatesList(idStore);
-            UpdateTriggersList(idStore);
+            UpdateStatesList();
+            UpdateTriggersList();
             SubscribeButtons();
         }
 
-        private void UpdateStatesList(IdStore idStore)
+        private void UpdateStatesList()
         {
             _statesScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllStates();
-            IReadOnlyList<StateModel> states = models.Select(model => new StateModel(idStore.ID, model)).ToList();
-            
-            List<Button> buttons = CreateTreeModelsButtons(states, treeModel =>
-            {
-                _canvas.AddState(treeModel as StateModel);
-                _canvasView.CreateNode(treeModel as StateModel, _defaultNodePosition);
-            });
-            
+            List<Button> buttons = CreateTreeModelsButtons(models, model => CreateState?.Invoke(model));
             foreach (Button button in buttons)
             {
                 _statesScrollView.Add(button);
             }
         }
         
-        private void UpdateTriggersList(IdStore idStore)
+        private void UpdateTriggersList()
         {
             _triggersScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllTriggers();
-            IReadOnlyList<TriggerModel> triggers = models.Select(model => new TriggerModel(idStore.ID, model, false)).ToList();
-            
-            List<Button> buttons = CreateTreeModelsButtons(triggers, treeModel =>
-            {
-                _canvas.AddTrigger(treeModel as TriggerModel);
-                _canvasView.CreateTriggerNode(treeModel as TriggerModel, _defaultNodePosition);
-            });
-            
+            List<Button> buttons = CreateTreeModelsButtons(models, model => CreateTrigger?.Invoke(model));
             foreach (Button button in buttons)
             {
                 _triggersScrollView.Add(button);
             }
         }
 
-        private List<Button> CreateTreeModelsButtons(IReadOnlyList<TreeModel> treeModels, Action<TreeModel> buttonClickEvent)
+        private List<Button> CreateTreeModelsButtons(IReadOnlyList<Model> models, Action<Model> buttonClickEvent)
         {
-            List<Button> buttons = new List<Button>(treeModels.Count);
-            foreach (TreeModel treeModel in treeModels)
+            List<Button> buttons = new List<Button>(models.Count);
+            foreach (Model model in models)
             {
-                Button button = new Button(() => buttonClickEvent(treeModel));
-                button.text = treeModel.Model.Name;
+                Button button = new Button(() => buttonClickEvent(model));
+                button.text = model.Name;
                 buttons.Add(button);
             }
             return buttons;

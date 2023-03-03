@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Code.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -9,13 +10,15 @@ namespace Code.Editor
 {
     public class BehaviourCanvasView : GraphView
     {
-        public NodeView RootNode => _rootNode;
+        public event Action<int> DeleteTreeModel;
         public IReadOnlyList<NodeView> Nodes => _nodes;
 
         private NodeView _rootNode;
         private List<NodeView> _nodes;
-        private IdStore _idStore;
+        private ViewSerializer _serializer;
 
+        #region UIToolkitRegion
+        
         public new class UxmlFactory : UxmlFactory<BehaviourCanvasView, UxmlTraits> { }
 
         public BehaviourCanvasView()
@@ -39,68 +42,56 @@ namespace Code.Editor
                                                                               "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
             styleSheets.Add(stylesheet);
         }
+        
+        #endregion
 
-        public void Initialize(BehaviourCanvas canvas, BehaviourCanvasSerializer canvasSerializer)
-        {
-            _nodes = new List<NodeView>(canvas.States.Count + canvas.Triggers.Count);
-            _idStore = new IdStore();
-            CreateBehaviourCanvasGraph(canvas, canvasSerializer);
-        }
-
-        private void CreateBehaviourCanvasGraph(BehaviourCanvas canvas, BehaviourCanvasSerializer canvasSerializer)
+        public void Initialize(ViewSerializer serializer)
         {
             graphViewChanged -= OnGraphViewChanged;
-            DeleteElements(graphElements);
+
+            _serializer = serializer;
+            _nodes = new List<NodeView>();
+            
             graphViewChanged += OnGraphViewChanged;
-            foreach (StateModel state in canvas.States)
-            {
-                CreateNode(state, canvasSerializer.GetNodePosition(state.ID.ToString()));
-            }
-            foreach (TriggerModel trigger in canvas.Triggers)
-            {
-                CreateTriggerNode(trigger, canvasSerializer.GetTriggerNodePosition(trigger.ID.ToString()));
-            }
+        }
+        
+        public Rect FindNodePosition(int id)
+        {
+            return _serializer.GetNodePosition(id.ToString());
+        }
+        
+        public void CreateNodeView(StateModel state, Rect position)
+        {
+            NodeView node = new NodeView(state.Model.Name, state.ID, state.Model.Parameters);
+            node.SetPosition(position);
+            _nodes.Add(node);
+            AddElement(node);
+        }
+
+        public void CreateTriggerView(TriggerModel trigger, Rect position)
+        { 
+            NodeView node = new TriggerView(trigger.Model.Name, trigger.ID, trigger.Model.Parameters, trigger.ResetTarget);
+            node.SetPosition(position);
+            _nodes.Add(node);
+            AddElement(node);
+        }
+
+        public void DeleteNode(int modelID)
+        {
+            NodeView nodeView = _nodes.Find(node => node.ID == modelID);
+            _nodes.Remove(nodeView);
+            contentViewContainer[0].Remove(nodeView);
         }
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             if (graphViewChange.elementsToRemove == null) return graphViewChange;
+            graphViewChange.elementsToRemove.ForEach(element => 
+            {
+                if (element is NodeView node) DeleteTreeModel?.Invoke(node.ID); 
+            });
             graphViewChange.elementsToRemove.Clear();
             return graphViewChange;
-        }
-
-        public void CreateRootNode(string nodeName, int id, (string, string)[] parameters, Rect position)
-        {
-            _rootNode = new NodeView(nodeName, id, parameters);
-            _rootNode.SetPosition(position);
-            AddElement(_rootNode);
-            _nodes.Add(_rootNode);
-        }
-
-        public void CreateNode(StateModel state, Rect position)
-        {
-            CreateNode(state.Model.Name, state.ID, state.Model.Parameters, position);
-        }
-        
-        public void CreateTriggerNode(TriggerModel trigger, Rect position)
-        {
-            CreateTriggerNode(trigger.Model.Name, trigger.ID, trigger.Model.Parameters, trigger.ResetTarget, position);
-        }
-        
-        private void CreateNode(string nodeName, int id, (string, string)[] parameters, Rect position)
-        {
-            NodeView node = new NodeView(nodeName, id, parameters);
-            node.SetPosition(position);
-            AddElement(node);
-            _nodes.Add(node);
-        }
-
-        private void CreateTriggerNode(string nodeName, int id, (string, string)[] parameters, bool resetTarget, Rect position)
-        {
-            NodeView node = new TriggerView(nodeName, id, parameters, resetTarget);
-            node.SetPosition(position);
-            AddElement(node);
-            _nodes.Add(node);
         }
     }
 }
