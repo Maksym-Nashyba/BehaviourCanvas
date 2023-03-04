@@ -2,6 +2,8 @@
 {
     public class StateModel : TreeModel
     {
+        public bool IsRoot => ID == 1;
+        
         public StateModel() : base()
         {
             

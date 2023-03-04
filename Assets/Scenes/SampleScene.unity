@@ -318,7 +318,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1815124841}
-  - component: {fileID: 1815124840}
+  - component: {fileID: 1815124842}
   m_Layer: 0
   m_Name: BehaviourHost
   m_TagString: Untagged
@@ -326,19 +326,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1815124840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815124839}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd177a1758014418ba6779d0880a3668, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _behaviourTreeAsset: {fileID: 0}
 --- !u!4 &1815124841
 Transform:
   m_ObjectHideFlags: 0
@@ -354,3 +341,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1815124842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815124839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd177a1758014418ba6779d0880a3668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _behaviourTreeAsset: {fileID: 11400000, guid: aedbaa7e8a0693a49b2d082b81d1b923, type: 2}
+  _rootArguments:
+  - PlainObject:
+      rid: 9033034587940061481
+    UnityObject: {fileID: 0}
+  - PlainObject:
+      rid: -2
+    UnityObject: {fileID: 1815124842}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 9033034587940061481
+      type: {class: Vector3, ns: UnityEngine, asm: UnityEngine.CoreModule}
+      data:
+        x: 0.47
+        y: 0.79
+        z: 0.72

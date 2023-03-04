@@ -1,33 +1,34 @@
 using System;
-using Code;
-using Code.Runtime;
 
-public class TestTrigger : Trigger<Single>
+namespace Code.Runtime.Triggers
 {
-    private State<Single> _targetState;
-    private Single _number;
+    public class TestTrigger : Trigger<Single>
+    {
+        private State<Single> _targetState;
+        private Single _number;
 
-    public override bool IsHit()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Reset()
-    {
-        throw new NotImplementedException();
-    }
-    
-    public override IState PrepareTarget()
-    {
-        _targetState.ResetStateParameters(_number);
-        return _targetState;
-    }
-    
-    public static (string,Type)[] GetParameterList()
-    {
-        return new(string, Type)[]
+        public override bool IsHit()
         {
-            ("number", typeof(Single)),
-        };
+            throw new NotImplementedException();
+        }
+
+        public override void Reset()
+        {
+            throw new NotImplementedException();
+        }
+    
+        public override IState PrepareTarget()
+        {
+            _targetState.ResetStateParameters(_number);
+            return _targetState;
+        }
+    
+        public static (string,Type)[] GetParameterList()
+        {
+            return new(string, Type)[]
+            {
+                ("number", typeof(Single)),
+            };
+        }
     }
 }

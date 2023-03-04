@@ -7,13 +7,13 @@ namespace Code.Runtime
 {
     public class ModelSerializer
     {
-        protected List<StateModel> DeserializeStateModels(TextAsset xml) 
+        public List<StateModel> DeserializeStateModels(TextAsset xml) 
         {
             List<TreeModel> models = DeserializeTreeModels(xml, "State");
             return models.ConvertAll(m => (StateModel)m);
         }
     
-        protected List<TriggerModel> DeserializeTriggerModels(TextAsset xml)
+        public List<TriggerModel> DeserializeTriggerModels(TextAsset xml)
         {
             List<TreeModel> models = DeserializeTreeModels(xml, "Trigger");
             return models.ConvertAll(m => (TriggerModel)m);

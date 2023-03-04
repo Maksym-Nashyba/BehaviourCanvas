@@ -19,7 +19,7 @@ namespace Code.Runtime
         
         public void StartRootState(params object[] rootStateParameters)
         {
-            if (CurrentState is not null) throw new InvalidOperationException("Only start from root state if current state is null.");
+            if (CurrentState is not null) throw new InvalidOperationException("Only start from root state if the current state is null.");
             
             CurrentState = _rootState;
             throw new NotImplementedException();//TODO pass arguments to the root state

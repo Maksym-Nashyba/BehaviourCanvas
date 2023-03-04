@@ -12,7 +12,7 @@ namespace Code.Editor
         public static IEnumerable<Type> GetAllTypesShortName(string name)
         {
             return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
-                .Where(type => type.Name.Contains(name) && !type.FullName.Contains("VisualScripting"));
+                .Where(type => type.Name.Contains(name) && !type.FullName!.Contains("VisualScripting"));
         }
 
         public static Type FromFullName(string fullName)
@@ -41,6 +41,18 @@ namespace Code.Editor
                     (string, string)[] parameters = parameterGetter.Invoke().Select(parameter => (parameter.Item2.Name, parameter.Item1)).ToArray();
                     return new Model(type.Name, parameters);
                 }).ToArray();
+        }
+
+        public static (Type, string)[] GetStateParameters(string stateName)
+        {
+            if(!stateName.Contains("State")) stateName += "State";
+            string fullName = typeof(StateAssemblyMarker).FullName!.Replace("StateAssemblyMarker", stateName);
+            Type stateType = Assembly.GetAssembly(typeof(StateAssemblyMarker)).GetType(fullName);
+            if (stateType == null) throw new ArgumentException($"Failed to find type {fullName}. Should be in the same DIRECTORY and NAMESPACE as {nameof(StateAssemblyMarker)}");
+            Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
+                null,
+                stateType.GetMethod("GetParameterList", BindingFlags.Public | BindingFlags.Static)!);
+            return parameterGetter.Invoke().Select(parameter => (parameter.Item2, parameter.Item1)).ToArray();
         }
     }
 }

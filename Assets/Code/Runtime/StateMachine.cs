@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -8,9 +7,9 @@ namespace Code.Runtime
     public class StateMachine : MonoBehaviour
     {
         [SerializeField] private BehaviourTreeAsset _behaviourTreeAsset;
+        [SerializeField] private List<SerializableParameter>_rootArguments;
         [Inject] private BehaviourTreeBuilder _behaviourTreeBuilder;
         private BehaviourTree _behaviourTree;
-        [SerializeReference] private object[] _rootArguments;
         
         private void Start()
         {
