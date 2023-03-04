@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Code.Editor.Serializers;
 using Code.Runtime;
+using Code.Runtime.BehaviourElementModels;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -72,7 +74,7 @@ namespace Code.Editor
         
         public void CreateNodeView(StateModel state, Rect position)
         {
-            NodeView node = new NodeView(state.Model.Name, state.ID, state.Model.Parameters);
+            NodeView node = new NodeView(state.Model.Name, state.Id, state.Model.Parameters);
             node.SetPosition(position);
             node.Draw();
             _nodes.Add(node);
@@ -81,7 +83,7 @@ namespace Code.Editor
 
         public void CreateTriggerView(TriggerModel trigger, Rect position)
         { 
-            NodeView node = new TriggerView(trigger.Model.Name, trigger.ID, trigger.Model.Parameters, trigger.ResetTarget);
+            NodeView node = new TriggerView(trigger.Model.Name, trigger.Id, trigger.Model.Parameters, trigger.ResetTarget);
             node.SetPosition(position);
             node.Draw();
             _nodes.Add(node);

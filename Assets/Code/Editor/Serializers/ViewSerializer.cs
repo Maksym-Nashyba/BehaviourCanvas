@@ -5,9 +5,9 @@ using Code.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace Code.Editor
+namespace Code.Editor.Serializers
 {
-    public class ViewSerializer : EditorSerializer
+    public sealed class ViewSerializer : EditorSerializer
     {
         public ViewSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset)
         {
@@ -24,7 +24,7 @@ namespace Code.Editor
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(TreeAsset.NodeTreeXML.text);
-            XmlNodeList ids = document.GetElementsByTagName("ID");
+            XmlNodeList ids = document.GetElementsByTagName("Id");
             Rect position = new Rect(0, 0, 500, 250);
             foreach (XmlNode id in ids)
             {
@@ -36,22 +36,7 @@ namespace Code.Editor
             }
 
             return position;
-        }
-        
-        private protected sealed override void ValidateTreeAsset(BehaviourTreeAsset treeAsset) 
-        {
-            try 
-            {
-                if (treeAsset.NodeTreeXML.bytes is null) 
-                {
-                    Serialize(new List<NodeView>());
-                }
-            }
-            catch (MissingReferenceException ex) 
-            {
-                Serialize(new List<NodeView>());
-            }
-        }
+        } //TODO rewrite?
         
         private TextAsset CreateXML(IReadOnlyList<NodeView> nodeViews) 
         {
@@ -77,7 +62,7 @@ namespace Code.Editor
             {
                 XmlElement nodeXML = document.CreateElement(string.Empty, "Node", string.Empty);
                 
-                XmlElement idXML = CreateElementWithContent(document, "ID", node.ID.ToString());
+                XmlElement idXML = CreateElementWithContent(document, "Id", node.ID.ToString());
                 XmlElement xPositionXML = CreateElementWithContent(document, "PositionX", node.GetPosition().x.ToString());
                 XmlElement yPositionXML = CreateElementWithContent(document, "PositionY", node.GetPosition().y.ToString());
                 
@@ -89,6 +74,21 @@ namespace Code.Editor
             }
 
             return nodesXML;
+        }
+
+        private protected override void ValidateTreeAsset(BehaviourTreeAsset treeAsset)
+        {
+            try 
+            {
+                if (treeAsset.NodeTreeXML.bytes is null) 
+                {
+                    Serialize(new List<NodeView>());
+                }
+            }
+            catch (MissingReferenceException ex) 
+            { 
+                Serialize(new List<NodeView>());
+            }
         }
     }
 }

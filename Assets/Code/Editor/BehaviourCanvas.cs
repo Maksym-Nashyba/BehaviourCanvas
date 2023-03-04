@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Code.Runtime;
+using Code.Runtime.BehaviourElementModels;
 
 namespace Code.Editor
 {
     public class BehaviourCanvas
     {
-        public StateModel RootState => _states.First(state => state.ID == -1);
+        public StateModel RootState => _states.First(state => state.Id == -1);
         public IReadOnlyList<StateModel> States => _states;
         public IReadOnlyList<TriggerModel> Triggers => _triggers;
         
@@ -54,8 +55,8 @@ namespace Code.Editor
 
         private int GetIncrementedBiggestId(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
         {
-            int firstId = states.Count != 0 ? states[^1].ID : -2;
-            int secondId = triggers.Count != 0 ? triggers[^1].ID : -2;
+            int firstId = states.Count != 0 ? states[^1].Id : -2;
+            int secondId = triggers.Count != 0 ? triggers[^1].Id : -2;
             return Math.Max(firstId, secondId) + 1;
         }
 
@@ -74,8 +75,8 @@ namespace Code.Editor
         private void SetRootState(int stateId)
         {
             int oldRootStateNewId = _idStore.ID;
-            RootState.ID = oldRootStateNewId;
-            _states.First(state => state.ID == stateId).ID = -1;
+            RootState.Id = oldRootStateNewId;
+            _states.First(state => state.Id == stateId).Id = -1;
             _view.SetRootNode(stateId, oldRootStateNewId);
         }
 
@@ -88,7 +89,7 @@ namespace Code.Editor
         private void CreateState(StateModel state)
         {
             _states.Add(state);
-            _view.CreateNodeView(state, _view.FindNodePosition(state.ID));
+            _view.CreateNodeView(state, _view.FindNodePosition(state.Id));
         }
         
         private void CreateTrigger(Model model)
@@ -100,18 +101,18 @@ namespace Code.Editor
         private void CreateTrigger(TriggerModel trigger)
         {
             _triggers.Add(trigger);
-            _view.CreateTriggerView(trigger, _view.FindNodePosition(trigger.ID));
+            _view.CreateTriggerView(trigger, _view.FindNodePosition(trigger.Id));
         }
         
         private void DeleteTreeModel(int modelID)
         {
-            foreach (StateModel state in _states.Where(state => state.ID == modelID))
+            foreach (StateModel state in _states.Where(state => state.Id == modelID))
             {
                 DeleteState(state);
                 _idStore = new IdStore(GetIncrementedBiggestId(_states, _triggers));
                 return;
             }
-            foreach (TriggerModel trigger in _triggers.Where(trigger => trigger.ID == modelID))
+            foreach (TriggerModel trigger in _triggers.Where(trigger => trigger.Id == modelID))
             {
                 DeleteTrigger(trigger);
                 _idStore = new IdStore(GetIncrementedBiggestId(_states, _triggers));
@@ -122,13 +123,13 @@ namespace Code.Editor
         private void DeleteState(StateModel state)
         {
             _states.Remove(state);
-            _view.DeleteNode(state.ID);
+            _view.DeleteNode(state.Id);
         }
         
         private void DeleteTrigger(TriggerModel trigger)
         {
             _triggers.Remove(trigger);
-            _view.DeleteNode(trigger.ID);
+            _view.DeleteNode(trigger.Id);
         }
     }
 }

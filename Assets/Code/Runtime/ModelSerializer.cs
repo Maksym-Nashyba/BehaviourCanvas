@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using Code.Runtime.BehaviourElementModels;
 using UnityEngine;
 
 namespace Code.Runtime
@@ -9,56 +10,59 @@ namespace Code.Runtime
     {
         public List<StateModel> DeserializeStateModels(TextAsset xml) 
         {
-            List<TreeModel> models = DeserializeTreeModels(xml, "State");
+            List<BehaviourElementModel> models = DeserializeBehaviourElementModels(xml, "State");
             return models.ConvertAll(m => (StateModel)m);
         }
     
         public List<TriggerModel> DeserializeTriggerModels(TextAsset xml)
         {
-            List<TreeModel> models = DeserializeTreeModels(xml, "Trigger");
+            List<BehaviourElementModel> models = DeserializeBehaviourElementModels(xml, "Trigger");
             return models.ConvertAll(m => (TriggerModel)m);
         }
         
-        private List<TreeModel> DeserializeTreeModels(TextAsset xml, string modelKey) 
+        private List<BehaviourElementModel> DeserializeBehaviourElementModels(TextAsset xml, string modelKey) 
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(xml.text);
-            XmlNodeList treeModelNodes = document.GetElementsByTagName(modelKey);
+            XmlNodeList behaviourElementModelsNodes = document.GetElementsByTagName(modelKey);
 
-            List<TreeModel> deserializedModels = new List<TreeModel>(treeModelNodes.Count);
-            foreach (XmlNode treeModelNode in treeModelNodes) 
+            List<BehaviourElementModel> deserializedBehaviourModels = 
+                new List<BehaviourElementModel>(behaviourElementModelsNodes.Count);
+            
+            foreach (XmlNode behaviourModelNode in behaviourElementModelsNodes) 
             {
-                TreeModel deserializedTreeModel = modelKey == "State" ? new StateModel() : new TriggerModel();
-                Model model = new Model();
+                BehaviourElementModel behaviourModel = modelKey == "State" ? new StateModel() : new TriggerModel();
+                
+                string modelName = "";
                 List<(string, string)> parametersList = new List<(string, string)>();
-                foreach (XmlNode treeModelField in treeModelNode.ChildNodes) 
+                
+                foreach (XmlNode treeModelField in behaviourModelNode.ChildNodes) 
                 {
                     switch (treeModelField.Name) 
                     {
                         case "Name": 
-                            model.Name = treeModelField.InnerText;
+                            modelName = treeModelField.InnerText;
                             break;
-                        case "ID": 
-                            deserializedTreeModel.ID = Convert.ToInt32(treeModelField.InnerText);
+                        case "Id": 
+                            behaviourModel.Id = Convert.ToInt32(treeModelField.InnerText);
                             break;
                         case "ResetTarget": 
-                            ((TriggerModel)deserializedTreeModel).ResetTarget = Convert.ToBoolean(treeModelField.InnerText);
+                            ((TriggerModel)behaviourModel).ResetTarget = Convert.ToBoolean(treeModelField.InnerText);
                             break;
                         case "Parameters": 
                             parametersList.Capacity = treeModelField.ChildNodes.Count;
                             foreach (XmlNode parameter in treeModelField)
                             {
-                                parametersList.Add(new ValueTuple<string, string>(parameter.FirstChild.InnerText, parameter.LastChild.InnerText));
+                                parametersList.Add(new ValueTuple<string, string>(parameter.FirstChild.InnerText,
+                                    parameter.LastChild.InnerText));
                             }
                             break;
                     }
                 }
-                model.Parameters = parametersList.ToArray();
-                deserializedTreeModel.Model = model;
-                deserializedModels.Add(deserializedTreeModel);
+                behaviourModel.Model = new Model(modelName, parametersList.ToArray());
+                deserializedBehaviourModels.Add(behaviourModel);
             }
-
-            return deserializedModels;
+            return deserializedBehaviourModels;
         }
     }
 }

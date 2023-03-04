@@ -1,9 +1,9 @@
-﻿namespace Code.Runtime
+﻿namespace Code.Runtime.BehaviourElementModels
 {
     public struct Model
     {
-        public string Name;
-        public (string, string)[] Parameters;
+        public string Name { get; }
+        public (string, string)[] Parameters { get; }
 
         public Model(string name, (string, string)[] parameters)
         {
