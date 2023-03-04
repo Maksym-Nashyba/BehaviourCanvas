@@ -2,7 +2,8 @@
 {
     public class StateModel : BehaviourElementModel
     {
-        public bool IsRoot => Id == 1;
+        public const int RootId = -1;
+        public bool IsRoot => Id == RootId;
         
         public StateModel() : base()
         {

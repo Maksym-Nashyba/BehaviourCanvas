@@ -62,7 +62,7 @@ namespace Code.Editor.Serializers
             {
                 XmlElement nodeXML = document.CreateElement(string.Empty, "Node", string.Empty);
                 
-                XmlElement idXML = CreateElementWithContent(document, "Id", node.ID.ToString());
+                XmlElement idXML = CreateElementWithContent(document, "Id", node.Id.ToString());
                 XmlElement xPositionXML = CreateElementWithContent(document, "PositionX", node.GetPosition().x.ToString());
                 XmlElement yPositionXML = CreateElementWithContent(document, "PositionY", node.GetPosition().y.ToString());
                 

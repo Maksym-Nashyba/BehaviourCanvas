@@ -19,7 +19,7 @@ namespace Code.Editor.EditorWindows.Builders.StateBuilder
         private DropdownField _parameterCountDropdown;
         private VisualElement _middleSegment;
 
-        [MenuItem("Window/BehaviourCanvas/StateBuilder")]
+        [MenuItem("Window/CanvasController/StateBuilder")]
         public static void ShowWindow()
         {
             StateBuilder wnd = GetWindow<StateBuilder>();

@@ -11,48 +11,49 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
         private ToolbarButton _toolbarButton;
-        private BehaviourCanvas _canvas;
-
-        [MenuItem("Window/BehaviourCanvas/BehaviourCanvasEditor")]
+        private BehaviourCanvasView _canvasView;
+        
+        [MenuItem("Window/CanvasController/BehaviourCanvasEditor")]
         public static void OpenWindow()
         {
             BehaviourCanvasEditor wnd = GetWindow<BehaviourCanvasEditor>();
             wnd.titleContent = new GUIContent("BehaviourCanvasEditor");
         }
-
+        
         public void CreateGUI()
         {
             VisualElement root = rootVisualElement;
             _visualTreeAsset.CloneTree(root);
             AddStylesheets();
             
-            BehaviourCanvasView canvasView = root.Q<BehaviourCanvasView>();
-            ModelBuilder modelBuilder = root.Q<ModelBuilder>();
+            _canvasView = root.Q<BehaviourCanvasView>();
+            BehaviourElementModelsPool behaviourElementModelsPool = root.Q<BehaviourElementModelsPool>();
             
             string behaviourTreeAssetPath = BehaviourCanvasPaths.BehaviourTreeAssets +"/BehaviourTreeAsset.asset";
             BehaviourTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(behaviourTreeAssetPath);
-            BehaviourCanvasSerializer canvasSerializer = new BehaviourCanvasSerializer(treeAsset);
+            EditorModelSerializer editorModelSerializer = new EditorModelSerializer(treeAsset);
             ViewSerializer viewSerializer = new ViewSerializer(treeAsset);
             
-            canvasView.Initialize(viewSerializer);
-            modelBuilder.Initialize();
-
-            _canvas = new BehaviourCanvas(canvasView, modelBuilder);
-            _canvas.Initialize(canvasSerializer.DeserializeStateModels(), canvasSerializer.DeserializeTriggerModels());
-
+            CanvasModel canvasModel = new CanvasModel();
+            CanvasController canvasController = new CanvasController(canvasModel, editorModelSerializer);
+            
+            _canvasView.Initialize(canvasModel, canvasController, viewSerializer);
+            canvasController.Initialize();
+            behaviourElementModelsPool.Initialize(canvasController);
+            
             _toolbarButton = root.Q<ToolbarButton>();
             _toolbarButton.clicked += () =>
             {
-                canvasSerializer.Serialize(_canvas.States, _canvas.Triggers);
-                viewSerializer.Serialize(canvasView.Nodes);
+                canvasController.SerializeModel();
+                _canvasView.Serialize();
             };
         }
-
+        
         private void OnDisable()
         {
-            _canvas.UnsubscribeFromEvents();
+            _canvasView.UnsubscribeFromEvents();
         }
-
+        
         private void AddStylesheets()
         {
             StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/EditorWindows/" +

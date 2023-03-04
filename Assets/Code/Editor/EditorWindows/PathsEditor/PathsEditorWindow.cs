@@ -12,7 +12,7 @@ namespace Code.Editor.EditorWindows.PathsEditor
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
         private Dictionary<string, PathVisualElement> _idToPathField;
 
-        [MenuItem("Window/BehaviourCanvas/PathsEditor")]
+        [MenuItem("Window/CanvasController/PathsEditor")]
         public static void ShowWindow()
         {
             PathsEditorWindow wnd = GetWindow<PathsEditorWindow>();

@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Code.Editor.Serializers
 {
-    public sealed class BehaviourCanvasSerializer : EditorSerializer
+    public sealed class EditorModelSerializer : EditorSerializer
     {
         private readonly ModelSerializer _modelSerializer;
         
-        public BehaviourCanvasSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset)
+        public EditorModelSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset)
         {
             _modelSerializer = new ModelSerializer();
             ValidateTreeAsset(treeAsset);

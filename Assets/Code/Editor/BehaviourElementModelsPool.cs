@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace Code.Editor
 {
-    public class ModelBuilder : VisualElement
+    public class BehaviourElementModelsPool : VisualElement
     {
         #region VisualElements
             private Button _statesSectionButton;
@@ -22,18 +22,18 @@ namespace Code.Editor
             private Button _createTriggerButton;
         #endregion
 
-        public event Action<Model> CreateState;
-        public event Action<Model> CreateTrigger;
+        private CanvasController _canvasController;
 
-        public new class UxmlFactory : UxmlFactory<ModelBuilder> { }
+        public new class UxmlFactory : UxmlFactory<BehaviourElementModelsPool> { }
 
-        public ModelBuilder()
+        public BehaviourElementModelsPool()
         {
             
         }
 
-        public void Initialize()
+        public void Initialize(CanvasController canvasController)
         {
+            _canvasController = canvasController;
             QueryAllVisualElements();
             UpdateStatesList();
             UpdateTriggersList();
@@ -44,7 +44,8 @@ namespace Code.Editor
         {
             _statesScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllStates();
-            List<Button> buttons = CreateTreeModelsButtons(models, model => CreateState?.Invoke(model));
+            List<Button> buttons = CreateBehaviourElementModelsButtons(models, 
+                model => _canvasController.CreateState(model));
             foreach (Button button in buttons)
             {
                 _statesScrollView.Add(button);
@@ -55,14 +56,15 @@ namespace Code.Editor
         {
             _triggersScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllTriggers();
-            List<Button> buttons = CreateTreeModelsButtons(models, model => CreateTrigger?.Invoke(model));
+            List<Button> buttons = CreateBehaviourElementModelsButtons(models, 
+                model => _canvasController.CreateTrigger(model));
             foreach (Button button in buttons)
             {
                 _triggersScrollView.Add(button);
             }
         }
 
-        private List<Button> CreateTreeModelsButtons(IReadOnlyList<Model> models, Action<Model> buttonClickEvent)
+        private List<Button> CreateBehaviourElementModelsButtons(IReadOnlyList<Model> models, Action<Model> buttonClickEvent)
         {
             List<Button> buttons = new List<Button>(models.Count);
             foreach (Model model in models)

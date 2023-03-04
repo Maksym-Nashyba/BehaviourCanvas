@@ -19,7 +19,7 @@ namespace Code.Editor.EditorWindows.Builders.TriggerBuilder
         private DropdownField _parameterCountDropdown;
         private VisualElement _middleSegment;
 
-        [MenuItem("Window/BehaviourCanvas/TriggerBuilder")]
+        [MenuItem("Window/CanvasController/TriggerBuilder")]
         public static void ShowWindow()
         {
             TriggerBuilder wnd = GetWindow<TriggerBuilder>();

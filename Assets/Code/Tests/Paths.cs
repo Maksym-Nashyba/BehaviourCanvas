@@ -14,7 +14,7 @@ namespace Code.Tests
         {
             foreach (string id in BehaviourCanvasPaths.Ids)
             {
-                if(!EditorPrefs.HasKey(id)) Assert.Fail($"No path set for {id}. Go to Window/BehaviourCanvas/PathsEditor");
+                if(!EditorPrefs.HasKey(id)) Assert.Fail($"No path set for {id}. Go to Window/CanvasController/PathsEditor");
             }
             Assert.Pass();
         }

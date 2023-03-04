@@ -39,7 +39,7 @@ namespace Code.Editor
 
         public static string GetSavedPath(string id)
         {
-            if (!EditorPrefs.HasKey(id)) throw new InvalidPathException($"Path not set for {id}. Go to 'Window/BehaviourCanvas/PathsEditor'");
+            if (!EditorPrefs.HasKey(id)) throw new InvalidPathException($"Path not set for {id}. Go to 'Window/CanvasController/PathsEditor'");
             return EditorPrefs.GetString(id);
         }
 
