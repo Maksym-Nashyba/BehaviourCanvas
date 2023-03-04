@@ -5,7 +5,7 @@
         public int ID => _id++;
         private int _id;
         
-        public IdStore(int id = 1)
+        public IdStore(int id)
         {
             _id = id;
         }

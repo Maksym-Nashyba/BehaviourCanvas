@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85fee48623b241dfa3e2e0f7953ce725, type: 3}
   m_Name: BehaviourTreeAsset
   m_EditorClassIdentifier: 
-  _behaviourTreeXML: {fileID: 0}
-  _editorTreeXML: {fileID: 0}
+  _behaviourTreeXML: {fileID: 4900000, guid: 0424002e8bc2a76439407be439ce4c56, type: 3}
+  _nodeTreeXML: {fileID: 4900000, guid: 3a7967623948e244ba24ff467ad4a10e, type: 3}

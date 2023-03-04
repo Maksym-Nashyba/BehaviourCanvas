@@ -7,7 +7,7 @@ namespace Code.Editor
 {
     public class BehaviourCanvas
     {
-        public StateModel RootState => _states.Find(state => state.ID == 1);
+        public StateModel RootState => _states.First(state => state.ID == -1);
         public IReadOnlyList<StateModel> States => _states;
         public IReadOnlyList<TriggerModel> Triggers => _triggers;
         
@@ -30,7 +30,7 @@ namespace Code.Editor
             
             _states = new List<StateModel>();
             _triggers = new List<TriggerModel>();
-            _idStore = new IdStore(GetBiggestId(states, triggers) + 1);
+            _idStore = new IdStore(GetIncrementedBiggestId(states, triggers));
 
             if (states.Count == 0 && triggers.Count == 0) return;
             CreateBehaviourTree(states, triggers);
@@ -41,6 +41,7 @@ namespace Code.Editor
             _modelBuilder.CreateState -= CreateState;
             _modelBuilder.CreateTrigger += CreateTrigger;
             _view.DeleteTreeModel -= DeleteTreeModel;
+            _view.SetRootState += SetRootState;
         }
 
         private void SubscribeOnEvents()
@@ -48,13 +49,14 @@ namespace Code.Editor
             _modelBuilder.CreateState += CreateState;
             _modelBuilder.CreateTrigger += CreateTrigger;
             _view.DeleteTreeModel += DeleteTreeModel;
+            _view.SetRootState += SetRootState;
         }
 
-        private int GetBiggestId(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
+        private int GetIncrementedBiggestId(IReadOnlyList<StateModel> states, IReadOnlyList<TriggerModel> triggers)
         {
-            int firstId = states.Count != 0 ? states[^1].ID : 0;
-            int secondId = triggers.Count != 0 ? triggers[^1].ID : 0;
-            return Math.Max(firstId, secondId);
+            int firstId = states.Count != 0 ? states[^1].ID : -2;
+            int secondId = triggers.Count != 0 ? triggers[^1].ID : -2;
+            return Math.Max(firstId, secondId) + 1;
         }
 
         private void CreateBehaviourTree(List<StateModel> states, List<TriggerModel> triggers)
@@ -67,6 +69,14 @@ namespace Code.Editor
             {
                 CreateTrigger(trigger);
             }
+        }
+
+        private void SetRootState(int stateId)
+        {
+            int oldRootStateNewId = _idStore.ID;
+            RootState.ID = oldRootStateNewId;
+            _states.First(state => state.ID == stateId).ID = -1;
+            _view.SetRootNode(stateId, oldRootStateNewId);
         }
 
         private void CreateState(Model model)
@@ -98,11 +108,13 @@ namespace Code.Editor
             foreach (StateModel state in _states.Where(state => state.ID == modelID))
             {
                 DeleteState(state);
+                _idStore = new IdStore(GetIncrementedBiggestId(_states, _triggers));
                 return;
             }
             foreach (TriggerModel trigger in _triggers.Where(trigger => trigger.ID == modelID))
             {
                 DeleteTrigger(trigger);
+                _idStore = new IdStore(GetIncrementedBiggestId(_states, _triggers));
                 return;
             }
         }

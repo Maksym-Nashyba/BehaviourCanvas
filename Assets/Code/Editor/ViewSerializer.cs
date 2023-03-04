@@ -24,18 +24,15 @@ namespace Code.Editor
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(TreeAsset.NodeTreeXML.text);
-            XmlNodeList nodes = document.GetElementsByTagName("Node");
-            Rect position = new Rect(0, 0, 200, 100);
-            foreach (XmlNode node in nodes)
+            XmlNodeList ids = document.GetElementsByTagName("ID");
+            Rect position = new Rect(0, 0, 500, 250);
+            foreach (XmlNode id in ids)
             {
-                foreach (XmlNode nodeField in node.ChildNodes)
-                {
-                    if (nodeField.FirstChild.InnerText != nodeID) continue;
+                if (id.FirstChild.InnerText != nodeID) continue;
                     
-                    position.x = Convert.ToSingle(node.ChildNodes[1].InnerText);
-                    position.y = Convert.ToSingle(node.LastChild.InnerText);
-                    break;
-                }
+                position.x = Convert.ToSingle(id.ParentNode.ChildNodes[1].InnerText);
+                position.y = Convert.ToSingle(id.ParentNode.LastChild.InnerText);
+                break;
             }
 
             return position;
