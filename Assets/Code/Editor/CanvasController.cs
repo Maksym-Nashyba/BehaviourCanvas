@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Code.Editor.Serializers;
+﻿using Code.Editor.Serializers;
 using Code.Runtime.BehaviourElementModels;
 
 namespace Code.Editor
@@ -20,19 +18,28 @@ namespace Code.Editor
         public void Initialize()
         {
             DeserializeModel();
-            _idStore = new IdStore(GetIncrementedBiggestId());
+            _idStore = new IdStore(_canvasModel.GetCurrentBiggestId() + 1);
         }
 
         public void SerializeModel()
         {
             _modelSerializer.Serialize(_canvasModel.States, _canvasModel.Triggers);
         }
-        
+
         public void SetRootState(int stateId)
         {
-            if(stateId == StateModel.RootId) return;
-            _canvasModel.RootState.Id = _idStore.ID;
-            _canvasModel.States.First(state => state.Id == stateId).Id = StateModel.RootId;
+            if (stateId == StateModel.RootId) return;
+            _canvasModel.SetRootState(stateId);
+        }
+
+        public void SetTargetModel(int startModelId, int targetModelId)
+        {
+            _canvasModel.SetTargetModel(startModelId, targetModelId);
+        }
+
+        public void ClearTargetModel(int modelId)
+        {
+            _canvasModel.ClearTargetModel(modelId);
         }
 
         public void CreateState(Model model)
@@ -45,6 +52,13 @@ namespace Code.Editor
         {
             TriggerModel trigger = new TriggerModel(_idStore.ID, model, false);
             AddTriggerToModel(trigger);
+        }
+        
+        public void DeleteBehaviourElementModel(int modelId)
+        {
+            if(_canvasModel.IsState(modelId)) _canvasModel.RemoveState(modelId);
+            else if (_canvasModel.IsTrigger(modelId)) _canvasModel.RemoveTrigger(modelId);
+            _idStore = new IdStore(_canvasModel.GetCurrentBiggestId() + 1);
         }
         
         private void DeserializeModel()
@@ -61,32 +75,6 @@ namespace Code.Editor
         private void AddTriggerToModel(TriggerModel trigger)
         {
             _canvasModel.AddTrigger(trigger);
-        }
-        
-        public void DeleteTreeModel(int modelID)
-        {
-            foreach (StateModel state in _canvasModel.States)
-            {
-                if (state.Id != modelID) continue;
-                _canvasModel.RemoveState(state);
-                _idStore = new IdStore(GetIncrementedBiggestId());
-                return;
-            }
-            
-            foreach (TriggerModel trigger in _canvasModel.Triggers)
-            {
-                if (trigger.Id != modelID) continue;
-                _canvasModel.RemoveTrigger(trigger);
-                _idStore = new IdStore(GetIncrementedBiggestId());
-                return;
-            }
-        }
-        
-        private int GetIncrementedBiggestId()
-        {
-            int firstId = _canvasModel.States.Count != 0 ? _canvasModel.States[^1].Id : StateModel.RootId - 1;
-            int secondId = _canvasModel.Triggers.Count != 0 ? _canvasModel.Triggers[^1].Id : StateModel.RootId - 1;
-            return Math.Max(firstId, secondId) + 1;
         }
     }
 }

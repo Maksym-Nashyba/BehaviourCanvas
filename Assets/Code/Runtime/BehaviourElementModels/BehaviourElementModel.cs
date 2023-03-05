@@ -4,6 +4,12 @@
     {
         public int Id { get; set; }
         public Model Model { get; set; }
+        public IReadOnlyBehaviourElementModel SetTargetModel
+        {
+            set => _targetModel = value;
+        }
+
+        private IReadOnlyBehaviourElementModel _targetModel;
 
         protected BehaviourElementModel()
         {
@@ -22,14 +28,14 @@
             return Id;
         }
 
-        public string GetName()
+        public Model GetModel()
         {
-            return Model.Name;
+            return Model;
         }
 
-        public (string, string)[] GetParameters()
+        public IReadOnlyBehaviourElementModel GetTargetModel()
         {
-            return Model.Parameters;
+            return _targetModel;
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿using System;
 using Code.Runtime.BehaviourElementModels;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Code.Editor
 {
     public class NodeView : Node
     {
-        public int Id => _behaviourElementModel.GetId();
+        public int ModelId => _behaviourElementModel.GetId();
         public Type ModelType => _behaviourElementModel.GetType();
+
         private readonly IReadOnlyBehaviourElementModel _behaviourElementModel;
 
         public NodeView(IReadOnlyBehaviourElementModel behaviourElementModel)
@@ -18,14 +20,20 @@ namespace Code.Editor
 
         public void Draw()
         {
-            
-            TextField titleTextField = new TextField()
-            {
-                value = _behaviourElementModel.GetName()
-            };
-            titleContainer.Insert(0, titleTextField);
+            UpdateNodeTitleDisplay();
 
             /*--------------------------------------------*/
+
+            Type portType = _behaviourElementModel is TriggerModel ? typeof(StateModel) : typeof(TriggerModel);
+            Port.Capacity outputPortCapacity = _behaviourElementModel is TriggerModel ? Port.Capacity.Single : Port.Capacity.Multi;
+            Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, portType);
+            Port outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, outputPortCapacity, portType);
+
+            inputPort.portName = "Input";
+            outputPort.portName = "Output";
+            
+            inputContainer.Add(inputPort);
+            outputContainer.Add(outputPort);
             
             //TODO if(_behaviourElementModel is IReadOnlyTriggerModel) AddCheckBoxField;
             
@@ -35,7 +43,7 @@ namespace Code.Editor
                 text = "Parameters"
             };
 
-            foreach ((string, string) parameter in _behaviourElementModel.GetParameters())
+            foreach ((string, string) parameter in _behaviourElementModel.GetModel().Parameters)
             {
                 Foldout parameterFoldout = new Foldout()
                 {
@@ -47,6 +55,17 @@ namespace Code.Editor
 
             parametersContainer.Add(parametersFoldout);
             extensionContainer.Add(parametersContainer);
+        }
+        
+        public void UpdateNodeTitleDisplay()
+        {
+            Label titleLabel = new Label()
+            {
+                text = "Name: " + _behaviourElementModel.GetModel().Name + "\nId: " + _behaviourElementModel.GetId(),
+                style = { unityTextAlign = new StyleEnum<TextAnchor>(TextAnchor.MiddleCenter)}
+            };
+            titleContainer.RemoveAt(0);
+            titleContainer.Insert(0, titleLabel);
         }
     }
 }

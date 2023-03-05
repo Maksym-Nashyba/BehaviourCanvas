@@ -24,7 +24,7 @@ namespace Code.Editor.Serializers
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(TreeAsset.NodeTreeXML.text);
-            XmlNodeList ids = document.GetElementsByTagName("Id");
+            XmlNodeList ids = document.GetElementsByTagName("ModelId");
             Rect position = new Rect(0, 0, 500, 250);
             foreach (XmlNode id in ids)
             {
@@ -62,7 +62,7 @@ namespace Code.Editor.Serializers
             {
                 XmlElement nodeXML = document.CreateElement(string.Empty, "Node", string.Empty);
                 
-                XmlElement idXML = CreateElementWithContent(document, "Id", node.Id.ToString());
+                XmlElement idXML = CreateElementWithContent(document, "ModelId", node.ModelId.ToString());
                 XmlElement xPositionXML = CreateElementWithContent(document, "PositionX", node.GetPosition().x.ToString());
                 XmlElement yPositionXML = CreateElementWithContent(document, "PositionY", node.GetPosition().y.ToString());
                 

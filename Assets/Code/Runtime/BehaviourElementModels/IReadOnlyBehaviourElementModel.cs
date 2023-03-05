@@ -3,7 +3,7 @@
     public interface IReadOnlyBehaviourElementModel
     {
         public int GetId();
-        public string GetName();
-        public (string, string)[] GetParameters();
+        public Model GetModel();
+        public IReadOnlyBehaviourElementModel GetTargetModel();
     }
 }

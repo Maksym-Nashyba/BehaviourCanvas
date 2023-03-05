@@ -9,53 +9,108 @@ namespace Code.Editor
     {
         public event Action Changed;
         public event Action<IReadOnlyBehaviourElementModel> ModelAdded;
-        public event Action<int> ModelRemoved;
+        public event Action<int> ModelRemoved; //TODO subscribe runtimeXml serialize
 
-        public StateModel RootState => _states.First(state => state.IsRoot);
-        public IReadOnlyList<StateModel> States => _states;
-        public IReadOnlyList<TriggerModel> Triggers => _triggers;
+        public IReadOnlyBehaviourElementModel RootState => _stateDictionary[StateModel.RootId];
+        public IReadOnlyList<IReadOnlyBehaviourElementModel> States => _stateDictionary.Values.ToList().AsReadOnly();
+        public IReadOnlyList<IReadOnlyTriggerModel> Triggers => _triggerDictionary.Values.ToList().AsReadOnly();
 
-        private List<StateModel> _states;
-        private List<TriggerModel> _triggers;
+        private readonly Dictionary<int, IReadOnlyBehaviourElementModel> _stateDictionary;
+        private readonly Dictionary<int, IReadOnlyTriggerModel> _triggerDictionary;
 
         public CanvasModel()
         {
-            _states = new List<StateModel>();
-            _triggers = new List<TriggerModel>();
+            _stateDictionary = new Dictionary<int, IReadOnlyBehaviourElementModel>();
+            _triggerDictionary = new Dictionary<int, IReadOnlyTriggerModel>();
         }
 
         public void Deserialize(List<StateModel> states, List<TriggerModel> triggers)
         {
-            _states = states;
-            _triggers = triggers;
+            foreach (StateModel state in states)
+            {
+                _stateDictionary.Add(state.Id, state);
+            }
+            foreach (TriggerModel trigger in triggers)
+            {
+                _triggerDictionary.Add(trigger.Id, trigger);
+            }
             Changed?.Invoke();
         }
 
+        public int GetCurrentBiggestId()
+        {
+            int firstId = _stateDictionary.Count != 0 ? _stateDictionary.Max(pair => pair.Value.GetId()) : StateModel.RootId - 1;
+            int secondId = _triggerDictionary.Count != 0 ? _triggerDictionary.Max(pair => pair.Value.GetId()) : StateModel.RootId - 1;
+            return Math.Max(firstId, secondId);
+        }
+
+        public void SetTargetModel(int startModelId, int targetModelId)
+        {
+            if (GetModelById(startModelId) is BehaviourElementModel startModel) 
+                startModel.SetTargetModel = GetModelById(targetModelId);
+        }
+
+        public void ClearTargetModel(int modelId)
+        {
+            if (GetModelById(modelId) is BehaviourElementModel model) model.SetTargetModel = null;
+        }
+        
+        private IReadOnlyBehaviourElementModel GetModelById(int modelId)
+        {
+            IReadOnlyBehaviourElementModel model = null;
+            if (_stateDictionary.TryGetValue(modelId, out IReadOnlyBehaviourElementModel stateModel))
+            {
+                model = stateModel;
+            }
+            else if (_triggerDictionary.TryGetValue(modelId, out IReadOnlyTriggerModel triggerModel))
+            {
+                model = triggerModel;
+            }
+            return model;
+        }
+
         #region States
+        public bool IsState(int modelId)
+        {
+            return _stateDictionary.ContainsKey(modelId);
+        }
+
+        public void SetRootState(int stateId)
+        {
+            BehaviourElementModel newRootState = _stateDictionary[stateId] as BehaviourElementModel;
+            if (RootState is BehaviourElementModel oldRootState) oldRootState.Id = stateId;
+            if (newRootState != null) newRootState.Id = StateModel.RootId;
+        }
+        
         public void AddState(StateModel state)
         {
-            _states.Add(state);
+            _stateDictionary.Add(state.Id, state);
             ModelAdded?.Invoke(state);
         }
 
-        public void RemoveState(StateModel state)
+        public void RemoveState(int stateId)
         {
-            _states.Remove(state);
-            ModelRemoved?.Invoke(state.Id); 
+            _stateDictionary.Remove(stateId);
+            ModelRemoved?.Invoke(stateId); 
         }
         #endregion
         
         #region Triggers
+        public bool IsTrigger(int modelId)
+        {
+            return _triggerDictionary.ContainsKey(modelId);
+        }
+        
         public void AddTrigger(TriggerModel trigger)
         {
-            _triggers.Add(trigger);
+            _triggerDictionary.Add(trigger.Id, trigger);
             ModelAdded?.Invoke(trigger);
         }
 
-        public void RemoveTrigger(TriggerModel trigger)
+        public void RemoveTrigger(int triggerId)
         {
-            _triggers.Remove(trigger);
-            ModelRemoved?.Invoke(trigger.Id);
+            _triggerDictionary.Remove(triggerId);
+            ModelRemoved?.Invoke(triggerId);
         }
         #endregion
     }

@@ -10,8 +10,6 @@ namespace Code.Editor
 {
     public class BehaviourCanvasView : GraphView
     {
-        public IReadOnlyList<NodeView> Nodes => _nodes;
-
         private List<NodeView> _nodes;
         private CanvasModel _canvasModel;
         private CanvasController _canvasController;
@@ -42,12 +40,13 @@ namespace Code.Editor
             ContextualMenuManipulator contextualMenuManipulator = new ContextualMenuManipulator(
                 menuEvent =>
                 {
-                    if (menuEvent.target is NodeView node && node.ModelType != typeof(TriggerModel))
+                    if (menuEvent.target is NodeView node && node.ModelType != typeof(TriggerModel)) //TODO check this with IReadOnlyTriggerModel
                     {
                         menuEvent.menu.AppendAction("Set root state", 
                             _ =>
                             {
-                                _canvasController.SetRootState(node.Id);
+                                _canvasController.SetRootState(node.ModelId);
+                                _nodes.ForEach(nodeView => nodeView.UpdateNodeTitleDisplay());
                                 Serialize();
                             });
                     }
@@ -78,7 +77,6 @@ namespace Code.Editor
         {
             _canvasModel.Changed -= BuildGraph;
             _canvasModel.ModelAdded -= CreateNodeView;
-            _canvasModel.ModelRemoved -= DeleteNode;
             graphViewChanged -= OnGraphViewChanged;
         }
         
@@ -86,7 +84,6 @@ namespace Code.Editor
         {
             _canvasModel.Changed += BuildGraph;
             _canvasModel.ModelAdded += CreateNodeView;
-            _canvasModel.ModelRemoved += DeleteNode;
             graphViewChanged += OnGraphViewChanged;
         }
         #endregion
@@ -98,13 +95,13 @@ namespace Code.Editor
 
         private void BuildGraph()
         {
-            foreach (StateModel state in _canvasModel.States)
+            foreach (IReadOnlyBehaviourElementModel state in _canvasModel.States)
             {
-                CreateNodeView(state, FindNodePosition(state.Id));
+                CreateNodeView(state, FindNodePosition(state.GetId()));
             }
-            foreach (TriggerModel trigger in _canvasModel.Triggers)
+            foreach (IReadOnlyTriggerModel trigger in _canvasModel.Triggers)
             {
-                CreateNodeView(trigger, FindNodePosition(trigger.Id));
+                CreateNodeView(trigger, FindNodePosition(trigger.GetId()));
             }
         }
         
@@ -127,25 +124,42 @@ namespace Code.Editor
             AddElement(node);
         }
 
-        private void DeleteNode(int modelID)
+        private void DeleteNode(NodeView node)
         {
-            NodeView nodeView = _nodes.Find(node => node.Id == modelID);
-            _nodes.Remove(nodeView);
-            contentViewContainer[0].Remove(nodeView);
+            _canvasController.DeleteBehaviourElementModel(node.ModelId);
+            _nodes.Remove(node);
+            //Node on graph will be removed automatically by graphViewChange.DeleteElements
+        }
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            List<Port> compatiblePorts = new List<Port>();
+
+            ports.ForEach(port =>
+            {
+                if (((NodeView) startPort.node).ModelType == ((NodeView) port.node).ModelType) return;
+                if (startPort == port) return;
+                if (startPort.node == port.node) return;
+                if (startPort.direction == port.direction) return;
+                compatiblePorts.Add(port);
+            });
+            return compatiblePorts;
         }
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            if (graphViewChange.elementsToRemove == null)
+            graphViewChange.elementsToRemove?.ForEach(element =>
             {
-                Serialize();
-                return graphViewChange;
-            }
-            graphViewChange.elementsToRemove.ForEach(element =>
-            {
-                if (element is NodeView node) _canvasController.DeleteTreeModel(node.Id);
+                if (element is NodeView node) DeleteNode(node);
+                if (element is Edge edge) _canvasController.ClearTargetModel(((NodeView) edge.output.node).ModelId);
+                
             });
-            graphViewChange.elementsToRemove.Clear();
+            graphViewChange.edgesToCreate?.ForEach(edge =>
+            {
+                NodeView startNode = edge.output.node as NodeView;
+                NodeView targetNode = edge.input.node as NodeView;
+                _canvasController.SetTargetModel(startNode.ModelId, targetNode.ModelId);
+            });
             Serialize();
             return graphViewChange;
         }
