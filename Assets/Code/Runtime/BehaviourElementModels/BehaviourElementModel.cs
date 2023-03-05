@@ -1,16 +1,19 @@
-﻿namespace Code.Runtime.BehaviourElementModels
+﻿using System.Collections.Generic;
+
+namespace Code.Runtime.BehaviourElementModels
 {
     public abstract class BehaviourElementModel : IReadOnlyBehaviourElementModel
     {
         public int Id { get; set; }
         public Model Model { get; set; }
-        public IReadOnlyBehaviourElementModel SetTargetModel
+        
+        public List<IReadOnlyBehaviourElementModel> SetTargetModels
         {
-            set => _targetModel = value;
+            set => _targetModels = value;
         }
-
-        private IReadOnlyBehaviourElementModel _targetModel;
-
+        
+        private List<IReadOnlyBehaviourElementModel> _targetModels;
+        
         protected BehaviourElementModel()
         {
             Id = 0;
@@ -33,9 +36,9 @@
             return Model;
         }
 
-        public IReadOnlyBehaviourElementModel GetTargetModel()
+        public List<IReadOnlyBehaviourElementModel> GetTargetModels()
         {
-            return _targetModel;
+            return _targetModels;
         }
     }
 }

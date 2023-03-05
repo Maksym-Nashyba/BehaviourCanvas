@@ -10,10 +10,10 @@ namespace Code.Editor
 {
     public class BehaviourCanvasView : GraphView
     {
-        private List<NodeView> _nodes;
         private CanvasModel _canvasModel;
         private CanvasController _canvasController;
-        private ViewSerializer _serializer;
+        private ViewSerializer _serializer;        
+        private Dictionary<int, NodeView> _nodes;
 
         #region UIToolkitRegion
         
@@ -46,7 +46,10 @@ namespace Code.Editor
                             _ =>
                             {
                                 _canvasController.SetRootState(node.ModelId);
-                                _nodes.ForEach(nodeView => nodeView.UpdateNodeTitleDisplay());
+                                foreach (NodeView nodeView in _nodes.Values)
+                                {
+                                    nodeView.UpdateNodeTitleDisplay();
+                                }
                                 Serialize();
                             });
                     }
@@ -69,7 +72,7 @@ namespace Code.Editor
             _canvasModel = canvasModel;
             _canvasController = canvasController;
             _serializer = serializer;
-            _nodes = new List<NodeView>();
+            _nodes = new Dictionary<int, NodeView>();
             SubscribeOnEvents();
         }
         
@@ -90,7 +93,7 @@ namespace Code.Editor
 
         public void Serialize()
         {
-            _serializer.Serialize(_nodes);
+            _serializer.Serialize(_nodes.Values);
         }
 
         private void BuildGraph()
@@ -103,6 +106,9 @@ namespace Code.Editor
             {
                 CreateNodeView(trigger, FindNodePosition(trigger.GetId()));
             }
+
+            LoadNodesConnections(_canvasModel.States);
+            LoadNodesConnections(_canvasModel.Triggers);
         }
         
         private Rect FindNodePosition(int id)
@@ -120,14 +126,29 @@ namespace Code.Editor
             NodeView node = new NodeView(model);
             node.SetPosition(position);
             node.Draw();
-            _nodes.Add(node);
+            _nodes.Add(model.GetId(), node);
             AddElement(node);
+        }
+
+        private void LoadNodesConnections(IReadOnlyCollection<IReadOnlyBehaviourElementModel> models)
+        {
+            foreach (IReadOnlyBehaviourElementModel model in models)
+            {
+                if (model.GetTargetModels() == null) continue;
+                NodeView startNode = _nodes[model.GetId()];
+                foreach (IReadOnlyBehaviourElementModel targetModel in model.GetTargetModels())
+                {
+                    if (targetModel == null) continue;
+                    Edge edge = startNode.OutputPort.ConnectTo(_nodes[targetModel.GetId()].InputPort);
+                    AddElement(edge);
+                }
+            }
         }
 
         private void DeleteNode(NodeView node)
         {
             _canvasController.DeleteBehaviourElementModel(node.ModelId);
-            _nodes.Remove(node);
+            _nodes.Remove(node.ModelId);
             //Node on graph will be removed automatically by graphViewChange.DeleteElements
         }
 
@@ -154,12 +175,15 @@ namespace Code.Editor
                 if (element is Edge edge) _canvasController.ClearTargetModel(((NodeView) edge.output.node).ModelId);
                 
             });
-            graphViewChange.edgesToCreate?.ForEach(edge =>
+            if (graphViewChange.edgesToCreate != null)
             {
-                NodeView startNode = edge.output.node as NodeView;
-                NodeView targetNode = edge.input.node as NodeView;
-                _canvasController.SetTargetModel(startNode.ModelId, targetNode.ModelId);
-            });
+                graphViewChange.edgesToCreate.ForEach(edge =>
+                {
+                    NodeView startNode = edge.output.node as NodeView;
+                    NodeView targetNode = edge.input.node as NodeView;
+                    _canvasController.SetTargetModels(startNode.ModelId, targetNode.ModelId);
+                });
+            }
             Serialize();
             return graphViewChange;
         }

@@ -18,12 +18,17 @@ namespace Code.Editor.Serializers
             ValidateTreeAsset(treeAsset);
         }
 
-        public void Serialize(IReadOnlyList<IReadOnlyBehaviourElementModel> states, IReadOnlyList<IReadOnlyTriggerModel> triggers)
+        public void Serialize(IReadOnlyCollection<IReadOnlyBehaviourElementModel> states, IReadOnlyCollection<IReadOnlyTriggerModel> triggers)
         {
             TextAsset xml = CreateXML(states, triggers);
             TreeAsset.UpdateBehaviourTreeXML(xml);
         }
 
+        public List<(int, int[])> DeserializeModelsAndTargets()
+        {
+            return _modelSerializer.DeserializeModelsWithTargets(TreeAsset.BehaviourTreeXML);
+        }
+        
         public List<StateModel> DeserializeStateModels()
         {
             return _modelSerializer.DeserializeStateModels(TreeAsset.BehaviourTreeXML);
@@ -34,15 +39,15 @@ namespace Code.Editor.Serializers
             return _modelSerializer.DeserializeTriggerModels(TreeAsset.BehaviourTreeXML);
         }
 
-        private TextAsset CreateXML(IReadOnlyList<IReadOnlyBehaviourElementModel> states, IReadOnlyList<IReadOnlyTriggerModel> triggers)
+        private TextAsset CreateXML(IReadOnlyCollection<IReadOnlyBehaviourElementModel> states, IReadOnlyCollection<IReadOnlyTriggerModel> triggers)
         {
             XmlDocument document = new XmlDocument();
             
             XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BehaviourTree", string.Empty);
             document.AppendChild(behaviourCanvasXML);
 
-            XmlElement statesXML = CreateTreeModelsXML(document, states, "State");
-            XmlElement triggersXML = CreateTreeModelsXML(document, triggers, "Trigger");
+            XmlElement statesXML = CreateTreeModelsXML(document, states.ToList(), "State");
+            XmlElement triggersXML = CreateTreeModelsXML(document, triggers.ToList(), "Trigger");
             
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);
@@ -52,21 +57,39 @@ namespace Code.Editor.Serializers
             return xml;
         }
 
-        private XmlElement CreateTreeModelsXML(XmlDocument document, IReadOnlyList<IReadOnlyBehaviourElementModel> treeModels, string modelKey)
+        private XmlElement CreateTreeModelsXML(XmlDocument document, IReadOnlyList<IReadOnlyBehaviourElementModel> behaviourElementModels, string modelKey)
         {
-            XmlElement treeModelsXml = CreateModelsXML(document, treeModels.Select(treeModel => treeModel.GetModel()).ToList(), modelKey);
+            XmlElement behaviourElementModelsXml = CreateModelsXML(document, 
+                behaviourElementModels.Select(treeModel => treeModel.GetModel()).ToList(), modelKey);
             
-            for (int i = 0; i < treeModels.Count; i++)
+            for (int i = 0; i < behaviourElementModels.Count; i++)
             {
-                XmlElement idXML = CreateElementWithContent(document, "Id", treeModels[i].GetId().ToString());
-                treeModelsXml.ChildNodes[i].AppendChild(idXML);
+                XmlElement idXML = CreateElementWithContent(document, "Id", behaviourElementModels[i].GetId().ToString());
+                behaviourElementModelsXml.ChildNodes[i].AppendChild(idXML);
 
-                if (treeModels[i] is not IReadOnlyTriggerModel triggerModel) continue;
-                XmlElement resetTargetXML = CreateElementWithContent(document, "ResetTarget", 
-                    triggerModel.GetResetTarget().ToString());
-                treeModelsXml.ChildNodes[i].AppendChild(resetTargetXML);
+                if (behaviourElementModels[i] is IReadOnlyTriggerModel triggerModel)
+                {
+                    XmlElement resetTargetXML = CreateElementWithContent(document, "ResetTarget", 
+                        triggerModel.GetResetTarget().ToString());
+                    behaviourElementModelsXml.ChildNodes[i].AppendChild(resetTargetXML);
+                }
+                
+                XmlElement targetModelsXML = document.CreateElement(string.Empty, "TargetModels", string.Empty);
+                if (behaviourElementModels[i].GetTargetModels() == null)
+                {
+                    behaviourElementModelsXml.ChildNodes[i].AppendChild(targetModelsXML);
+                    continue;
+                }
+                foreach (IReadOnlyBehaviourElementModel targetModel in behaviourElementModels[i].GetTargetModels())
+                {
+                    string targetModelId = targetModel == null ? "" : targetModel.GetId().ToString();
+                    XmlElement targetIdXML = CreateElementWithContent(document, "TargetId", targetModelId);
+                    targetModelsXML.AppendChild(targetIdXML);
+                }
+
+                behaviourElementModelsXml.ChildNodes[i].AppendChild(targetModelsXML);
             }
-            return treeModelsXml;
+            return behaviourElementModelsXml;
         }
         
         private XmlElement CreateModelsXML(XmlDocument document, IReadOnlyList<Model> models, string modelKey)

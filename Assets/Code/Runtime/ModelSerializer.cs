@@ -8,6 +8,31 @@ namespace Code.Runtime
 {
     public class ModelSerializer
     {
+        public List<(int, int[])> DeserializeModelsWithTargets(TextAsset xml)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml.text);
+            XmlNodeList idNodes = document.GetElementsByTagName("Id");
+
+            List<(int, int[])> modelsAndTargets = new List<(int, int[])>();
+            
+            foreach (XmlNode idNode in idNodes)
+            {
+                if (idNode.ParentNode.LastChild.ChildNodes.Count == 0) continue;
+                int modelId = Convert.ToInt32(idNode.InnerText);
+                XmlNodeList targetModelsXml = idNode.ParentNode.LastChild.ChildNodes;
+                List<int> targetModelIds = new List<int>(targetModelsXml.Count);
+                
+                foreach (XmlNode targetModelNode in targetModelsXml)
+                {
+                    if (targetModelNode.InnerText == "") continue;
+                    targetModelIds.Add(Convert.ToInt32(targetModelNode.InnerText));
+                }
+                modelsAndTargets.Add((modelId, targetModelIds.ToArray()));
+            }
+            return modelsAndTargets;
+        }
+        
         public List<StateModel> DeserializeStateModels(TextAsset xml) 
         {
             List<BehaviourElementModel> models = DeserializeBehaviourElementModels(xml, "State");

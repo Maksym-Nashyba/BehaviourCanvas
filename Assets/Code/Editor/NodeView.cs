@@ -8,6 +8,9 @@ namespace Code.Editor
 {
     public class NodeView : Node
     {
+        public Port InputPort => inputContainer[0] as Port;
+        public Port OutputPort => outputContainer[0] as Port;
+        
         public int ModelId => _behaviourElementModel.GetId();
         public Type ModelType => _behaviourElementModel.GetType();
 

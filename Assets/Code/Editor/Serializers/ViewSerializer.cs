@@ -14,7 +14,7 @@ namespace Code.Editor.Serializers
             ValidateTreeAsset(treeAsset);
         }
 
-        public void Serialize(IReadOnlyList<NodeView> nodeViews)
+        public void Serialize(IReadOnlyCollection<NodeView> nodeViews)
         {
             TextAsset xml = CreateXML(nodeViews);
             TreeAsset.UpdateNodeTreeXML(xml);
@@ -38,7 +38,7 @@ namespace Code.Editor.Serializers
             return position;
         } //TODO rewrite?
         
-        private TextAsset CreateXML(IReadOnlyList<NodeView> nodeViews) 
+        private TextAsset CreateXML(IReadOnlyCollection<NodeView> nodeViews) 
         {
             XmlDocument document = new XmlDocument();
                     
@@ -54,7 +54,7 @@ namespace Code.Editor.Serializers
             return xml;
         }
 
-        private XmlElement CreateNodesXML(XmlDocument document, IReadOnlyList<NodeView> nodes)
+        private XmlElement CreateNodesXML(XmlDocument document, IReadOnlyCollection<NodeView> nodes)
         {
             XmlElement nodesXML = document.CreateElement(string.Empty, "Nodes", string.Empty);
             

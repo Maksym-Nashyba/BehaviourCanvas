@@ -32,9 +32,9 @@ namespace Code.Editor
             _canvasModel.SetRootState(stateId);
         }
 
-        public void SetTargetModel(int startModelId, int targetModelId)
+        public void SetTargetModels(int startModelId, int targetModelId)
         {
-            _canvasModel.SetTargetModel(startModelId, targetModelId);
+            _canvasModel.AddTargetModel(startModelId, targetModelId);
         }
 
         public void ClearTargetModel(int modelId)
@@ -64,7 +64,8 @@ namespace Code.Editor
         private void DeserializeModel()
         {
             _canvasModel.Deserialize(_modelSerializer.DeserializeStateModels(),
-                _modelSerializer.DeserializeTriggerModels());
+                _modelSerializer.DeserializeTriggerModels(), 
+                _modelSerializer.DeserializeModelsAndTargets());
         }
 
         private void AddStateToModel(StateModel state)

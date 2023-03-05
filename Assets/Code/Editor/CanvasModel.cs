@@ -12,8 +12,8 @@ namespace Code.Editor
         public event Action<int> ModelRemoved; //TODO subscribe runtimeXml serialize
 
         public IReadOnlyBehaviourElementModel RootState => _stateDictionary[StateModel.RootId];
-        public IReadOnlyList<IReadOnlyBehaviourElementModel> States => _stateDictionary.Values.ToList().AsReadOnly();
-        public IReadOnlyList<IReadOnlyTriggerModel> Triggers => _triggerDictionary.Values.ToList().AsReadOnly();
+        public IReadOnlyCollection<IReadOnlyBehaviourElementModel> States => _stateDictionary.Values;
+        public IReadOnlyCollection<IReadOnlyTriggerModel> Triggers => _triggerDictionary.Values;
 
         private readonly Dictionary<int, IReadOnlyBehaviourElementModel> _stateDictionary;
         private readonly Dictionary<int, IReadOnlyTriggerModel> _triggerDictionary;
@@ -24,7 +24,7 @@ namespace Code.Editor
             _triggerDictionary = new Dictionary<int, IReadOnlyTriggerModel>();
         }
 
-        public void Deserialize(List<StateModel> states, List<TriggerModel> triggers)
+        public void Deserialize(List<StateModel> states, List<TriggerModel> triggers, List<(int, int[])> modelsAndTargets)
         {
             foreach (StateModel state in states)
             {
@@ -33,6 +33,13 @@ namespace Code.Editor
             foreach (TriggerModel trigger in triggers)
             {
                 _triggerDictionary.Add(trigger.Id, trigger);
+            }
+            foreach ((int, int[]) idsPair in modelsAndTargets)
+            {
+                foreach (int targetId in idsPair.Item2)
+                {
+                    AddTargetModel(idsPair.Item1, targetId);
+                }
             }
             Changed?.Invoke();
         }
@@ -44,15 +51,17 @@ namespace Code.Editor
             return Math.Max(firstId, secondId);
         }
 
-        public void SetTargetModel(int startModelId, int targetModelId)
+        public void AddTargetModel(int startModelId, int targetModelId)
         {
-            if (GetModelById(startModelId) is BehaviourElementModel startModel) 
-                startModel.SetTargetModel = GetModelById(targetModelId);
+            if (GetModelById(startModelId) is not BehaviourElementModel startModel) return;
+            if(startModel.GetTargetModels() == null) 
+                startModel.SetTargetModels = new List<IReadOnlyBehaviourElementModel>();
+            startModel.GetTargetModels().Add(GetModelById(targetModelId));
         }
 
         public void ClearTargetModel(int modelId)
         {
-            if (GetModelById(modelId) is BehaviourElementModel model) model.SetTargetModel = null;
+            if (GetModelById(modelId) is BehaviourElementModel model) model.SetTargetModels = null;
         }
         
         private IReadOnlyBehaviourElementModel GetModelById(int modelId)
