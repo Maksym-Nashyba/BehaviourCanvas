@@ -61,15 +61,16 @@ namespace Code.Runtime
             }
             return result;
         }
-
+        
         private (List<StateModel> states, List<TriggerModel> triggers) Deserialize(BehaviourTreeAsset blueprint)
         {
-            if (_cachedModels.ContainsKey(blueprint)) return _cachedModels[blueprint];
+            throw new NotImplementedException();
+            /*if (_cachedModels.ContainsKey(blueprint)) return _cachedModels[blueprint];
             List<StateModel> stateModels = _deserializer.DeserializeStateModels(blueprint.BehaviourTreeXML);
             List<TriggerModel> triggerModels = _deserializer.DeserializeTriggerModels(blueprint.BehaviourTreeXML);
             (List<StateModel> states, List<TriggerModel> triggers) result = (stateModels, triggerModels);
             _cachedModels.Add(blueprint, result);
-            return result;
+            return result;*/
         }
     }
 }

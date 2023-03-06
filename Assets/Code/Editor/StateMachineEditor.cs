@@ -117,13 +117,14 @@ namespace Code.Editor
         
         private (Type, string)[] ResolveRootParameters()
         {
-            ModelSerializer modelSerializer = new ModelSerializer();
+            throw new NotImplementedException();
+            /*ModelSerializer modelSerializer = new ModelSerializer();
             StateModel rootState = modelSerializer.DeserializeStateModels(_behaviourTreeAsset!.BehaviourTreeXML)
                 .First(model => model.IsRoot);
             (Type, string)[] parameters = Reflection.GetStateParameters(rootState.Model.Name);
             _parametersArrayProperty.arraySize = parameters.Length;
             _parametersArrayProperty.serializedObject.ApplyModifiedProperties();
-            return parameters;
+            return parameters;*/
         }
     }
 }

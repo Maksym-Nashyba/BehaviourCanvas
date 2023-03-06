@@ -11,6 +11,7 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
         private ToolbarButton _toolbarButton;
+        private CanvasController _canvasController;
         private BehaviourCanvasView _canvasView;
         
         [MenuItem("Window/CanvasController/BehaviourCanvasEditor")]
@@ -35,23 +36,24 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             ViewSerializer viewSerializer = new ViewSerializer(treeAsset);
             
             CanvasModel canvasModel = new CanvasModel();
-            CanvasController canvasController = new CanvasController(canvasModel, editorModelSerializer);
+            _canvasController = new CanvasController(canvasModel, editorModelSerializer);
             
-            _canvasView.Initialize(canvasModel, canvasController, viewSerializer);
-            canvasController.Initialize();
-            behaviourElementModelsPool.Initialize(canvasController);
+            _canvasView.Initialize(canvasModel, _canvasController, viewSerializer);
+            _canvasController.Initialize();
+            behaviourElementModelsPool.Initialize(_canvasController);
             
             _toolbarButton = root.Q<ToolbarButton>();
             _toolbarButton.clicked += () =>
             {
-                canvasController.SerializeModel();
+                _canvasController.SaveModel();
                 _canvasView.Serialize();
             };
         }
         
         private void OnDisable()
         {
-            _canvasView.UnsubscribeFromEvents();
+            _canvasController.Dispose();
+            _canvasView.Dispose();
         }
         
         private void AddStylesheets()

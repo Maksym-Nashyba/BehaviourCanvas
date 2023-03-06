@@ -1,9 +1,10 @@
-﻿using Code.Editor.Serializers;
+﻿using System;
+using Code.Editor.Serializers;
 using Code.Runtime.BehaviourElementModels;
 
 namespace Code.Editor
 {
-    public class CanvasController
+    public class CanvasController : IDisposable
     {
         private IdStore _idStore;
         private readonly CanvasModel _canvasModel;
@@ -17,11 +18,12 @@ namespace Code.Editor
 
         public void Initialize()
         {
-            DeserializeModel();
+            LoadModel();
             _idStore = new IdStore(_canvasModel.GetCurrentBiggestId() + 1);
+            _canvasModel.Changed += SaveModel;
         }
 
-        public void SerializeModel()
+        public void SaveModel()
         {
             _modelSerializer.Serialize(_canvasModel.States, _canvasModel.Triggers);
         }
@@ -45,37 +47,29 @@ namespace Code.Editor
         public void CreateState(Model model)
         {
             StateModel state = new StateModel(_idStore.ID, model);
-            AddStateToModel(state);
+            _canvasModel.AddState(state);
         }
         
         public void CreateTrigger(Model model)
         {
             TriggerModel trigger = new TriggerModel(_idStore.ID, model, false);
-            AddTriggerToModel(trigger);
+            _canvasModel.AddTrigger(trigger);
         }
         
         public void DeleteBehaviourElementModel(int modelId)
         {
-            if(_canvasModel.IsState(modelId)) _canvasModel.RemoveState(modelId);
-            else if (_canvasModel.IsTrigger(modelId)) _canvasModel.RemoveTrigger(modelId);
+            _canvasModel.DeleteBehaviourElementModel(modelId);
             _idStore = new IdStore(_canvasModel.GetCurrentBiggestId() + 1);
         }
         
-        private void DeserializeModel()
+        public void Dispose()
         {
-            _canvasModel.Deserialize(_modelSerializer.DeserializeStateModels(),
-                _modelSerializer.DeserializeTriggerModels(), 
-                _modelSerializer.DeserializeModelsAndTargets());
+            _canvasModel.Changed -= SaveModel;
         }
 
-        private void AddStateToModel(StateModel state)
+        private void LoadModel()
         {
-            _canvasModel.AddState(state);
-        }
-
-        private void AddTriggerToModel(TriggerModel trigger)
-        {
-            _canvasModel.AddTrigger(trigger);
+            _canvasModel.Initialize(_modelSerializer.DeserializeModelGraph());
         }
     }
 }

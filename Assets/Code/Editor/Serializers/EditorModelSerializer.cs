@@ -23,20 +23,10 @@ namespace Code.Editor.Serializers
             TextAsset xml = CreateXML(states, triggers);
             TreeAsset.UpdateBehaviourTreeXML(xml);
         }
-
-        public List<(int, int[])> DeserializeModelsAndTargets()
-        {
-            return _modelSerializer.DeserializeModelsWithTargets(TreeAsset.BehaviourTreeXML);
-        }
         
-        public List<StateModel> DeserializeStateModels()
+        public ModelGraph DeserializeModelGraph()
         {
-            return _modelSerializer.DeserializeStateModels(TreeAsset.BehaviourTreeXML);
-        }
-    
-        public List<TriggerModel> DeserializeTriggerModels()
-        {
-            return _modelSerializer.DeserializeTriggerModels(TreeAsset.BehaviourTreeXML);
+            return _modelSerializer.DeserializeModelGraph(TreeAsset.BehaviourTreeXML);
         }
 
         private TextAsset CreateXML(IReadOnlyCollection<IReadOnlyBehaviourElementModel> states, IReadOnlyCollection<IReadOnlyTriggerModel> triggers)

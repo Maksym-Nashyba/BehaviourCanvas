@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Code.Editor.Serializers;
 using Code.Runtime.BehaviourElementModels;
 using UnityEditor;
@@ -8,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace Code.Editor
 {
-    public class BehaviourCanvasView : GraphView
+    public class BehaviourCanvasView : GraphView, IDisposable
     {
         private CanvasModel _canvasModel;
         private CanvasController _canvasController;
@@ -73,27 +74,32 @@ namespace Code.Editor
             _canvasController = canvasController;
             _serializer = serializer;
             _nodes = new Dictionary<int, NodeView>();
-            SubscribeOnEvents();
+            SubscribeToEvents();
         }
         
-        public void UnsubscribeFromEvents()
+        private void SubscribeToEvents()
         {
-            _canvasModel.Changed -= BuildGraph;
-            _canvasModel.ModelAdded -= CreateNodeView;
-            graphViewChanged -= OnGraphViewChanged;
-        }
-        
-        private void SubscribeOnEvents()
-        {
-            _canvasModel.Changed += BuildGraph;
+            _canvasModel.Initialized += BuildGraph;
             _canvasModel.ModelAdded += CreateNodeView;
             graphViewChanged += OnGraphViewChanged;
+        }
+        
+        private void UnsubscribeFromEvents()
+        {
+            _canvasModel.Initialized -= BuildGraph;
+            _canvasModel.ModelAdded -= CreateNodeView;
+            graphViewChanged -= OnGraphViewChanged;
         }
         #endregion
 
         public void Serialize()
         {
             _serializer.Serialize(_nodes.Values);
+        }
+        
+        public void Dispose()
+        {
+            UnsubscribeFromEvents();
         }
 
         private void BuildGraph()

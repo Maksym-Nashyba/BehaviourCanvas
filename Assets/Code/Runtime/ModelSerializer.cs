@@ -8,43 +8,34 @@ namespace Code.Runtime
 {
     public class ModelSerializer
     {
-        public List<(int, int[])> DeserializeModelsWithTargets(TextAsset xml)
+        public ModelGraph DeserializeModelGraph(TextAsset xml)
         {
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(xml.text);
-            XmlNodeList idNodes = document.GetElementsByTagName("Id");
-
-            List<(int, int[])> modelsAndTargets = new List<(int, int[])>();
-            
-            foreach (XmlNode idNode in idNodes)
+            ModelGraph modelGraph = new ModelGraph(DeserializeStateModels(xml), 
+                DeserializeTriggerModels(xml));
+            List<(int, int[])> modelsAndTargets = DeserializeModelsWithTargets(xml);
+            foreach ((int, int[]) modelAndTarget in modelsAndTargets)
             {
-                if (idNode.ParentNode.LastChild.ChildNodes.Count == 0) continue;
-                int modelId = Convert.ToInt32(idNode.InnerText);
-                XmlNodeList targetModelsXml = idNode.ParentNode.LastChild.ChildNodes;
-                List<int> targetModelIds = new List<int>(targetModelsXml.Count);
-                
-                foreach (XmlNode targetModelNode in targetModelsXml)
+                for (int i = 0; i < modelAndTarget.Item2.Length; i++)
                 {
-                    if (targetModelNode.InnerText == "") continue;
-                    targetModelIds.Add(Convert.ToInt32(targetModelNode.InnerText));
+                    modelGraph.AddTargetModel(modelAndTarget.Item1, modelAndTarget.Item2[i]);
                 }
-                modelsAndTargets.Add((modelId, targetModelIds.ToArray()));
             }
-            return modelsAndTargets;
+
+            return modelGraph;
         }
-        
-        public List<StateModel> DeserializeStateModels(TextAsset xml) 
+
+        private List<StateModel> DeserializeStateModels(TextAsset xml) 
         {
             List<BehaviourElementModel> models = DeserializeBehaviourElementModels(xml, "State");
             return models.ConvertAll(m => (StateModel)m);
         }
     
-        public List<TriggerModel> DeserializeTriggerModels(TextAsset xml)
+        private List<TriggerModel> DeserializeTriggerModels(TextAsset xml)
         {
             List<BehaviourElementModel> models = DeserializeBehaviourElementModels(xml, "Trigger");
             return models.ConvertAll(m => (TriggerModel)m);
         }
-        
+
         private List<BehaviourElementModel> DeserializeBehaviourElementModels(TextAsset xml, string modelKey) 
         {
             XmlDocument document = new XmlDocument();
@@ -88,6 +79,31 @@ namespace Code.Runtime
                 deserializedBehaviourModels.Add(behaviourModel);
             }
             return deserializedBehaviourModels;
+        }
+        
+        public List<(int, int[])> DeserializeModelsWithTargets(TextAsset xml)
+        {
+            XmlDocument document = new XmlDocument();
+            document.LoadXml(xml.text);
+            XmlNodeList idNodes = document.GetElementsByTagName("Id");
+
+            List<(int, int[])> modelsAndTargets = new List<(int, int[])>();
+            
+            foreach (XmlNode idNode in idNodes)
+            {
+                if (idNode.ParentNode.LastChild.ChildNodes.Count == 0) continue;
+                int modelId = Convert.ToInt32(idNode.InnerText);
+                XmlNodeList targetModelsXml = idNode.ParentNode.LastChild.ChildNodes;
+                List<int> targetModelIds = new List<int>(targetModelsXml.Count);
+                
+                foreach (XmlNode targetModelNode in targetModelsXml)
+                {
+                    if (targetModelNode.InnerText == "") continue;
+                    targetModelIds.Add(Convert.ToInt32(targetModelNode.InnerText));
+                }
+                modelsAndTargets.Add((modelId, targetModelIds.ToArray()));
+            }
+            return modelsAndTargets;
         }
     }
 }
