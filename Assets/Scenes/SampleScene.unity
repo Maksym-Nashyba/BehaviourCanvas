@@ -356,7 +356,7 @@ MonoBehaviour:
   _behaviourTreeAsset: {fileID: 11400000, guid: aedbaa7e8a0693a49b2d082b81d1b923, type: 2}
   _rootArguments:
   - PlainObject:
-      rid: 9033034587940061481
+      rid: 9033034606123680544
     UnityObject: {fileID: 0}
   - PlainObject:
       rid: -2
@@ -366,9 +366,9 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 9033034587940061481
+    - rid: 9033034606123680544
       type: {class: Vector3, ns: UnityEngine, asm: UnityEngine.CoreModule}
       data:
         x: 0.47
         y: 0.79
-        z: 0.72
+        z: 0.06

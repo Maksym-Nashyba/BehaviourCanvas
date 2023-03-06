@@ -7,11 +7,11 @@ namespace Code.Runtime
     public sealed class BehaviourTree
     {
         public IState CurrentState { get; private set; }
-        private readonly ReadOnlyDictionary<IState, List<ITrigger>> _triggers;
+        private readonly IReadOnlyList<ITrigger> _triggers;
         private readonly IReadOnlyList<IState> _states;
         private readonly IState _rootState;
 
-        public BehaviourTree(IReadOnlyList<IState> states, ReadOnlyDictionary<IState, List<ITrigger>> triggers)
+        public BehaviourTree(IReadOnlyList<IState> states, IReadOnlyList<ITrigger> triggers)
         {
             _states = states;
             _triggers = triggers;
@@ -44,7 +44,8 @@ namespace Code.Runtime
 
         public IReadOnlyList<ITrigger> TriggersFrom(IState state)
         {
-            return _triggers[state];
+            throw new NotImplementedException();
+            return null;
         }
     }
 }

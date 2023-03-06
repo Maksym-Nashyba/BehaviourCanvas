@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -9,15 +10,13 @@ namespace Code.Runtime
         [SerializeField] private BehaviourTreeAsset _behaviourTreeAsset;
         [SerializeField] private List<SerializableParameter>_rootArguments;
         [Inject] private BehaviourTreeBuilder _behaviourTreeBuilder;
+        [Inject] private GameObjectContext _dependencyContainer;
         private BehaviourTree _behaviourTree;
         
         private void Start()
         {
-            
-            
-            return;
-            _behaviourTree = _behaviourTreeBuilder.BuildTree(_behaviourTreeAsset);
-            _behaviourTree.StartRootState();
+            _behaviourTree = _behaviourTreeBuilder.BuildTree(_behaviourTreeAsset, _dependencyContainer);
+            _behaviourTree.StartRootState(_rootArguments.Select(parameter => parameter.PlainObject ?? parameter.UnityObject));
         }
 
         private void Update()
