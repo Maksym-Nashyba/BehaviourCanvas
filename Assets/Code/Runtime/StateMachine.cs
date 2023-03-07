@@ -7,10 +7,10 @@ namespace Code.Runtime
 {
     public class StateMachine : MonoBehaviour
     {
+        [SerializeField] private GameObjectContext _dependencyContainer;
         [SerializeField] private BehaviourTreeAsset _behaviourTreeAsset;
         [SerializeField] private List<SerializableParameter>_rootArguments;
         [Inject] private BehaviourTreeBuilder _behaviourTreeBuilder;
-        [Inject] private GameObjectContext _dependencyContainer;
         private BehaviourTree _behaviourTree;
         
         private void Start()

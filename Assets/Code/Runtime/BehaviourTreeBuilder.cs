@@ -9,32 +9,42 @@ namespace Code.Runtime
 {
     public sealed class BehaviourTreeBuilder
     {
-        private readonly Dictionary<BehaviourTreeAsset, (List<StateModel> states, List<TriggerModel> triggers)> _cachedModels;
+        private readonly Dictionary<BehaviourTreeAsset, ModelGraph> _cachedModels;
         private readonly ModelSerializer _deserializer;
 
         public BehaviourTreeBuilder()
         {
             _cachedModels =
-                new Dictionary<BehaviourTreeAsset, (List<StateModel> states, List<TriggerModel> triggers)>();
+                new Dictionary<BehaviourTreeAsset, ModelGraph>();
             _deserializer = new ModelSerializer();
         }
 
         public BehaviourTree BuildTree(BehaviourTreeAsset blueprint, GameObjectContext dependencyContainer)
         {
-            (List<StateModel> states, List<TriggerModel> triggers) deserializedModels = Deserialize(blueprint);
-            IReadOnlyDictionary<int, IState> stateObjects = InstantiateBehaviourElements<IState>(deserializedModels.states);
-            IReadOnlyDictionary<int, ITrigger> triggerObjects = InstantiateBehaviourElements<ITrigger>(deserializedModels.triggers);
+            ModelGraph deserializedModels = Deserialize(blueprint);
+            IReadOnlyDictionary<int, IState> stateObjects = InstantiateBehaviourElements<IState>(deserializedModels.GetStates().Values);
+            IReadOnlyDictionary<int, ITrigger> triggerObjects = InstantiateBehaviourElements<ITrigger>(deserializedModels.GetTriggers().Values);
             InjectDependencies(stateObjects.Values, triggerObjects.Values, dependencyContainer);
-            InjectTriggerTargets(deserializedModels.triggers, stateObjects, triggerObjects);
-            return new BehaviourTree(stateObjects.Values.ToList(), triggerObjects.Values.ToList());
+            InjectTriggerTargets(deserializedModels.GetTriggers().Values, stateObjects, triggerObjects);
+
+            Dictionary<IState, IReadOnlyList<ITrigger>> orderedTriggers
+                = deserializedModels.GetStates().Values
+                .Select(model => model.GetTargetModels())
+                .Select(triggerList =>
+                    triggerList.Select(triggerModel => triggerObjects[triggerModel.GetId()]).ToList())
+                .Cast<IReadOnlyList<ITrigger>>()
+                .Zip(stateObjects.Values, (triggers, state) => (triggers, state))
+                .ToDictionary(tuple => tuple.state, tuple => tuple.triggers);
+
+            return new BehaviourTree(stateObjects.Values.ToList(), orderedTriggers);
         }
 
-        private void InjectTriggerTargets(IReadOnlyList<TriggerModel> triggerBlueprints,
+        private void InjectTriggerTargets(IEnumerable<IReadOnlyTriggerModel> triggerBlueprints,
             IReadOnlyDictionary<int, IState> states, IReadOnlyDictionary<int, ITrigger> triggers)
         {
-            foreach (TriggerModel triggerBlueprint in triggerBlueprints)
+            foreach (IReadOnlyTriggerModel triggerBlueprint in triggerBlueprints)
             {
-                ITrigger trigger = triggers[triggerBlueprint.Id];
+                ITrigger trigger = triggers[triggerBlueprint.GetId()];
                 IState targetState = states[triggerBlueprint.GetTargetModels()[0].GetId()];
 
                 FieldInfo field = trigger.GetType().GetField("_targetState", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -48,11 +58,11 @@ namespace Code.Runtime
             foreach (ITrigger trigger in triggers) dependencyContainer.Container.Inject(trigger);
         }
         
-        private IReadOnlyDictionary<int, T> InstantiateBehaviourElements<T>(IEnumerable<BehaviourElementModel> models)
+        private IReadOnlyDictionary<int, T> InstantiateBehaviourElements<T>(IEnumerable<IReadOnlyBehaviourElementModel> models)
         {
-            IEnumerable<(T instantiatedObject, int id)> instances = Reflection.GetStateTypes(models.Select(model => model.Model.Name))
+            IEnumerable<(T instantiatedObject, int id)> instances = Reflection.GetStateTypes(models.Select(model => model.GetModel().Name))
                 .Select(type => (T)Activator.CreateInstance(type))
-                .Zip(models, (instance, model) => (instance, model.Id));
+                .Zip(models, (instance, model) => (instance, model.GetId()));
 
             Dictionary<int, T> result = new Dictionary<int, T>();
             foreach ((T instantiatedObject, int id) instance in instances)
@@ -62,15 +72,12 @@ namespace Code.Runtime
             return result;
         }
         
-        private (List<StateModel> states, List<TriggerModel> triggers) Deserialize(BehaviourTreeAsset blueprint)
+        private ModelGraph Deserialize(BehaviourTreeAsset blueprint)
         {
-            throw new NotImplementedException();
-            /*if (_cachedModels.ContainsKey(blueprint)) return _cachedModels[blueprint];
-            List<StateModel> stateModels = _deserializer.DeserializeStateModels(blueprint.BehaviourTreeXML);
-            List<TriggerModel> triggerModels = _deserializer.DeserializeTriggerModels(blueprint.BehaviourTreeXML);
-            (List<StateModel> states, List<TriggerModel> triggers) result = (stateModels, triggerModels);
+            if (_cachedModels.ContainsKey(blueprint)) return _cachedModels[blueprint];
+            ModelGraph result = _deserializer.DeserializeModelGraph(blueprint.BehaviourTreeXML);
             _cachedModels.Add(blueprint, result);
-            return result;*/
+            return result;
         }
     }
 }

@@ -7,5 +7,7 @@
         public void Update();
 
         public void End();
+
+        public void Reset(params object[] arguments);
     }
 }

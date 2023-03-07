@@ -6,6 +6,10 @@
         public abstract void Start();
         public abstract void Update();
         public abstract void End();
+        public void Reset(params object[] arguments)
+        {
+            ResetStateParameters();
+        }
     }
 
     public abstract class State<T0> : IState
@@ -14,6 +18,10 @@
         public abstract void Start();
         public abstract void Update();
         public abstract void End();
+        public void Reset(params object[] arguments)
+        {
+            ResetStateParameters((T0)arguments[0]);
+        }
     }
     
     public abstract class State<T0,T1> : IState
@@ -22,6 +30,10 @@
         public abstract void Start();
         public abstract void Update();
         public abstract void End();
+        public void Reset(params object[] arguments)
+        {
+            ResetStateParameters((T0)arguments[0], (T1)arguments[1]);
+        }
     }
     
     public abstract class State<T0,T1,T2> : IState
@@ -30,5 +42,10 @@
         public abstract void Start();
         public abstract void Update();
         public abstract void End();
+        
+        public void Reset(params object[] arguments)
+        {
+            ResetStateParameters((T0)arguments[0], (T1)arguments[1], (T2)arguments[2]);
+        }
     }
 }

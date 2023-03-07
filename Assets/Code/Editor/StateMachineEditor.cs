@@ -4,7 +4,9 @@ using System.Reflection;
 using Code.Runtime;
 using Code.Runtime.BehaviourElementModels;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace Code.Editor
@@ -15,6 +17,7 @@ namespace Code.Editor
         private StateMachine _target;
         private SerializedProperty _behaviourTreeAssetProperty;
         private SerializedProperty _parametersArrayProperty;
+        private SerializedProperty _dependencyContainerProperty;
         private BehaviourTreeAsset _behaviourTreeAsset;
         private (Type, string)[] _parameters;
         
@@ -23,13 +26,13 @@ namespace Code.Editor
             _target = target as StateMachine;
             _behaviourTreeAssetProperty = serializedObject.FindProperty("_behaviourTreeAsset");
             _parametersArrayProperty = serializedObject.FindProperty("_rootArguments");
-            
+            _dependencyContainerProperty = serializedObject.FindProperty("_dependencyContainer");
             _behaviourTreeAsset = null;
             _parameters = null;
             _behaviourTreeAsset = ResolveBehaviourAsset();
             if (_behaviourTreeAsset != null) _parameters = ResolveRootParameters();
         }
-
+        
         private void OnDisable()
         {
             _parameters = null;
@@ -37,9 +40,12 @@ namespace Code.Editor
 
         public override void OnInspectorGUI()
         {
-            GUILayout.BeginVertical("box");
-            EditorGUI.BeginChangeCheck();
             serializedObject.Update();
+            EditorGUILayout.PropertyField(_dependencyContainerProperty, new GUIContent("Dependency Container"));
+            serializedObject.ApplyModifiedProperties();
+            GUILayout.BeginVertical("box");
+            
+            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(_behaviourTreeAssetProperty, new GUIContent("Behaviour Tree"));
             if (EditorGUI.EndChangeCheck())
             {
@@ -105,8 +111,12 @@ namespace Code.Editor
             property.serializedObject.Update();
             property = property.FindPropertyRelative("PlainObject");
             object last = property.managedReferenceValue ?? default(T);
+            EditorGUI.BeginChangeCheck();
             property.managedReferenceValue = field.Invoke(name, (T)last, null);
-            property.serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck())
+            {
+                property.serializedObject.ApplyModifiedProperties();
+            }
         }
         
         private BehaviourTreeAsset ResolveBehaviourAsset()
@@ -117,14 +127,16 @@ namespace Code.Editor
         
         private (Type, string)[] ResolveRootParameters()
         {
-            throw new NotImplementedException();
-            /*ModelSerializer modelSerializer = new ModelSerializer();
-            StateModel rootState = modelSerializer.DeserializeStateModels(_behaviourTreeAsset!.BehaviourTreeXML)
-                .First(model => model.IsRoot);
-            (Type, string)[] parameters = Reflection.GetStateParameters(rootState.Model.Name);
-            _parametersArrayProperty.arraySize = parameters.Length;
-            _parametersArrayProperty.serializedObject.ApplyModifiedProperties();
-            return parameters;*/
+            ModelSerializer modelSerializer = new ModelSerializer();
+            ModelGraph graph = modelSerializer.DeserializeModelGraph(_behaviourTreeAsset!.BehaviourTreeXML);
+            IReadOnlyBehaviourElementModel rootState = graph.GetRootState();
+            (Type, string)[] parameters = Reflection.GetStateParameters(rootState.GetModel().Name);
+            if (_parametersArrayProperty.arraySize != parameters.Length)
+            {
+                _parametersArrayProperty.arraySize = parameters.Length;
+                _parametersArrayProperty.serializedObject.ApplyModifiedProperties();
+            }
+            return parameters;
         }
     }
 }
