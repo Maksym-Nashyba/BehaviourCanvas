@@ -63,7 +63,7 @@ namespace Code.Runtime
                     Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
                         null,
                         type.GetMethod("GetParameterList", BindingFlags.Public | BindingFlags.Static)!);
-                    (string, string)[] parameters = parameterGetter.Invoke().Select(parameter => (parameter.Item2.Name, parameter.Item1)).ToArray();
+                    (Type, string)[] parameters = parameterGetter.Invoke().Select(parameter => (parameter.Item2, parameter.Item1)).ToArray();
                     return new Model(type.Name, parameters);
                 }).ToArray();
         }

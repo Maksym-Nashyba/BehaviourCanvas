@@ -6,7 +6,6 @@ namespace Code.Runtime.BehaviourElementModels
     {
         public int Id { get; set; }
         public Model Model { get; set; }
-        
         public List<IReadOnlyBehaviourElementModel> SetTargetModels
         {
             set => _targetModels = value;
@@ -40,5 +39,7 @@ namespace Code.Runtime.BehaviourElementModels
         {
             return _targetModels;
         }
+
+        public abstract bool CanTarget(IReadOnlyBehaviourElementModel targetModel);
     }
 }

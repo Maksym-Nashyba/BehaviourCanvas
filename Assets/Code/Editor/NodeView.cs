@@ -10,15 +10,31 @@ namespace Code.Editor
     {
         public Port InputPort => inputContainer[0] as Port;
         public Port OutputPort => outputContainer[0] as Port;
-        
         public int ModelId => _behaviourElementModel.GetId();
-        public Type ModelType => _behaviourElementModel.GetType();
+        public Type BehaviourModelType => _behaviourElementModel.GetType();
 
         private readonly IReadOnlyBehaviourElementModel _behaviourElementModel;
 
         public NodeView(IReadOnlyBehaviourElementModel behaviourElementModel)
         {
             _behaviourElementModel = behaviourElementModel;
+        }
+
+        public bool CanTarget(NodeView targetNode, Direction startPortDirection)
+        {
+            if (targetNode == this) return false;
+            if (_behaviourElementModel.GetType() == targetNode._behaviourElementModel.GetType()) return false;
+            if (_behaviourElementModel.GetType() == typeof(TriggerModel) 
+                && startPortDirection == Direction.Input) return true;
+            
+            IReadOnlyBehaviourElementModel sourceModel = _behaviourElementModel;
+            IReadOnlyBehaviourElementModel targetModel = targetNode._behaviourElementModel;
+            if (_behaviourElementModel.GetType() == typeof(StateModel))
+            {
+                sourceModel = startPortDirection == Direction.Input ? targetNode._behaviourElementModel : _behaviourElementModel;
+                targetModel = startPortDirection == Direction.Input ? _behaviourElementModel : targetNode._behaviourElementModel;
+            }
+            return sourceModel.CanTarget(targetModel);
         }
 
         public void Draw()
@@ -46,13 +62,13 @@ namespace Code.Editor
                 text = "Parameters"
             };
 
-            foreach ((string, string) parameter in _behaviourElementModel.GetModel().Parameters)
+            foreach ((Type, string) parameter in _behaviourElementModel.GetModel().Parameters)
             {
                 Foldout parameterFoldout = new Foldout()
                 {
                     text = "Parameter"
                 };
-                parameterFoldout.Add(new Label($"Type: {parameter.Item1}\nName: {parameter.Item2}"));
+                parameterFoldout.Add(new Label($"Type: {parameter.Item1.Name}\nName: {parameter.Item2}"));
                 parametersFoldout.Add(parameterFoldout);
             }
 
