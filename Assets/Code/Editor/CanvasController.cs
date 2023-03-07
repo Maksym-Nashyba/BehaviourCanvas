@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Code.Editor.EditorWindows.PopUpWindow;
 using Code.Editor.Serializers;
 using Code.Runtime.BehaviourElementModels;
 
@@ -9,7 +11,7 @@ namespace Code.Editor
         private IdStore _idStore;
         private readonly CanvasModel _canvasModel;
         private readonly EditorModelSerializer _modelSerializer;
-
+        
         public CanvasController(CanvasModel canvasModel, EditorModelSerializer modelSerializer)
         {
             _canvasModel = canvasModel;
@@ -25,6 +27,15 @@ namespace Code.Editor
 
         public void SaveModel()
         {
+            try
+            {
+                ModelGraphValidator.Validate(_canvasModel.Graph);
+            }
+            catch (InvalidDataException e)
+            {
+                PopUp.Show(e.Message);
+                return;
+            }
             _modelSerializer.Serialize(_canvasModel.States, _canvasModel.Triggers);
         }
 

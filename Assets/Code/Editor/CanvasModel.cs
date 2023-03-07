@@ -12,6 +12,8 @@ namespace Code.Editor
         public event Action<IReadOnlyBehaviourElementModel> ModelAdded;
         public event Action<int> ModelRemoved; //TODO subscribe runtimeXml serialize
 
+        public IReadOnlyModelGraph Graph => _modelGraph;
+        
         public IReadOnlyCollection<IReadOnlyBehaviourElementModel> States => 
             _modelGraph.GetStates().Values as IReadOnlyCollection<IReadOnlyBehaviourElementModel>;
         public IReadOnlyCollection<IReadOnlyTriggerModel> Triggers => 

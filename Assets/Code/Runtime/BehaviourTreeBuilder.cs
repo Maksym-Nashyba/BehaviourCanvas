@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Code.Runtime.BehaviourElementModels;
+using Code.Runtime.States;
+using Code.Runtime.Triggers;
 using Zenject;
 
 namespace Code.Runtime
@@ -60,7 +62,10 @@ namespace Code.Runtime
         
         private IReadOnlyDictionary<int, T> InstantiateBehaviourElements<T>(IEnumerable<IReadOnlyBehaviourElementModel> models)
         {
-            IEnumerable<(T instantiatedObject, int id)> instances = Reflection.GetStateTypes(models.Select(model => model.GetModel().Name))
+            Type assemblyAnchor = typeof(T) == typeof(IState)
+                ? typeof(StateAssemblyMarker)
+                : typeof(TriggerAssemblyMarker);
+            IEnumerable<(T instantiatedObject, int id)> instances = Reflection.GetStateTypes(models.Select(model => model.GetModel().Name), assemblyAnchor)
                 .Select(type => (T)Activator.CreateInstance(type))
                 .Zip(models, (instance, model) => (instance, model.GetId()));
 

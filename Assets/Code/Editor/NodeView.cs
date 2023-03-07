@@ -32,8 +32,8 @@ namespace Code.Editor
             Port inputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, portType);
             Port outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, outputPortCapacity, portType);
 
-            inputPort.portName = "Input";
-            outputPort.portName = "Output";
+            inputPort.portName = "Source";
+            outputPort.portName = "Target";
             
             inputContainer.Add(inputPort);
             outputContainer.Add(outputPort);

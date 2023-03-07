@@ -32,15 +32,15 @@ namespace Code.Runtime
             return parameterGetter.Invoke().Select(parameter => (parameter.Item2, parameter.Item1)).ToArray();
         }
 
-        public static IEnumerable<Type> GetStateTypes(IEnumerable<string> names)
+        public static IEnumerable<Type> GetStateTypes(IEnumerable<string> names, Type assemblyAnchor)
         {
-            Assembly assembly = Assembly.GetAssembly(typeof(StateAssemblyMarker));
-            string namespaceName = typeof(StateAssemblyMarker).FullName!.Replace("StateAssemblyMarker", "");
+            Assembly assembly = Assembly.GetAssembly(assemblyAnchor);
+            string namespaceName = assemblyAnchor.FullName!.Replace(assemblyAnchor.Name, "");
             return names.Select(name =>
             {
                 Type type = assembly.GetType(namespaceName + name);
                 if(type is null) throw new ArgumentException($"Failed to find type {namespaceName + name}. " +
-                                                             $"Should be in the same DIRECTORY and NAMESPACE as {nameof(StateAssemblyMarker)}");
+                                                             $"Should be in the same DIRECTORY and NAMESPACE as {nameof(assemblyAnchor)}");
                 return type;
             });
         }
