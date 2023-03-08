@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Code.BCTemplates;
 using Code.BCTemplates.StateTemplate;
+using Code.Runtime.States;
 
 namespace Code.Templates.StateTemplate
 {
@@ -11,6 +12,7 @@ namespace Code.Templates.StateTemplate
         {
             processedChunks = new Dictionary<string, string>
             {
+                { "Namespace", typeof(StateAssemblyMarker).Namespace },
                 { "Name", data.Name + "State" },
                 { "BaseClassName", BuildBaseClassName(data) },
                 { "Fields", BuildFields(data) },

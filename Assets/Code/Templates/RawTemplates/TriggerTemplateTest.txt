@@ -1,34 +1,37 @@
 ﻿using System;
 using UnityEngine;
 
-public class NoticedKrisaTrigger : Trigger<NavMeshAgent, Single>
+namespace Code.Runtime.Triggers
 {
-    private State<NavMeshAgent, Single> _targetState;
-    private NavMeshAgent _target;
+    public class NoticedKrisaTrigger : Trigger<NavMeshAgent, Single>
+    {
+        private State<NavMeshAgent, Single> _targetState;
+        private NavMeshAgent _target;
  private Single _maxDistance;
-
-    public override bool IsHit()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Reset()
-    {
-        throw new NotImplementedException();
-    }
     
-    public override IState PrepareTarget()
-    {
-        _targetState.ResetStateParameters(_target, _maxDistance);
-        return _targetState;
-    }
-    
-    public static (string,Type)[] GetParameterList()
-    {
-        return new(string, Type)[]
+        public override bool IsHit()
         {
-            ("target", typeof(NavMeshAgent)),
-            ("maxDistance", typeof(Single)),
-        };
+            throw new NotImplementedException();
+        }
+    
+        public override void Reset()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public override IState PrepareTarget()
+        {
+            _targetState.ResetStateParameters(_target, _maxDistance);
+            return _targetState;
+        }
+        
+        public static (string,Type)[] GetParameterList()
+        {
+            return new(string, Type)[]
+            {
+                ("target", typeof(NavMeshAgent)),
+                ("maxDistance", typeof(Single)),
+            };
+        }
     }
 }

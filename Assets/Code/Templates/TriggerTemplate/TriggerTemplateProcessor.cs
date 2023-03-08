@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Code.BCTemplates;
 using Code.BCTemplates.TriggerTemplate;
+using Code.Runtime.Triggers;
 
 namespace Code.Templates.TriggerTemplate
 {
@@ -10,6 +11,7 @@ namespace Code.Templates.TriggerTemplate
         {
             processedChunks = new Dictionary<string, string>
             {
+                { "Namespace", typeof(TriggerAssemblyMarker).Namespace },
                 { "Name", data.Name + "Trigger" },
                 { "BaseClassGenericParameters", BuildBaseClassGenericParameters(data) },
                 { "TargetStateField", BuildTargetStateField(data) },
@@ -25,14 +27,14 @@ namespace Code.Templates.TriggerTemplate
         {
             if (data.Parameters.Length == 0) return "return Array.Empty<(string, Type)>();";
 
-            string result = "return new(string, Type)[]\n        {\n";
+            string result = "return new(string, Type)[]\n            {\n";
             for (int i = 0; i < data.Parameters.Length; i++)
             {
-                result += "            (" + "\"" + $"{data.Parameters[i].NameCamelCase}" + "\"";
+                result += "                (" + "\"" + $"{data.Parameters[i].NameCamelCase}" + "\"";
                 result += $", typeof({data.Parameters[i].Type.Name})),\n";
             }
 
-            result += "        };";
+            result += "            };";
             return result;
         }
         

@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using UnityEngine;
 
-namespace #Namespace#
+namespace Code.Runtime.Triggers
 {
-    public class #Name# : Trigger#BaseClassGenericParameters#
+    public class EmptyTriggerTrigger : Trigger
     {
-        #TargetStateField#
-        #ParameterFields#
+        private State _targetState;
+        
     
         public override bool IsHit()
         {
@@ -20,13 +20,13 @@ namespace #Namespace#
         
         public override IState PrepareTarget()
         {
-            _targetState.ResetStateParameters#ResetTargetParameters#;
+            _targetState.ResetStateParameters();
             return _targetState;
         }
         
         public static (string,Type)[] GetParameterList()
         {
-            #ParameterGetterBody#
+            return Array.Empty<(string, Type)>();
         }
     }
 }

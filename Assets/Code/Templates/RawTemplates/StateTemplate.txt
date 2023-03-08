@@ -1,32 +1,35 @@
 ﻿using System;
 using UnityEngine;
 
-public class #Name# : State#BaseClassName#
+namespace #Namespace#
 {
-    #Fields#
-
-    public override void ResetStateParameters#ResetStateMethodParameters#
+    public class #Name# : State#BaseClassName#
     {
-        #ResetStateBody#
-    }
-
-    public override void Start()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void End()
-    {
-        throw new NotImplementedException();
-    }
+        #Fields#
     
-    public static (string,Type)[] GetParameterList()
-    {
-        #ParameterGetterBody#
+        public override void ResetStateParameters#ResetStateMethodParameters#
+        {
+            #ResetStateBody#
+        }
+    
+        public override void Start()
+        {
+            throw new NotImplementedException();
+        }
+    
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+    
+        public override void End()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static (string,Type)[] GetParameterList()
+        {
+            #ParameterGetterBody#
+        }
     }
 }
