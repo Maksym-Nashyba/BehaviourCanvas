@@ -7,5 +7,6 @@ namespace Code.Runtime.BehaviourElementModels
         public int GetId();
         public Model GetModel();
         public List<IReadOnlyBehaviourElementModel> GetTargetModels();
+        public abstract bool CanTarget(IReadOnlyBehaviourElementModel targetModel);
     }
 }

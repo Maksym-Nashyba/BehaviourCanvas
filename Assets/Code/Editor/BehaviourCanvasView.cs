@@ -41,7 +41,7 @@ namespace Code.Editor
             ContextualMenuManipulator contextualMenuManipulator = new ContextualMenuManipulator(
                 menuEvent =>
                 {
-                    if (menuEvent.target is NodeView node && node.ModelType != typeof(TriggerModel)) //TODO check this with IReadOnlyTriggerModel
+                    if (menuEvent.target is NodeView node && node.BehaviourModelType != typeof(TriggerModel)) //TODO check this with IReadOnlyTriggerModel
                     {
                         menuEvent.menu.AppendAction("Set root state", 
                             _ =>
@@ -162,13 +162,14 @@ namespace Code.Editor
         {
             List<Port> compatiblePorts = new List<Port>();
 
-            ports.ForEach(port =>
+            ports.ForEach(targetPort =>
             {
-                if (((NodeView) startPort.node).ModelType == ((NodeView) port.node).ModelType) return;
-                if (startPort == port) return;
-                if (startPort.node == port.node) return;
-                if (startPort.direction == port.direction) return;
-                compatiblePorts.Add(port);
+                if (startPort.direction == targetPort.direction) return;
+                NodeView startNodeView = startPort.node as NodeView;
+                NodeView targetNodeView = targetPort.node as NodeView;
+                
+                if(!startNodeView.CanTarget(targetNodeView, startPort.direction)) return;
+                compatiblePorts.Add(targetPort);
             });
             return compatiblePorts;
         }

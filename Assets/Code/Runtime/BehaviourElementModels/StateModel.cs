@@ -14,5 +14,10 @@
         {
             
         }
+
+        public override bool CanTarget(IReadOnlyBehaviourElementModel targetModel)
+        {
+            return targetModel.GetType() == typeof(TriggerModel);
+        }
     }
 }

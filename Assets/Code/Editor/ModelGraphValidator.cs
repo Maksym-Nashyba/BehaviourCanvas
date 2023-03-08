@@ -21,11 +21,10 @@ namespace Code.Editor
             foreach (IReadOnlyTriggerModel trigger in graph.GetTriggers().Values)
             {
                 Model targetState = trigger.GetTargetModels()[0].GetModel();
-                if (!Enumerable.SequenceEqual(
-                        trigger.GetModel().Parameters.Select((tuple, _) => tuple.typeName), 
-                        targetState.Parameters.Select((tuple, _) => tuple.typeName)))
+                if (!trigger.GetModel().Parameters.Select((tuple, _) => tuple.parameterType)
+                        .SequenceEqual(targetState.Parameters.Select((tuple, _) => tuple.parameterType)))
                 {
-                    throw new InvalidDataException("Prameters differ! " +
+                    throw new InvalidDataException("Parameters differ! " +
                                                    $"Trigger {trigger.GetModel().Name}_{trigger.GetId()} " +
                                                    $" and State {targetState.Name}_{trigger.GetTargetModels()[0].GetId()}");
                 }

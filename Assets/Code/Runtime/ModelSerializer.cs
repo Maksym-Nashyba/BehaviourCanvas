@@ -50,7 +50,7 @@ namespace Code.Runtime
                 BehaviourElementModel behaviourModel = modelKey == "State" ? new StateModel() : new TriggerModel();
                 
                 string modelName = "";
-                List<(string, string)> parametersList = new List<(string, string)>();
+                List<(Type, string)> parametersList = new List<(Type, string)>();
                 
                 foreach (XmlNode treeModelField in behaviourModelNode.ChildNodes) 
                 {
@@ -69,7 +69,7 @@ namespace Code.Runtime
                             parametersList.Capacity = treeModelField.ChildNodes.Count;
                             foreach (XmlNode parameter in treeModelField)
                             {
-                                parametersList.Add(new ValueTuple<string, string>(parameter.FirstChild.InnerText,
+                                parametersList.Add(new ValueTuple<Type, string>(Reflection.FromFullName(parameter.FirstChild.InnerText),
                                     parameter.LastChild.InnerText));
                             }
                             break;
@@ -81,7 +81,7 @@ namespace Code.Runtime
             return deserializedBehaviourModels;
         }
         
-        public List<(int, int[])> DeserializeModelsWithTargets(TextAsset xml)
+        private List<(int, int[])> DeserializeModelsWithTargets(TextAsset xml)
         {
             XmlDocument document = new XmlDocument();
             document.LoadXml(xml.text);
