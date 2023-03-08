@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Code.Runtime
+namespace Code.Runtime.Innitialization
 {
     public class BehaviourTreeAsset : ScriptableObject
     {

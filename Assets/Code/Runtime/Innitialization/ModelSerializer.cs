@@ -4,7 +4,7 @@ using System.Xml;
 using Code.Runtime.BehaviourElementModels;
 using UnityEngine;
 
-namespace Code.Runtime
+namespace Code.Runtime.Innitialization
 {
     public class ModelSerializer
     {

@@ -1,6 +1,6 @@
 ﻿using Zenject;
 
-namespace Code.Runtime
+namespace Code.Runtime.Innitialization
 {
     internal class BehaviourCanvasSceneInstaller : MonoInstaller<BehaviourCanvasSceneInstaller>
     {

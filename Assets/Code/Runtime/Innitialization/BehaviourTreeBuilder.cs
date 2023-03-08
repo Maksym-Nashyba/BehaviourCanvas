@@ -7,7 +7,7 @@ using Code.Runtime.States;
 using Code.Runtime.Triggers;
 using Zenject;
 
-namespace Code.Runtime
+namespace Code.Runtime.Innitialization
 {
     public sealed class BehaviourTreeBuilder
     {
