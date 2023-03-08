@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Code.Runtime.Innitialization
+namespace Code.Runtime.BehaviourGraphSerialization
 {
     public class BehaviourTreeAsset : ScriptableObject
     {

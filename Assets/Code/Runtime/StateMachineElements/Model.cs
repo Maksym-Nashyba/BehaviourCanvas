@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Code.Runtime.BehaviourElementModels
+namespace Code.Runtime.StateMachineElements
 {
     public struct Model
     {

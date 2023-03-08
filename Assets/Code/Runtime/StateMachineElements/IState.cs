@@ -1,4 +1,4 @@
-﻿namespace Code.Runtime
+﻿namespace Code.Runtime.StateMachineElements
 {
     public interface IState
     {

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Code.Runtime.Innitialization;
+using Code.Runtime.BehaviourGraphSerialization;
+using Code.Runtime.Initialization;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Runtime
+namespace Code.Runtime.StateMachineElements
 {
     public class StateMachine : MonoBehaviour
     {

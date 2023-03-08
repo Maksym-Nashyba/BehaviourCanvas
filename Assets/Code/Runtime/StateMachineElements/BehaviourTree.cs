@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Code.Runtime
+namespace Code.Runtime.StateMachineElements
 {
     public sealed class BehaviourTree
     {

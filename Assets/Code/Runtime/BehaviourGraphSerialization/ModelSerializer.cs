@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Code.Runtime.BehaviourElementModels;
+using Code.Runtime.StateMachineElements;
 using UnityEngine;
 
-namespace Code.Runtime.Innitialization
+namespace Code.Runtime.BehaviourGraphSerialization
 {
     public class ModelSerializer
     {

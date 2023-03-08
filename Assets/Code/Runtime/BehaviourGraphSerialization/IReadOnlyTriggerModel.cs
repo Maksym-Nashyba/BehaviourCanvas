@@ -1,4 +1,4 @@
-﻿namespace Code.Runtime.BehaviourElementModels
+﻿namespace Code.Runtime.BehaviourGraphSerialization
 {
     public interface IReadOnlyTriggerModel : IReadOnlyBehaviourElementModel
     {

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Code.Runtime.BehaviourElementModels;
+using Code.Runtime.BehaviourGraphSerialization;
+using Code.Runtime.StateMachineElements;
 
 namespace Code.Editor
 {

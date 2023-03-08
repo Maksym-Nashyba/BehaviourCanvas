@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Code.Editor.Serializers;
-using Code.Runtime.BehaviourElementModels;
+using Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;

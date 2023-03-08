@@ -1,6 +1,7 @@
-﻿using Zenject;
+﻿using Code.Runtime.StateMachineElements;
+using Zenject;
 
-namespace Code.Runtime.Innitialization
+namespace Code.Runtime.Initialization
 {
     internal class BehaviourCanvasSceneInstaller : MonoInstaller<BehaviourCanvasSceneInstaller>
     {

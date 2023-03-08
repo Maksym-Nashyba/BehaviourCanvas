@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Code.Runtime.BehaviourGraphSerialization;
 
-namespace Code.Runtime.BehaviourElementModels
+namespace Code.Runtime.StateMachineElements
 {
     public readonly struct ModelGraph : IReadOnlyModelGraph
     {

@@ -1,4 +1,6 @@
-﻿namespace Code.Runtime.BehaviourElementModels
+﻿using Code.Runtime.StateMachineElements;
+
+namespace Code.Runtime.BehaviourGraphSerialization
 {
     public class StateModel : BehaviourElementModel
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Code.Runtime.Innitialization
+namespace Code.Runtime.StateMachineElements
 {
     [Serializable]
     internal struct SerializableParameter

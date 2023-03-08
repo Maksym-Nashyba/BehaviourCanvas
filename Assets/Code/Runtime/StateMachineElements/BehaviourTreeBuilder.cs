@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Code.Runtime.BehaviourElementModels;
+using Code.Runtime.BehaviourGraphSerialization;
+using Code.Runtime.Initialization;
 using Code.Runtime.States;
 using Code.Runtime.Triggers;
 using Zenject;
 
-namespace Code.Runtime.Innitialization
+namespace Code.Runtime.StateMachineElements
 {
     public sealed class BehaviourTreeBuilder
     {

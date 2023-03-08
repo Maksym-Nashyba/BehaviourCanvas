@@ -1,4 +1,4 @@
-﻿namespace Code.Runtime 
+﻿namespace Code.Runtime.StateMachineElements 
 {
     public abstract class Trigger : ITrigger
     {

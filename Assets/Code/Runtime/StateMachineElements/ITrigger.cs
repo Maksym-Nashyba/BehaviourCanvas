@@ -1,6 +1,4 @@
-﻿using Code.Runtime;
-
-namespace Code
+﻿namespace Code.Runtime.StateMachineElements
 {
     public interface ITrigger
     {
