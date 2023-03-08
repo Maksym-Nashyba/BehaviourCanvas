@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Code.Runtime.BehaviourElementModels;
@@ -10,10 +9,29 @@ namespace Code.Editor
     {
         public static void Validate(IReadOnlyModelGraph graph)
         {
+            ValidateIsntEmpty(graph);
+            ValidateHasOneRoot(graph);
             ValidateStatesHaveSource(graph);
-            ValidateTriggersHaveOneSource(graph);
             ValidateTriggersHaveTargets(graph);
+            ValidateTriggersHaveOneSource(graph);
             ValidateTriggerToStateParameters(graph);
+        }
+
+        private static void ValidateHasOneRoot(IReadOnlyModelGraph graph)
+        {
+            List<IReadOnlyBehaviourElementModel> roots = new List<IReadOnlyBehaviourElementModel>();
+            foreach (IReadOnlyBehaviourElementModel state in graph.GetStates().Values)
+            {
+                if (state.GetId() == StateModel.RootId) roots.Add(state);
+            }
+
+            if (roots.Count < 1) throw new InvalidDataException("There is no root state on this graph");
+            if (roots.Count > 1) throw new InvalidDataException("There can only be one root state");
+        }
+
+        private static void ValidateIsntEmpty(IReadOnlyModelGraph graph)
+        {
+            if (graph.GetStates().Count < 1) throw new InvalidDataException("The graph is empty");
         }
 
         private static void ValidateTriggerToStateParameters(IReadOnlyModelGraph graph)
@@ -72,7 +90,19 @@ namespace Code.Editor
         
         private static void ValidateStatesHaveSource(IReadOnlyModelGraph graph)
         {
-            throw new NotImplementedException();
+            HashSet<IReadOnlyBehaviourElementModel> uncheckedStates = graph.GetStates().Values.ToHashSet();
+            foreach (IReadOnlyTriggerModel trigger in graph.GetTriggers().Values)
+            {
+                if (uncheckedStates.Contains(trigger.GetTargetModels()[0]))
+                {
+                    uncheckedStates.Remove(trigger.GetTargetModels()[0]);
+                }
+            }
+
+            if (uncheckedStates.Count > 1)
+            {
+                throw new InvalidDataException("Some states don't have source");
+            }
         }
     }
 }
