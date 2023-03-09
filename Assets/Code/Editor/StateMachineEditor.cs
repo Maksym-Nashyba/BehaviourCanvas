@@ -31,14 +31,14 @@ namespace Code.Editor
             _dependencyContainerProperty = serializedObject.FindProperty("_dependencyContainer");
             _parametersArrayProperty = serializedObject.FindProperty("_rootArguments");
             _behaviourTreeAsset = null;
-            _parameters = default;
+            _foundValidParameters = false;
             _behaviourTreeAsset = ResolveBehaviourAsset();
             if (_behaviourTreeAsset != null) _parameters = ResolveRootParameters();
         }
         
         private void OnDisable()
         {
-            _parameters = default;
+            _foundValidParameters = false;
         }
 
         public override void OnInspectorGUI()
@@ -60,7 +60,7 @@ namespace Code.Editor
                 if (_behaviourTreeAsset != null) _parameters = ResolveRootParameters();
             }
 
-            if (_foundValidParameters)
+            if (!_foundValidParameters)
             {
                 GUILayout.EndVertical();
                 return;
@@ -138,6 +138,8 @@ namespace Code.Editor
                 _parametersArrayProperty.arraySize = parameters.Count;
                 _parametersArrayProperty.serializedObject.ApplyModifiedProperties();
             }
+
+            _foundValidParameters = true;
             return parameters;
         }
     }
