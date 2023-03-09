@@ -105,16 +105,16 @@ namespace Code.Editor.Serializers
             return modelsXML;
         }
         
-        private XmlElement CreateParametersXml(XmlDocument document, (Type, string)[] parameters) 
+        private XmlElement CreateParametersXml(XmlDocument document, ParameterSet parameters) 
         {
             XmlElement parametersXML = document.CreateElement(string.Empty, "Parameters", string.Empty);
             
-            foreach ((Type parameterType, string parameterName) parameter in parameters)
+            foreach (Parameter parameter in parameters)
             {
                 XmlElement parameterXML = document.CreateElement(string.Empty, "Parameter", string.Empty);
 
-                XmlElement typeXML = CreateElementWithContent(document, "Type", parameter.parameterType.FullName);
-                XmlElement nameXML = CreateElementWithContent(document, "Name", parameter.parameterName);
+                XmlElement typeXML = CreateElementWithContent(document, "Type", parameter.Type.FullName);
+                XmlElement nameXML = CreateElementWithContent(document, "Name", parameter.Name);
                     
                 parameterXML.AppendChild(typeXML);
                 parameterXML.AppendChild(nameXML);

@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace Code.Runtime.StateMachineElements
+﻿namespace Code.Runtime.BehaviourGraphSerialization
 {
     public struct Model
     {
         public string Name { get; }
-        public (Type parameterType, string parameterName)[] Parameters { get; }
+        public ParameterSet Parameters { get; }
 
-        public Model(string name, (Type parameterType, string parameterName)[] parameters)
+        public Model(string name, ParameterSet parameters)
         {
             Name = name;
             Parameters = parameters;

@@ -1,16 +1,33 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Code.Runtime.BehaviourGraphSerialization
 {
-    public readonly struct ParameterSet
+    public readonly struct ParameterSet : IEnumerable<Parameter>
     {
         public const uint MaxParameterCount = 3;
         public static ParameterSet Empty => new ParameterSet(Array.Empty<Parameter>());
+        public int Count => Parameters.Length;
+        
         public readonly Parameter[] Parameters;
 
         #region Constructors
 
+        public ParameterSet((Type type, string name)[] rawParameters)
+        {
+            List<Parameter> parameters = new List<Parameter>(rawParameters.Length);
+            foreach ((Type, string) parameterTuple in rawParameters)
+            {
+                if (parameters.Any(parameter => parameter.Name == parameterTuple.Item2))
+                    throw new ArgumentException("Parameters set can't have two parameters with similar names.");
+                parameters.Add(new Parameter(parameterTuple));
+            }
+
+            Parameters = parameters.ToArray();
+        }
+        
         public ParameterSet(Parameter[] parameters)
         {
             if (parameters.Length > MaxParameterCount) throw new ArgumentOutOfRangeException($"{nameof(parameters)}",
@@ -100,5 +117,15 @@ namespace Code.Runtime.BehaviourGraphSerialization
         }
 
         #endregion
+
+        public IEnumerator<Parameter> GetEnumerator()
+        {
+            return (Parameters.GetEnumerator() as IEnumerator<Parameter>)!;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

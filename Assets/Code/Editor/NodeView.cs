@@ -62,13 +62,13 @@ namespace Code.Editor
                 text = "Parameters"
             };
 
-            foreach ((Type, string) parameter in _behaviourElementModel.GetModel().Parameters)
+            foreach (Parameter parameter in _behaviourElementModel.GetModel().Parameters.Parameters)
             {
                 Foldout parameterFoldout = new Foldout()
                 {
                     text = "Parameter"
                 };
-                parameterFoldout.Add(new Label($"Type: {parameter.Item1.Name}\nName: {parameter.Item2}"));
+                parameterFoldout.Add(new Label($"{parameter.Type.Name} {parameter.Name}"));
                 parametersFoldout.Add(parameterFoldout);
             }
 

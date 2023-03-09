@@ -50,7 +50,7 @@ namespace Code.Runtime.BehaviourGraphSerialization
                 BehaviourElementModel behaviourModel = modelKey == "State" ? new StateModel() : new TriggerModel();
                 
                 string modelName = "";
-                List<(Type, string)> parametersList = new List<(Type, string)>();
+                List<(Type type, string name)> parametersList = new List<(Type, string)>();
                 
                 foreach (XmlNode treeModelField in behaviourModelNode.ChildNodes) 
                 {
@@ -69,13 +69,14 @@ namespace Code.Runtime.BehaviourGraphSerialization
                             parametersList.Capacity = treeModelField.ChildNodes.Count;
                             foreach (XmlNode parameter in treeModelField)
                             {
-                                parametersList.Add(new ValueTuple<Type, string>(Reflection.FromFullName(parameter.FirstChild.InnerText),
+                                parametersList.Add(new ValueTuple<Type, string>
+                                    (Reflection.FromFullName(parameter.FirstChild.InnerText),
                                     parameter.LastChild.InnerText));
                             }
                             break;
                     }
                 }
-                behaviourModel.Model = new Model(modelName, parametersList.ToArray());
+                behaviourModel.Model = new Model(modelName, new ParameterSet(parametersList.ToArray()));
                 deserializedBehaviourModels.Add(behaviourModel);
             }
             return deserializedBehaviourModels;

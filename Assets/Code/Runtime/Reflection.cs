@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Code.Runtime.BehaviourGraphSerialization;
 using Code.Runtime.Initialization;
 using Code.Runtime.StateMachineElements;
 using Code.Runtime.States;
@@ -21,16 +22,14 @@ namespace Code.Runtime
             return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes()).First(type => type.FullName == fullName);
         }
 
-        public static (Type, string)[] GetStateParameters(string stateName)
+        public static ParameterSet GetStateParameters(string stateName)
         {
             if(!stateName.Contains("State")) stateName += "State";
             string fullName = typeof(StateAssemblyMarker).FullName!.Replace("StateAssemblyMarker", stateName);
             Type stateType = Assembly.GetAssembly(typeof(StateAssemblyMarker)).GetType(fullName);
             if (stateType == null) throw new ArgumentException($"Failed to find type {fullName}. Should be in the same DIRECTORY and NAMESPACE as {nameof(StateAssemblyMarker)}");
-            Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
-                null,
-                stateType.GetMethod("GetParameterList", BindingFlags.Public | BindingFlags.Static)!);
-            return parameterGetter.Invoke().Select(parameter => (parameter.Item2, parameter.Item1)).ToArray();
+
+            return GetParameterSet(stateType);
         }
 
         public static IEnumerable<Type> GetStateTypes(IEnumerable<string> names, Type assemblyAnchor)
@@ -59,14 +58,19 @@ namespace Code.Runtime
         private static Model[] FindAllModels(Type modelType)
         {
             return Assembly.GetAssembly(typeof(StateAssemblyMarker)).GetTypes()
-                .Where(type => modelType.IsAssignableFrom(type) && type != modelType && !type.IsAbstract).Select(type =>
-                {
-                    Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
-                        null,
-                        type.GetMethod("GetParameterList", BindingFlags.Public | BindingFlags.Static)!);
-                    (Type, string)[] parameters = parameterGetter.Invoke().Select(parameter => (parameter.Item2, parameter.Item1)).ToArray();
-                    return new Model(type.Name, parameters);
-                }).ToArray();
+                .Where(type => modelType.IsAssignableFrom(type) && type != modelType && !type.IsAbstract)
+                .Select(type => new Model(type.Name, GetParameterSet(type)))
+                .ToArray();
+        }
+
+        private static ParameterSet GetParameterSet(Type type)
+        {
+            Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
+                null,
+                type.GetMethod("GetParameterList", BindingFlags.Public | BindingFlags.Static)!);
+            Parameter[] parameters = parameterGetter.Invoke()
+                .Select(parameter => new Parameter(parameter.Item2, parameter.Item1)).ToArray();
+            return new ParameterSet(parameters);
         }
     }
 }

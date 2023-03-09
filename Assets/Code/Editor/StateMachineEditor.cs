@@ -21,23 +21,24 @@ namespace Code.Editor
         private SerializedProperty _parametersArrayProperty;
         private SerializedProperty _dependencyContainerProperty;
         private BehaviourTreeAsset _behaviourTreeAsset;
-        private (Type, string)[] _parameters;
-        
+        private ParameterSet _parameters;
+        private bool _foundValidParameters;
+
         private void OnEnable()
         {
             _target = target as StateMachine;
             _behaviourTreeAssetProperty = serializedObject.FindProperty("_behaviourTreeAsset");
-            _parametersArrayProperty = serializedObject.FindProperty("_rootArguments");
             _dependencyContainerProperty = serializedObject.FindProperty("_dependencyContainer");
+            _parametersArrayProperty = serializedObject.FindProperty("_rootArguments");
             _behaviourTreeAsset = null;
-            _parameters = null;
+            _parameters = default;
             _behaviourTreeAsset = ResolveBehaviourAsset();
             if (_behaviourTreeAsset != null) _parameters = ResolveRootParameters();
         }
         
         private void OnDisable()
         {
-            _parameters = null;
+            _parameters = default;
         }
 
         public override void OnInspectorGUI()
@@ -54,55 +55,54 @@ namespace Code.Editor
                 serializedObject.ApplyModifiedProperties();
                 serializedObject.Update();
                 _behaviourTreeAsset = null;
-                _parameters = null;
+                _parameters = default;
                 _behaviourTreeAsset = ResolveBehaviourAsset();
                 if (_behaviourTreeAsset != null) _parameters = ResolveRootParameters();
             }
 
-            if (_parameters == null)
+            if (_foundValidParameters)
             {
                 GUILayout.EndVertical();
                 return;
             }
             GUILayout.Label("Root State Arguments");
             EditorGUI.indentLevel++;
-            for (int i = 0; i < _parameters.Length; i++)
+            for (int i = 0; i < _parameters.Count; i++)
             { 
                 DisplayAppropriateField(
-                    _parametersArrayProperty.GetArrayElementAtIndex(i),
-                    _parameters[i].Item1,
-                    _parameters[i].Item2);
+                    _parametersArrayProperty.GetArrayElementAtIndex(i), 
+                    _parameters.Parameters[i]);
             }
             serializedObject.ApplyModifiedProperties();
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();
         }
 
-        private void DisplayAppropriateField(SerializedProperty property, Type parameterType, string name)
+        private void DisplayAppropriateField(SerializedProperty property, Parameter parameter)
         {
-            if (typeof(Object).IsAssignableFrom(parameterType))
+            if (typeof(Object).IsAssignableFrom(parameter.Type))
             {
                 property.serializedObject.Update();
                 property = property.FindPropertyRelative("UnityObject");
-                EditorGUILayout.ObjectField(property, typeof(Object), new GUIContent(name));
+                EditorGUILayout.ObjectField(property, typeof(Object), new GUIContent(parameter.Name));
                 if (property.objectReferenceValue != null)
                 {
-                    if (property.objectReferenceValue.GetType() != parameterType) throw new Exception($"The type of this field is {parameterType}");
+                    if (property.objectReferenceValue.GetType() != parameter.Type) throw new Exception($"The type of this field is {parameter.Type}");
                 }
             }
-            else if (parameterType == typeof(Int32))
+            else if (parameter.Type == typeof(Int32))
             {
                 DrawValueTypeField<int>(property, name, EditorGUILayout.IntField);
             }
-            else if (parameterType == typeof(Single))
+            else if (parameter.Type == typeof(Single))
             {
                 DrawValueTypeField<float>(property, name, EditorGUILayout.FloatField);
             }
-            else if (parameterType == typeof(Vector2))
+            else if (parameter.Type == typeof(Vector2))
             {
                 DrawValueTypeField<Vector2>(property, name, EditorGUILayout.Vector2Field);
             }
-            else if (parameterType == typeof(Vector3))
+            else if (parameter.Type == typeof(Vector3))
             {
                 DrawValueTypeField<Vector3>(property, name, EditorGUILayout.Vector3Field);
             }
@@ -127,15 +127,15 @@ namespace Code.Editor
             return field!.GetValue(_target) as BehaviourTreeAsset;
         }
         
-        private (Type, string)[] ResolveRootParameters()
+        private ParameterSet ResolveRootParameters()
         {
             ModelSerializer modelSerializer = new ModelSerializer();
             ModelGraph graph = modelSerializer.DeserializeModelGraph(_behaviourTreeAsset!.BehaviourTreeXML);
             IReadOnlyBehaviourElementModel rootState = graph.GetRootState();
-            (Type, string)[] parameters = Reflection.GetStateParameters(rootState.GetModel().Name);
-            if (_parametersArrayProperty.arraySize != parameters.Length)
+            ParameterSet parameters = Reflection.GetStateParameters(rootState.GetModel().Name);
+            if (_parametersArrayProperty.arraySize != parameters.Count)
             {
-                _parametersArrayProperty.arraySize = parameters.Length;
+                _parametersArrayProperty.arraySize = parameters.Count;
                 _parametersArrayProperty.serializedObject.ApplyModifiedProperties();
             }
             return parameters;

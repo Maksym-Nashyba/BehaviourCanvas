@@ -2,8 +2,6 @@
 using System.IO;
 using System.Linq;
 using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.Initialization;
-using Code.Runtime.StateMachineElements;
 
 namespace Code.Editor
 {
@@ -41,8 +39,7 @@ namespace Code.Editor
             foreach (IReadOnlyTriggerModel trigger in graph.GetTriggers().Values)
             {
                 Model targetState = trigger.GetTargetModels()[0].GetModel();
-                if (!trigger.GetModel().Parameters.Select((tuple, _) => tuple.parameterType)
-                        .SequenceEqual(targetState.Parameters.Select((tuple, _) => tuple.parameterType)))
+                if (!trigger.GetModel().Parameters.CanMapTo(targetState.Parameters))
                 {
                     throw new InvalidDataException("Parameters differ! " +
                                                    $"Trigger {trigger.GetModel().Name}_{trigger.GetId()} " +
