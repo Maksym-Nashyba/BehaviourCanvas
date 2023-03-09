@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Code.Editor.EditorWindows.PopUpWindow;
 using Code.Editor.Serializers;
 using Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
@@ -176,12 +178,20 @@ namespace Code.Editor
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
-            graphViewChange.elementsToRemove?.ForEach(element =>
+            if (graphViewChange.elementsToRemove != null)
             {
-                if (element is NodeView node) DeleteNode(node);
-                if (element is Edge edge) _canvasController.ClearTargetModel(((NodeView) edge.output.node).ModelId);
+                if (graphViewChange.elementsToRemove.Any(element => ((NodeView) element).ModelId == StateModel.RootId))
+                {
+                    graphViewChange.elementsToRemove.Clear();
+                    PopUp.Show("Can't delete root state");
+                }
+                graphViewChange.elementsToRemove.ForEach(element =>
+                {
+                    if (element is NodeView node) DeleteNode(node);
+                    if (element is Edge edge) _canvasController.ClearTargetModel(((NodeView) edge.output.node).ModelId);
                 
-            });
+                });
+            }
             if (graphViewChange.edgesToCreate != null)
             {
                 graphViewChange.edgesToCreate.ForEach(edge =>

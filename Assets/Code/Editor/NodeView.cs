@@ -78,6 +78,7 @@ namespace Code.Editor
         
         public void UpdateNodeTitleDisplay()
         {
+            //TODO check id
             Label titleLabel = new Label()
             {
                 text = "Name: " + _behaviourElementModel.GetModel().Name + "\nId: " + _behaviourElementModel.GetId(),

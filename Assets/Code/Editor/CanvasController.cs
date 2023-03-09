@@ -65,6 +65,7 @@ namespace Code.Editor
         
         public void CreateTrigger(Model model)
         {
+            //TODO fix trigger id
             TriggerModel trigger = new TriggerModel(_idStore.ID, model, false);
             _canvasModel.AddTrigger(trigger);
         }

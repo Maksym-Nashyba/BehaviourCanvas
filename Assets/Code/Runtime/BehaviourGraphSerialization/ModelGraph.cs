@@ -63,9 +63,12 @@ namespace Code.Runtime.BehaviourGraphSerialization
         #region States
         public void SetRootState(int stateId)
         {
-            BehaviourElementModel newRootState = _statesDictionary[stateId] as BehaviourElementModel;
-            if (RootState is BehaviourElementModel oldRootState) oldRootState.Id = stateId;
-            if (newRootState != null) newRootState.Id = StateModel.RootId;
+            _statesDictionary.Remove(stateId, out IReadOnlyBehaviourElementModel newRootState);
+            _statesDictionary.Remove(StateModel.RootId, out IReadOnlyBehaviourElementModel oldRootState);
+            ((BehaviourElementModel)oldRootState).Id = stateId;
+            ((BehaviourElementModel)newRootState).Id = StateModel.RootId;
+            _statesDictionary.Add(oldRootState.GetId(), oldRootState);
+            _statesDictionary.Add(newRootState.GetId(), newRootState);
         }
         
         public bool IsState(int modelId) => _statesDictionary.ContainsKey(modelId);
