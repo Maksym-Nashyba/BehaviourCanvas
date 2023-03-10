@@ -43,7 +43,7 @@ namespace Code.Editor.EditorWindows.PathsEditor
                 PopUp.Show($"'{input}' is not a valid Path\n{e}");
                 return;
             }
-            
+            input.TrimEnd('/');
             BehaviourCanvasPaths.UpdatePath(id, input);
             PopUp.Show("Path changed");
         }
@@ -51,7 +51,6 @@ namespace Code.Editor.EditorWindows.PathsEditor
         private void ValidatePath(string path)
         {
             if (!path.StartsWith("Assets/")) throw new InvalidPathException("Should start with 'Assets/'");
-            if (path == "Assets/") throw new InvalidPathException("Path can't be null or empty");
             if (!AssetDatabase.IsValidFolder(path)) throw new InvalidPathException("Directory doesn't exist");
         }
     }

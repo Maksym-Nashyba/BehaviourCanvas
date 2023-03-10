@@ -7,17 +7,19 @@ namespace Code.Editor
     {
         public static readonly string[] Ids =
         {
-            "templates",
+            "behaviour_canvas_root",
             "state_scripts",
             "trigger_scripts",
             "behaviour_tree_assets"
         };
         
-        public static string TemplatesPaths
+        public static string BehaviourCanvasRoot
         {
-            get => GetSavedPath("templates");
-            set => UpdatePath(TemplatesPaths, value);
+            get => GetSavedPath("behaviour_canvas_root");
+            set => UpdatePath(BehaviourCanvasRoot, value);
         }
+
+        public static string TemplatesPaths => GetSavedPath("behaviour_canvas_root") + "/Code/Templates";
         
         public static string StateScripts
         {
