@@ -88,7 +88,7 @@ namespace Code.Editor.EditorWindows.Builders.StateBuilder
             StateTemplateData templateData = new StateTemplateData(stateName, parameters);
             StateTemplateProcessor processor = new StateTemplateProcessor();
             string processed = processor.Process(templateData);
-            string path = Application.dataPath.Replace("/Assets", "") + "/" + BehaviourCanvasPaths.StateScripts;
+            string path = Application.dataPath.Substring(0, Application.dataPath.Length-6) + BehaviourCanvasPaths.StateScripts;
             File.WriteAllText(path+$"/{stateName}State.cs", processed);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

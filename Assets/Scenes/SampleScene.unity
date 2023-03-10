@@ -324,7 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dependencyContainer: {fileID: 0}
-  _behaviourTreeAsset: {fileID: 11400000, guid: aedbaa7e8a0693a49b2d082b81d1b923, type: 2}
+  _behaviourTreeAsset: {fileID: 0}
   _rootArguments: []
   references:
     version: 2

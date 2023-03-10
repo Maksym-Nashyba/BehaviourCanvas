@@ -19,7 +19,9 @@ namespace Code.Editor
             set => UpdatePath(BehaviourCanvasRoot, value);
         }
 
-        public static string TemplatesPaths => GetSavedPath("behaviour_canvas_root") + "/Code/Templates";
+        public static string Templates => GetSavedPath("behaviour_canvas_root") + "/Code/Templates";
+        
+        public static string Tests => GetSavedPath("behaviour_canvas_root") + "/Code/Tests";
         
         public static string StateScripts
         {
