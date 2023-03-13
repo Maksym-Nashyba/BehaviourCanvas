@@ -43,14 +43,14 @@ namespace Code.Editor.EditorWindows.PathsEditor
                 PopUp.Show($"'{input}' is not a valid Path\n{e}");
                 return;
             }
-            input.TrimEnd('/');
+            input = input.TrimEnd('/');
             BehaviourCanvasPaths.UpdatePath(id, input);
             PopUp.Show("Path changed");
         }
 
         private void ValidatePath(string path)
         {
-            if (!path.StartsWith("Assets/")) throw new InvalidPathException("Should start with 'Assets/'");
+            if (!path.StartsWith("Assets")) throw new InvalidPathException("Should start with 'Assets'");
             if (!AssetDatabase.IsValidFolder(path)) throw new InvalidPathException("Directory doesn't exist");
         }
     }

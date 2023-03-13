@@ -23,8 +23,11 @@ namespace Code.Tests.BehaviourCanvasRuntimeTests
         {
             if (!EditorBuildSettings.scenes.Contains(scene)) throw new ArgumentException($"Scene {scene} isn't included in build.");
 
+            EditorBuildSettings.scenes = Array.Empty<EditorBuildSettingsScene>();
+            return;
+            
             EditorBuildSettings.scenes =
-                EditorBuildSettings.scenes.Where(includedScene => includedScene != scene).ToArray();
+                EditorBuildSettings.scenes.Where(includedScene => includedScene.path != scene.path).ToArray();
         }
         
         private static EditorBuildSettingsScene FindScene(string name)
@@ -32,7 +35,7 @@ namespace Code.Tests.BehaviourCanvasRuntimeTests
             string path = BehaviourCanvasPaths.Tests + "/TestScenes";
             if (!AssetDatabase.IsValidFolder(path))
                 throw new InvalidPathException($"Couldn't find test scene directory. Path: {path}");
-            if(!File.Exists(Application.dataPath.Substring(0, Application.dataPath.Length - 6) + path + "/" + name))
+            if(!File.Exists(Application.dataPath.Substring(0, Application.dataPath.Length - 6) + path + "/" + name + ".unity"))
                 throw new InvalidPathException($"Scene {name} doesn't exist.");
             
             if (!name.EndsWith(".unity")) name += ".unity";

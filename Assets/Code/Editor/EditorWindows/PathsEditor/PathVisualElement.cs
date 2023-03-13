@@ -7,7 +7,7 @@ namespace Code.Editor.EditorWindows.PathsEditor
 {
     public class PathVisualElement : VisualElement
     {
-        public string PathText => "Assets/"+_textField.value;
+        public string PathText => ("Assets/"+_textField.value).TrimEnd('/');
         
         private readonly Label _label;
         private readonly TextField _textField;
@@ -58,7 +58,7 @@ namespace Code.Editor.EditorWindows.PathsEditor
         public void Setup(string id, Action callback)
         {
             if (!BehaviourCanvasPaths.Ids.Contains(id)) throw new ArgumentException($"'{id}' isn't a valid path id. It should be added in {nameof(BehaviourCanvasPaths.Ids)}");
-            if (EditorPrefs.HasKey(id)) _textField.value = BehaviourCanvasPaths.GetSavedPath(id).Substring(7);
+            if (EditorPrefs.HasKey(id)) _textField.value = BehaviourCanvasPaths.GetSavedPath(id).Substring(6).TrimStart('/');
             _label.text = id;
             _confirmButton.clicked += callback;
         }
