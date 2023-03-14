@@ -16,7 +16,7 @@ namespace Code.Editor
     [CustomEditor(typeof(StateMachine))]
     public class StateMachineEditor : UnityEditor.Editor
     {
-        private StateMachine _target;
+        protected StateMachine Target;
         private SerializedProperty _behaviourTreeAssetProperty;
         private SerializedProperty _parametersArrayProperty;
         private SerializedProperty _dependencyContainerProperty;
@@ -26,8 +26,8 @@ namespace Code.Editor
 
         private void OnEnable()
         {
-            _target = target as StateMachine;
-            _behaviourTreeAssetProperty = serializedObject.FindProperty("_behaviourTreeAsset");
+            Target = target as StateMachine;
+            _behaviourTreeAssetProperty = serializedObject.FindProperty("BehaviourTreeAsset");
             _dependencyContainerProperty = serializedObject.FindProperty("_dependencyContainer");
             _parametersArrayProperty = serializedObject.FindProperty("_rootArguments");
             _behaviourTreeAsset = null;
@@ -126,10 +126,10 @@ namespace Code.Editor
             }
         }
         
-        private BehaviourTreeAsset ResolveBehaviourAsset()
+        protected virtual BehaviourTreeAsset ResolveBehaviourAsset()
         {
-            FieldInfo field = _target!.GetType().GetField("_behaviourTreeAsset", BindingFlags.NonPublic | BindingFlags.Instance);
-            return field!.GetValue(_target) as BehaviourTreeAsset;
+            FieldInfo field = typeof(StateMachine).GetField("BehaviourTreeAsset", BindingFlags.NonPublic | BindingFlags.Instance);
+            return field!.GetValue(Target) as BehaviourTreeAsset;
         }
         
         private ParameterSet ResolveRootParameters()

@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,26 +15,25 @@ namespace Code.Tests.BehaviourCanvasRuntimeTests
             TestScenes.IncludeInBuild(TestScenes.Initialization);
         }
 
-        public void Cleanup()
-        {
-            TestScenes.RemoveFromBuild(TestScenes.Initialization);
-        }
-        
-        [UnityTest]
-        public IEnumerator InitializationScene_Loads()
+        [UnitySetUp]
+        public IEnumerator OneTimeSetUp()
         {
             AsyncOperation sceneLoading = SceneManager.LoadSceneAsync("Initialization");
             while (!sceneLoading.isDone)
             {
                 yield return null;
             }
-            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("Initialization"));
+        }
+
+        public void Cleanup()
+        {
+            TestScenes.RemoveFromBuild(TestScenes.Initialization);
         }
         
-        [UnityTest]
-        public IEnumerator InitializationWithEnumeratorPasses()
+        [Test]
+        public void InitializationScene_Loads()
         {
-            yield return null;
+            Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("Initialization"));
         }
     }
 }
