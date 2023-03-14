@@ -249,11 +249,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dependencyContainer: {fileID: 721216662}
-  _behaviourTreeAsset: {fileID: 0}
-  _rootArguments: []
+  _behaviourTreeAsset: {fileID: 11400000, guid: 57c0fdb825fa8fe489fe744877086f23, type: 2}
+  _rootArguments:
+  - PlainObject:
+      rid: 9033034806333801435
+    UnityObject: {fileID: 0}
+    IntValue: 0
+    FloatValue: 12
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 9033034806333801435
+      type: {class: Single, ns: System, asm: mscorlib}
 --- !u!1 &963804637
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +348,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963804637}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0.3, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

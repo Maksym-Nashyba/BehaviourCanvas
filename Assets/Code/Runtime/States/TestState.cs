@@ -1,33 +1,39 @@
 using System;
 using Code.Runtime.StateMachineElements;
+using UnityEngine;
 
 namespace Code.Runtime.States
 {
-    public class TestState : State
+    public class TestState : State<float>
     {
-        public override void ResetStateParameters()
-        {
+        private Single _argument;
         
+        public override void ResetStateParameters(float param0)
+        {
+            _argument = param0;
         }
 
         public override void Start()
         {
-            throw new NotImplementedException();
+            Debug.Log("Entered Test State");
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            Debug.Log("Update In Test State");
         }
 
         public override void End()
         {
-            throw new NotImplementedException();
+            Debug.Log("Test State Ended");
         }
     
         public static (string,Type)[] GetParameterList()
         {
-            return Array.Empty<(string, Type)>();
+            return new(string, Type)[]
+            {
+                ("argument", typeof(Single))
+            };
         }
     }
 }

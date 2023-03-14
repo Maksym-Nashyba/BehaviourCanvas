@@ -44,8 +44,9 @@ namespace Code.Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(_dependencyContainerProperty, new GUIContent("Dependency Container"));
-            serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck()) serializedObject.ApplyModifiedProperties();
             GUILayout.BeginVertical("box");
             
             EditorGUI.BeginChangeCheck();
@@ -67,13 +68,14 @@ namespace Code.Editor
             }
             GUILayout.Label("Root State Arguments");
             EditorGUI.indentLevel++;
+            EditorGUI.BeginChangeCheck();
             for (int i = 0; i < _parameters.Count; i++)
             { 
                 DisplayAppropriateField(
                     _parametersArrayProperty.GetArrayElementAtIndex(i), 
                     _parameters.Parameters[i]);
             }
-            serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck()) serializedObject.ApplyModifiedProperties();
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();
         }
@@ -92,29 +94,32 @@ namespace Code.Editor
             }
             else if (parameter.Type == typeof(Int32))
             {
-                DrawValueTypeField<int>(property, name, EditorGUILayout.IntField);
+                DrawValueTypeField(property, "IntValue", parameter.Name);
             }
             else if (parameter.Type == typeof(Single))
             {
-                DrawValueTypeField<float>(property, name, EditorGUILayout.FloatField);
+                DrawValueTypeField(property, "FloatValue", parameter.Name);
             }
             else if (parameter.Type == typeof(Vector2))
             {
-                DrawValueTypeField<Vector2>(property, name, EditorGUILayout.Vector2Field);
+                DrawValueTypeField(property, "Vector2Value", parameter.Name);
             }
             else if (parameter.Type == typeof(Vector3))
             {
-                DrawValueTypeField<Vector3>(property, name, EditorGUILayout.Vector3Field);
+                DrawValueTypeField(property, "Vector3Value", parameter.Name);
+            }
+            else
+            {
+                DrawValueTypeField(property, "PlainObject", parameter.Name);
             }
         }
 
-        private void DrawValueTypeField<T>(SerializedProperty property, string name, Func<string, T, GUILayoutOption[], T> field)
+        private void DrawValueTypeField(SerializedProperty property, string relativePropertyName, string name)
         {
             property.serializedObject.Update();
-            property = property.FindPropertyRelative("PlainObject");
-            object last = property.managedReferenceValue ?? default(T);
+            property = property.FindPropertyRelative(relativePropertyName);
             EditorGUI.BeginChangeCheck();
-            property.managedReferenceValue = field.Invoke(name, (T)last, null);
+            EditorGUILayout.PropertyField(property, new GUIContent(name));
             if (EditorGUI.EndChangeCheck())
             {
                 property.serializedObject.ApplyModifiedProperties();
