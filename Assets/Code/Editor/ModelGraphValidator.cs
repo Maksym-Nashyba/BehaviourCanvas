@@ -70,6 +70,7 @@ namespace Code.Editor
                 new Dictionary<IReadOnlyTriggerModel, IReadOnlyBehaviourElementModel>();
             foreach (IReadOnlyBehaviourElementModel state in graph.GetStates().Values)
             {
+                if(state.GetTargetModels() is null) continue;
                 foreach (IReadOnlyTriggerModel targetTrigger in state.GetTargetModels().Cast<IReadOnlyTriggerModel>())
                 {
                     if (triggerToSource.ContainsKey(targetTrigger))

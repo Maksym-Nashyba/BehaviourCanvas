@@ -8,13 +8,11 @@ namespace Code.Tests.BehaviourCanvasRuntimeTests
 {
     public class Initialization : IPrebuildSetup, IPostBuildCleanup
     {
-        [OneTimeSetUp]
         public void Setup()
         {
             TestScenes.IncludeInBuild(TestScenes.Initialization);
         }
 
-        [OneTimeTearDown]
         public void Cleanup()
         {
             TestScenes.RemoveFromBuild(TestScenes.Initialization);

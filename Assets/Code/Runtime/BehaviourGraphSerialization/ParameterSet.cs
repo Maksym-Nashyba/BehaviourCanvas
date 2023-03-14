@@ -5,10 +5,14 @@ using System.Linq;
 
 namespace Code.Runtime.BehaviourGraphSerialization
 {
-    public readonly struct ParameterSet : IEnumerable<Parameter>
+    public readonly struct ParameterSet
     {
         public const uint MaxParameterCount = 3;
+        
         public static ParameterSet Empty => new ParameterSet(Array.Empty<Parameter>());
+
+        public bool IsEmpty => Count == 0;
+        
         public int Count => Parameters.Length;
         
         public readonly Parameter[] Parameters;
@@ -117,15 +121,5 @@ namespace Code.Runtime.BehaviourGraphSerialization
         }
 
         #endregion
-
-        public IEnumerator<Parameter> GetEnumerator()
-        {
-            return (Parameters.GetEnumerator() as IEnumerator<Parameter>)!;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
     }
 }

@@ -21,11 +21,8 @@ namespace Code.Tests.BehaviourCanvasRuntimeTests
         
         public static void RemoveFromBuild(EditorBuildSettingsScene scene)
         {
-            if (!EditorBuildSettings.scenes.Contains(scene)) throw new ArgumentException($"Scene {scene} isn't included in build.");
+            if (EditorBuildSettings.scenes.All(includedScene => includedScene.path != scene.path)) throw new ArgumentException($"Scene {scene} isn't included in build.");
 
-            EditorBuildSettings.scenes = Array.Empty<EditorBuildSettingsScene>();
-            return;
-            
             EditorBuildSettings.scenes =
                 EditorBuildSettings.scenes.Where(includedScene => includedScene.path != scene.path).ToArray();
         }
