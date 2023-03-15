@@ -1,4 +1,6 @@
-﻿namespace Code.Runtime.StateMachineElements
+﻿using Code.Runtime.BehaviourGraphSerialization;
+
+namespace Code.Runtime.StateMachineElements
 {
     public interface IState
     {
@@ -9,5 +11,7 @@
         public void End();
 
         public void Reset(params object[] arguments);
+
+        public ParameterSet GetParameters();
     }
 }

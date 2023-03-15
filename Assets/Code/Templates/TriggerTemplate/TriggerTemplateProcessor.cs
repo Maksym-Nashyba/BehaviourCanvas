@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Code.BCTemplates;
+using Code.BCTemplates.StateTemplate;
 using Code.BCTemplates.TriggerTemplate;
 using Code.Runtime.Triggers;
 
@@ -25,16 +27,13 @@ namespace Code.Templates.TriggerTemplate
 
         private string BuildParameterGetterBody(TriggerTemplateData data)
         {
-            if (data.Parameters.Length == 0) return "return Array.Empty<(string, Type)>();";
+            if (data.Parameters.Length == 0) return String.Empty;
+            string result = $"                new Parameter(typeof({data.Parameters[^1].Type.Name}), {data.Parameters[^1].NameCamelCase})";
 
-            string result = "return new(string, Type)[]\n            {\n";
-            for (int i = 0; i < data.Parameters.Length; i++)
+            for (int i = data.Parameters.Length-2; i >= 0; i--)
             {
-                result += "                (" + "\"" + $"{data.Parameters[i].NameCamelCase}" + "\"";
-                result += $", typeof({data.Parameters[i].Type.Name})),\n";
+                result = $"new Parameter(typeof({data.Parameters[i].Type.Name}), {data.Parameters[i].NameCamelCase}),\n" + result;
             }
-
-            result += "            };";
             return result;
         }
         

@@ -8,12 +8,12 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Code.Tests
+namespace Code.Tests.BehaviourCanvasEditorTests
 {
     public class BehaviourCanvasTemplates
     {
         [Test]
-        public void TemplatesLoad()
+        public void Templates_Load()
         {
             string[] templates =
             {
@@ -36,7 +36,7 @@ namespace Code.Tests
         }
 
         [Test]
-        public void StateTemplateProcessedCorrectly()
+        public void StateTemplate_ProcessedCorrectly()
         {
             StateTemplateProcessor stateTemplateProcessor = new StateTemplateProcessor();
             StateTemplateData data = new StateTemplateData("Hunt", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
@@ -46,7 +46,7 @@ namespace Code.Tests
         }
         
         [Test]
-        public void TriggerTemplateProcessedCorrectly()
+        public void TriggerTemplate_ProcessedCorrectly()
         {
             TriggerTemplateProcessor stateTemplateProcessor = new TriggerTemplateProcessor();
             TriggerTemplateData data = new TriggerTemplateData("NoticedKrisa", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));

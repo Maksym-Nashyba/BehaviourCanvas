@@ -29,13 +29,14 @@ namespace Code.Runtime.States
             throw new NotImplementedException();
         }
         
-        public static (string,Type)[] GetParameterList()
+        public override ParameterSet GetParameters() => GetParametersStatic();
+
+        public static ParameterSet GetParametersStatic()
         {
-            return new(string, Type)[]
-        {
-            ("target", typeof(NavMeshAgent)),
-            ("maxDistance", typeof(Single)),
-        };
+            return new ParameterSet(
+                new Parameter(typeof(NavMeshAgent), target),
+                new Parameter(typeof(Single), maxDistance)
+            );
         }
     }
 }

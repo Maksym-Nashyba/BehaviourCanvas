@@ -27,9 +27,13 @@ namespace #Namespace#
             throw new NotImplementedException();
         }
         
-        public static (string,Type)[] GetParameterList()
+        public override ParameterSet GetParameters() => GetParametersStatic();
+
+        public static ParameterSet GetParametersStatic()
         {
-            #ParameterGetterBody#
+            return new ParameterSet(
+                #ParameterGetterBody#
+            );
         }
     }
 }

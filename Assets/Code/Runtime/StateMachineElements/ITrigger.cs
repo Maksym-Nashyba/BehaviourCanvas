@@ -1,4 +1,6 @@
-﻿namespace Code.Runtime.StateMachineElements
+﻿using Code.Runtime.BehaviourGraphSerialization;
+
+namespace Code.Runtime.StateMachineElements
 {
     public interface ITrigger
     {
@@ -7,5 +9,7 @@
         public IState PrepareTarget();
 
         public void Reset();
+        
+        public ParameterSet GetParameters();
     }
 }

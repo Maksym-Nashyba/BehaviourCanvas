@@ -1,4 +1,5 @@
 using System;
+using Code.Runtime.BehaviourGraphSerialization;
 using Code.Runtime.StateMachineElements;
 using Code.Runtime.States;
 
@@ -34,12 +35,13 @@ namespace Code.Runtime.Triggers
             return _targetState;
         }
     
-        public static (string,Type)[] GetParameterList()
+        public override ParameterSet GetParameters() => GetParametersStatic();
+
+        public static ParameterSet GetParametersStatic()
         {
-            return new(string, Type)[]
-            {
-                ("number", typeof(Single))
-            };
+            return new ParameterSet(
+                new Parameter(typeof(Single), "number")
+            );
         }
     }
 }

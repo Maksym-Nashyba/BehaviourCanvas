@@ -1,4 +1,5 @@
 using System;
+using Code.Runtime.BehaviourGraphSerialization;
 using Code.Runtime.StateMachineElements;
 using UnityEngine;
 
@@ -28,12 +29,13 @@ namespace Code.Runtime.States
             Debug.Log("Test State Ended");
         }
     
-        public static (string,Type)[] GetParameterList()
+        public override ParameterSet GetParameters() => GetParametersStatic();
+
+        public static ParameterSet GetParametersStatic()
         {
-            return new(string, Type)[]
-            {
-                ("argument", typeof(Single))
-            };
+            return new ParameterSet(
+                new Parameter(typeof(Single), "argument")
+            );
         }
     }
 }
