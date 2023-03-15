@@ -57,6 +57,23 @@ namespace Code.Runtime.BehaviourGraphSerialization
         #endregion
 
         #region Mapping
+
+        public bool AreValidValues(params object[] argumets)
+        {
+            if (argumets.Length != Parameters.Length) return false;
+            for (int i = 0; i < Parameters.Length; i++)
+            {
+                if (!Parameters[i].IsValidValue(argumets[i])) return false;
+            }
+
+            return true;
+        }
+        
+        public object[] MapTo(ParameterSet other, object[] values)
+        {
+            if (!AreValidValues(values)) throw new ArgumentException();
+            return null;
+        }
         
         public bool CanMapTo(ParameterSet other)
         {
@@ -102,6 +119,8 @@ namespace Code.Runtime.BehaviourGraphSerialization
 
         private bool CanMapDirectrly(Parameter[] otherParameters)
         {
+            if (otherParameters.Length != Parameters.Length) return false;
+            
             for (int i = 0; i < otherParameters.Length; i++)
             {
                 if (!otherParameters[i].IsAssignableFrom(Parameters[i])) return false;

@@ -21,5 +21,25 @@ namespace Code.Runtime.BehaviourGraphSerialization
         {
             return Type.IsAssignableFrom(other.Type);
         }
+
+        public bool IsValidValue(object argument)
+        {
+            return Type.IsAssignableFrom(argument.GetType());
+        }
+
+        public override int GetHashCode()
+        {
+            return Type.GetHashCode() / 3 + Name.GetHashCode() / 3;
+        }
+
+        public static bool operator ==(Parameter p1, Parameter p2) 
+        {
+            return p1.Equals(p2);
+        }
+
+        public static bool operator !=(Parameter p1, Parameter p2) 
+        {
+            return !p1.Equals(p2);
+        }
     }
 }
