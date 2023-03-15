@@ -16,9 +16,9 @@ namespace Code.Editor
         public IReadOnlyModelGraph Graph => _modelGraph;
         
         public IReadOnlyCollection<IReadOnlyBehaviourElementModel> States => 
-            _modelGraph.GetStates().Values as IReadOnlyCollection<IReadOnlyBehaviourElementModel>;
+            _modelGraph.GetIDStates().Values as IReadOnlyCollection<IReadOnlyBehaviourElementModel>;
         public IReadOnlyCollection<IReadOnlyTriggerModel> Triggers => 
-            _modelGraph.GetTriggers().Values as IReadOnlyCollection<IReadOnlyTriggerModel>;
+            _modelGraph.GetIDTriggers().Values as IReadOnlyCollection<IReadOnlyTriggerModel>;
         
         private ModelGraph _modelGraph;
 
@@ -31,8 +31,8 @@ namespace Code.Editor
         #region Common
         public int GetCurrentBiggestId()
         {
-            int firstId = _modelGraph.GetStates().Count != 0 ? _modelGraph.GetStates().Max(pair => pair.Value.GetId()) : StateModel.RootId - 1;
-            int secondId = _modelGraph.GetTriggers().Count != 0 ? _modelGraph.GetTriggers().Max(pair => pair.Value.GetId()) : StateModel.RootId - 1;
+            int firstId = _modelGraph.GetIDStates().Count != 0 ? _modelGraph.GetIDStates().Max(pair => pair.Value.GetId()) : StateModel.RootId - 1;
+            int secondId = _modelGraph.GetIDTriggers().Count != 0 ? _modelGraph.GetIDTriggers().Max(pair => pair.Value.GetId()) : StateModel.RootId - 1;
             return Math.Max(firstId, secondId);
         }
 

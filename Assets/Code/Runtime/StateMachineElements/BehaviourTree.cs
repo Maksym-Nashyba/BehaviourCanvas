@@ -41,6 +41,8 @@ namespace Code.Runtime.StateMachineElements
             }
         }
 
+        public IReadOnlyList<ITrigger> CurrentTriggers => TriggersFrom(CurrentState);
+        
         public IReadOnlyList<ITrigger> TriggersFrom(IState state)
         {
             return _triggers[state];

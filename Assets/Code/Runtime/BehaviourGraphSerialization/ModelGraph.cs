@@ -44,20 +44,13 @@ namespace Code.Runtime.BehaviourGraphSerialization
         }
 
         #region IReadOnlyGraphModel
-        public IReadOnlyBehaviourElementModel GetRootState()
-        {
-            return RootState;
-        }
 
-        public IReadOnlyDictionary<int, IReadOnlyBehaviourElementModel> GetStates()
-        {
-            return _statesDictionary;
-        }
+        public IReadOnlyBehaviourElementModel GetRootState() => RootState;
 
-        public IReadOnlyDictionary<int, IReadOnlyTriggerModel> GetTriggers()
-        {
-            return _triggersDictionary;
-        }
+        public IReadOnlyDictionary<int, IReadOnlyBehaviourElementModel> GetIDStates() => _statesDictionary;
+
+        public IReadOnlyDictionary<int, IReadOnlyTriggerModel> GetIDTriggers() => _triggersDictionary;
+        
         #endregion
         
         #region States

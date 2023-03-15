@@ -12,7 +12,7 @@ namespace Code.Runtime.BehaviourGraphSerialization
             set => _targetModels = value;
         }
         
-        private List<IReadOnlyBehaviourElementModel> _targetModels;
+        private List<IReadOnlyBehaviourElementModel> _targetModels = new List<IReadOnlyBehaviourElementModel>(3);
         
         protected BehaviourElementModel()
         {

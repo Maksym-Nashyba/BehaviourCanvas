@@ -20,7 +20,7 @@ namespace Code.Editor
         private static void ValidateHasOneRoot(IReadOnlyModelGraph graph)
         {
             List<IReadOnlyBehaviourElementModel> roots = new List<IReadOnlyBehaviourElementModel>();
-            foreach (IReadOnlyBehaviourElementModel state in graph.GetStates().Values)
+            foreach (IReadOnlyBehaviourElementModel state in graph.GetIDStates().Values)
             {
                 if (state.GetId() == StateModel.RootId) roots.Add(state);
             }
@@ -31,12 +31,12 @@ namespace Code.Editor
 
         private static void ValidateIsntEmpty(IReadOnlyModelGraph graph)
         {
-            if (graph.GetStates().Count < 1) throw new InvalidDataException("The graph is empty");
+            if (graph.GetIDStates().Count < 1) throw new InvalidDataException("The graph is empty");
         }
 
         private static void ValidateTriggerToStateParameters(IReadOnlyModelGraph graph)
         {
-            foreach (IReadOnlyTriggerModel trigger in graph.GetTriggers().Values)
+            foreach (IReadOnlyTriggerModel trigger in graph.GetIDTriggers().Values)
             {
                 Model targetState = trigger.GetTargetModels()[0].GetModel();
                 if (!trigger.GetModel().Parameters.CanMapTo(targetState.Parameters))
@@ -50,7 +50,7 @@ namespace Code.Editor
         
         private static void ValidateTriggersHaveTargets(IReadOnlyModelGraph graph)
         {
-            foreach (IReadOnlyTriggerModel trigger in graph.GetTriggers().Values)
+            foreach (IReadOnlyTriggerModel trigger in graph.GetIDTriggers().Values)
             {
                 if (trigger.GetTargetModels() == null || trigger.GetTargetModels().Count < 1)
                 {
@@ -68,7 +68,7 @@ namespace Code.Editor
         {
             Dictionary<IReadOnlyTriggerModel, IReadOnlyBehaviourElementModel> triggerToSource =
                 new Dictionary<IReadOnlyTriggerModel, IReadOnlyBehaviourElementModel>();
-            foreach (IReadOnlyBehaviourElementModel state in graph.GetStates().Values)
+            foreach (IReadOnlyBehaviourElementModel state in graph.GetIDStates().Values)
             {
                 if(state.GetTargetModels() is null) continue;
                 foreach (IReadOnlyTriggerModel targetTrigger in state.GetTargetModels().Cast<IReadOnlyTriggerModel>())
@@ -84,14 +84,14 @@ namespace Code.Editor
                 }
             }
 
-            bool allTriggersAdded = graph.GetTriggers().Values.Intersect(triggerToSource.Keys).Count() == triggerToSource.Keys.Count;
+            bool allTriggersAdded = graph.GetIDTriggers().Values.Intersect(triggerToSource.Keys).Count() == triggerToSource.Keys.Count;
             if (!allTriggersAdded) throw new InvalidDataException("Some triggers have no source");
         }
         
         private static void ValidateStatesHaveSource(IReadOnlyModelGraph graph)
         {
-            HashSet<IReadOnlyBehaviourElementModel> uncheckedStates = graph.GetStates().Values.ToHashSet();
-            foreach (IReadOnlyTriggerModel trigger in graph.GetTriggers().Values)
+            HashSet<IReadOnlyBehaviourElementModel> uncheckedStates = graph.GetIDStates().Values.ToHashSet();
+            foreach (IReadOnlyTriggerModel trigger in graph.GetIDTriggers().Values)
             {
                 if (uncheckedStates.Contains(trigger.GetTargetModels()[0]))
                 {

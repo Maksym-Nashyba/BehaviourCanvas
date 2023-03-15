@@ -1,5 +1,6 @@
 using System;
 using Code.Runtime.StateMachineElements;
+using Code.Runtime.States;
 
 namespace Code.Runtime.Triggers
 {
@@ -7,15 +8,24 @@ namespace Code.Runtime.Triggers
     {
         private State<Single> _targetState;
         private Single _number;
+        private bool _isHit;
+        
+        public float TestParameter => _number;
+        public TestState TargetState => (TestState)_targetState;
 
+        public void Activate()
+        {
+            _isHit = true;
+        }
+        
         public override bool IsHit()
         {
-            throw new NotImplementedException();
+            return _isHit;
         }
 
         public override void Reset()
         {
-            throw new NotImplementedException();
+            _isHit = false;
         }
     
         public override IState PrepareTarget()
@@ -28,7 +38,7 @@ namespace Code.Runtime.Triggers
         {
             return new(string, Type)[]
             {
-                ("number", typeof(Single)),
+                ("number", typeof(Single))
             };
         }
     }

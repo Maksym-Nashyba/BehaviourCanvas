@@ -25,13 +25,13 @@ namespace Code.Runtime.StateMachineElements
         public BehaviourTree BuildTree(BehaviourTreeAsset blueprint, GameObjectContext dependencyContainer)
         {
             ModelGraph deserializedModels = Deserialize(blueprint);
-            IReadOnlyDictionary<int, IState> stateObjects = InstantiateBehaviourElements<IState>(deserializedModels.GetStates().Values);
-            IReadOnlyDictionary<int, ITrigger> triggerObjects = InstantiateBehaviourElements<ITrigger>(deserializedModels.GetTriggers().Values);
+            IReadOnlyDictionary<int, IState> stateObjects = InstantiateBehaviourElements<IState>(deserializedModels.GetIDStates().Values);
+            IReadOnlyDictionary<int, ITrigger> triggerObjects = InstantiateBehaviourElements<ITrigger>(deserializedModels.GetIDTriggers().Values);
             InjectDependencies(stateObjects.Values, triggerObjects.Values, dependencyContainer);
-            InjectTriggerTargets(deserializedModels.GetTriggers().Values, stateObjects, triggerObjects);
+            InjectTriggerTargets(deserializedModels.GetIDTriggers().Values.WhereNotNull(), stateObjects, triggerObjects);
 
             Dictionary<IState, IReadOnlyList<ITrigger>> orderedTriggers
-                = deserializedModels.GetStates().Values
+                = deserializedModels.GetIDStates().Values
                 .Select(model => model.GetTargetModels())
                 .Select(triggerList =>
                     triggerList.Select(triggerModel => triggerObjects[triggerModel.GetId()]).ToList())

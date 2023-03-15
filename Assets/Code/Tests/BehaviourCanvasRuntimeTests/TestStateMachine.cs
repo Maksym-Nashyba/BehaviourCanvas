@@ -1,28 +1,33 @@
-﻿using System;
-using Code.Runtime.BehaviourGraphSerialization;
+﻿using Code.Runtime.BehaviourGraphSerialization;
 using Code.Runtime.StateMachineElements;
+using System;
 
 namespace Code.Tests.BehaviourCanvasRuntimeTests
 {
     public class TestStateMachine : StateMachine
     {
-        public IState CurrentState => BehaviourTree.CurrentState;
+        public BehaviourTree Tree => BehaviourTree;
         public BehaviourTreeAsset Asset => BehaviourTreeAsset;
-        private bool _started = false;
+        public bool Started { get; private set; }
         protected override void Start()
         {
         }
 
         public void BuildTree()
         {
-            if (_started) throw new InvalidOperationException("Already built");
+            if (Started) throw new InvalidOperationException("Already built");
             base.Start();
-            _started = true;
+            Started = true;
         }
 
+        public void Step()
+        {
+            Update();
+        }
+        
         protected override void Update()
         {
-            if(!_started) return;
+            if(!Started) return;
             base.Update();
         }
     }
