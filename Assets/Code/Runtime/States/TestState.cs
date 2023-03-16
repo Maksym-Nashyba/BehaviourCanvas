@@ -9,7 +9,7 @@ namespace Code.Runtime.States
     {
         private Single _argument;
         
-        public override void ResetStateParameters(float param0)
+        protected override void ResetStateParameters(float param0)
         {
             _argument = param0;
         }

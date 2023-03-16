@@ -20,7 +20,12 @@ namespace #Namespace#
         
         public override IState PrepareTarget()
         {
-            _targetState.ResetStateParameters#ResetTargetParameters#;
+            object[] arguments =
+            {
+                #ResetTargetParameters#
+            };
+            arguments = GetParameters().MapTo(_targetState.GetParameters(), arguments);
+            _targetState.Reset(arguments);
             return _targetState;
         }
         

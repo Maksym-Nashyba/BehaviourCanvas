@@ -21,7 +21,13 @@ namespace Code.Runtime.Triggers
         
         public override IState PrepareTarget()
         {
-            _targetState.ResetStateParameters(_target, _maxDistance);
+            object[] arguments =
+            {
+                _target,
+                 _maxDistance
+            };
+            arguments = GetParameters().MapTo(_targetState.GetParameters(), arguments);
+            _targetState.Reset(arguments);
             return _targetState;
         }
         

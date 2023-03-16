@@ -1,6 +1,5 @@
 ﻿using Code.Runtime.BehaviourGraphSerialization;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -17,7 +16,7 @@ namespace Code.Runtime.StateMachineElements
         protected virtual void Start()
         {
             BehaviourTree = _behaviourTreeBuilder.BuildTree(BehaviourTreeAsset, _dependencyContainer);
-            BehaviourTree.StartRootState(_rootArguments.Select(parameter => parameter.PlainObject ?? parameter.UnityObject));
+            BehaviourTree.StartRootState(_rootArguments.ToArray());
         }
 
         protected virtual  void Update()

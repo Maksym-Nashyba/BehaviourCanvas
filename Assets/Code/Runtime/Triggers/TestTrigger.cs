@@ -28,10 +28,15 @@ namespace Code.Runtime.Triggers
         {
             _isHit = false;
         }
-    
+
         public override IState PrepareTarget()
         {
-            _targetState.ResetStateParameters(_number);
+            object[] arguments =
+            {
+                _number
+            };
+            arguments = GetParameters().MapTo(_targetState.GetParameters(), arguments);
+            _targetState.Reset(arguments);
             return _targetState;
         }
     

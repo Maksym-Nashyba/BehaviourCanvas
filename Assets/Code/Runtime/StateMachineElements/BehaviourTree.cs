@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Code.Runtime.StateMachineElements
 {
@@ -16,10 +17,11 @@ namespace Code.Runtime.StateMachineElements
             _triggers = triggers;
         }
         
-        public void StartRootState(params object[] rootStateParameters)
+        internal void StartRootState(SerializableParameter[] serializableParameters)
         {
             if (CurrentState is not null) throw new InvalidOperationException("Only start from root state if the current state is null.");
-            
+
+            object[] rootStateParameters = serializableParameters.Select((parameter, i) => parameter.GetValue(_rootState.GetParameters().Parameters[i].Type)).ToArray();
             CurrentState = _rootState;
             CurrentState.Reset(rootStateParameters);
             CurrentState.Start();

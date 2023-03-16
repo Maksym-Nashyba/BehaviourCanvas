@@ -39,16 +39,15 @@ namespace Code.Templates.TriggerTemplate
         
         private string BuildResetTargetParameters(TriggerTemplateData data)
         {
-            if (data.Parameters.Length == 0) return "()";
-            string result = "(";
-
-            result += $"_{data.Parameters[0].NameCamelCase}";
+            if (data.Parameters.Length == 0) return String.Empty;
+            string result = "_"+data.Parameters[0].NameCamelCase;
+            
             for (int i = 1; i < data.Parameters.Length; i++)
             {
-                result += $", _{data.Parameters[i].NameCamelCase}";
+                result += $",\n                 _{data.Parameters[i].NameCamelCase}";
             }
             
-            return result+")";
+            return result;
         }
 
         private string BuildTargetStateField(TriggerTemplateData data)
