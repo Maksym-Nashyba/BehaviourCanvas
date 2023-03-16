@@ -60,7 +60,7 @@ namespace Code.Runtime.BehaviourGraphSerialization
 
         public bool AreValidValues(params object[] argumets)
         {
-            if (argumets.Length != Parameters.Length) return false;
+            if (argumets.Length < Parameters.Length) return false;
             for (int i = 0; i < Parameters.Length; i++)
             {
                 if (!Parameters[i].IsValidValue(argumets[i])) return false;
@@ -71,8 +71,22 @@ namespace Code.Runtime.BehaviourGraphSerialization
         
         public object[] MapTo(ParameterSet other, object[] values)
         {
+            values ??= Array.Empty<object>();
             if (!AreValidValues(values)) throw new ArgumentException();
-            return null;
+            if (CanMapDirectrly(other.Parameters) || IsDirectSupersetOf(other.Parameters))
+            {
+                return values.Take(other.Count).ToArray();
+            }
+
+            if (!CanMapTo(other)) throw new ArgumentException("Failed to map arguments.");
+            
+            object[] indirectMap = new object[other.Count];
+            for (var i = 0; i < other.Count; i++)
+            {
+                int argumentIndex = Array.FindIndex(Parameters, parameter => parameter == other.Parameters[i]);
+                indirectMap[i] = values[argumentIndex];
+            }
+            return indirectMap;
         }
         
         public bool CanMapTo(ParameterSet other)
