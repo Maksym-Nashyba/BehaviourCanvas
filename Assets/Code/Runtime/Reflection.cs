@@ -65,12 +65,10 @@ namespace Code.Runtime
 
         private static ParameterSet GetParameterSet(Type type)
         {
-            Func<(string, Type)[]> parameterGetter = (Func<(string, Type)[]>)Delegate.CreateDelegate(typeof(Func<(string, Type)[]>),
+            Func<ParameterSet> parameterGetter = (Func<ParameterSet>)Delegate.CreateDelegate(typeof(Func<ParameterSet>),
                 null,
-                type.GetMethod("GetParameterList", BindingFlags.Public | BindingFlags.Static)!);
-            Parameter[] parameters = parameterGetter.Invoke()
-                .Select(parameter => new Parameter(parameter.Item2, parameter.Item1)).ToArray();
-            return new ParameterSet(parameters);
+                type.GetMethod("GetParametersStatic", BindingFlags.Public | BindingFlags.Static)!);
+            return parameterGetter.Invoke();
         }
     }
 }

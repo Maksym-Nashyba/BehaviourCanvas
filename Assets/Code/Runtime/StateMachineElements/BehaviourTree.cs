@@ -11,13 +11,14 @@ namespace Code.Runtime.StateMachineElements
         private readonly IReadOnlyList<IState> _states;
         private readonly IState _rootState;
 
-        public BehaviourTree(IReadOnlyList<IState> states, IReadOnlyDictionary<IState, IReadOnlyList<ITrigger>> triggers)
+        public BehaviourTree(IState rootState, IReadOnlyList<IState> states, IReadOnlyDictionary<IState, IReadOnlyList<ITrigger>> triggers)
         {
+            _rootState = rootState;
             _states = states;
             _triggers = triggers;
         }
         
-        internal void StartRootState(SerializableParameter[] serializableParameters)
+        public void StartRootState(SerializableParameter[] serializableParameters)
         {
             if (CurrentState is not null) throw new InvalidOperationException("Only start from root state if the current state is null.");
 
@@ -30,8 +31,8 @@ namespace Code.Runtime.StateMachineElements
         public void Transition(IState target)
         {
             CurrentState.End();
-            target.Start();
             CurrentState = target;
+            target.Start();
         }
 
         public void ResetTriggers(IState state)

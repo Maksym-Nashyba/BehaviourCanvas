@@ -27,12 +27,11 @@ namespace Code.Runtime.StateMachineElements
             for (int i = 0; i < currentStateTriggers.Count; i++)
             {
                 ITrigger trigger = currentStateTriggers[i];
-                if (trigger.IsHit())
-                {
-                    IState beforeTransition = BehaviourTree.CurrentState;
-                    BehaviourTree.Transition(trigger.PrepareTarget());
-                    BehaviourTree.ResetTriggers(beforeTransition);
-                }
+                if (!trigger.IsHit()) continue;
+                
+                IState beforeTransition = BehaviourTree.CurrentState;
+                BehaviourTree.Transition(trigger.PrepareTarget());
+                BehaviourTree.ResetTriggers(beforeTransition);
             }
         }
     }

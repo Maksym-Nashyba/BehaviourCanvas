@@ -14,6 +14,12 @@ namespace Code.Runtime.Triggers
         public float TestParameter => _number;
         public TestState TargetState => (TestState)_targetState;
 
+        public TestTrigger(TestState target, float number)
+        {
+            _targetState = target;
+            _number = number;
+        }
+        
         public void Activate()
         {
             _isHit = true;

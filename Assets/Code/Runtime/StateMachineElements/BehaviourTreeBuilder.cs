@@ -39,7 +39,7 @@ namespace Code.Runtime.StateMachineElements
                 .Zip(stateObjects.Values, (triggers, state) => (triggers, state))
                 .ToDictionary(tuple => tuple.state, tuple => tuple.triggers);
 
-            return new BehaviourTree(stateObjects.Values.ToList(), orderedTriggers);
+            return new BehaviourTree(stateObjects[StateModel.RootId], stateObjects.Values.ToList(), orderedTriggers);
         }
 
         private void InjectTriggerTargets(IEnumerable<IReadOnlyTriggerModel> triggerBlueprints,

@@ -8,7 +8,14 @@ namespace Code.Runtime.States
     public class TestState : State<float>
     {
         private Single _argument;
+
+        public float Number => _argument;
         
+        public TestState(float number)
+        {
+            _argument = number;
+        }
+
         protected override void ResetStateParameters(float param0)
         {
             _argument = param0;

@@ -209,8 +209,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 721216661}
-  - component: {fileID: 721216662}
   - component: {fileID: 721216663}
+  - component: {fileID: 721216662}
   m_Layer: 0
   m_Name: StateMachine
   m_TagString: Untagged
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 721216660}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03a379fc58b346b7898d0ded224109bc, type: 3}
+  m_Script: {fileID: 11500000, guid: fd177a1758014418ba6779d0880a3668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   BehaviourTreeAsset: {fileID: 11400000, guid: 57c0fdb825fa8fe489fe744877086f23, type: 2}

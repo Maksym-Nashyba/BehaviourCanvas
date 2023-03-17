@@ -5,7 +5,8 @@
         "UnityEditor.TestRunner",
         "UnityEngine.TestRunner",
         "BehaviourCanvas.Runtime",
-        "BehaviourCanvas"
+        "BehaviourCanvas",
+        "Zenject"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
