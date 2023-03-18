@@ -16,6 +16,10 @@ namespace Code.Runtime.States
             _argument = number;
         }
 
+        public TestState()
+        {
+        }
+
         protected override void ResetStateParameters(float param0)
         {
             _argument = param0;

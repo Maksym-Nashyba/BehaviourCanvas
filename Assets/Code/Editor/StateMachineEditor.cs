@@ -40,9 +40,12 @@ namespace Code.Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(_dependencyContainerProperty, new GUIContent("Dependency Container"));
-            if (EditorGUI.EndChangeCheck()) serializedObject.ApplyModifiedProperties();
+            if (_dependencyContainerProperty != null)
+            {
+                EditorGUI.BeginChangeCheck();
+                EditorGUILayout.PropertyField(_dependencyContainerProperty, new GUIContent("Dependency Container"));
+                if (EditorGUI.EndChangeCheck()) serializedObject.ApplyModifiedProperties();
+            }
             GUILayout.BeginVertical("box");
             
             EditorGUI.BeginChangeCheck();

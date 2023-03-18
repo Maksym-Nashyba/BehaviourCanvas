@@ -9,8 +9,8 @@ namespace Code.Runtime.StateMachineElements
     {
         protected BehaviourTree BehaviourTree;
         [SerializeField] protected BehaviourTreeAsset BehaviourTreeAsset;
-        [SerializeField] private GameObjectContext _dependencyContainer;
         [SerializeField] private List<SerializableParameter>_rootArguments;
+        [Inject] private DiContainer _dependencyContainer;
         [Inject] private BehaviourTreeBuilder _behaviourTreeBuilder;
         
         protected virtual void Start()

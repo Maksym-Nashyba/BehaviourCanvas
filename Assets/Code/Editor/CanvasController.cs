@@ -3,7 +3,6 @@ using System.IO;
 using Code.Editor.EditorWindows.PopUpWindow;
 using Code.Editor.Serializers;
 using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.Initialization;
 using Code.Runtime.StateMachineElements;
 
 namespace Code.Editor

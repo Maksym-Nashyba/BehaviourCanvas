@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.Initialization;
 using Code.Runtime.States;
 using Code.Runtime.Triggers;
 using Zenject;
@@ -22,7 +21,7 @@ namespace Code.Runtime.StateMachineElements
             _deserializer = new ModelSerializer();
         }
 
-        public BehaviourTree BuildTree(BehaviourTreeAsset blueprint, GameObjectContext dependencyContainer)
+        public BehaviourTree BuildTree(BehaviourTreeAsset blueprint, DiContainer dependencyContainer)
         {
             ModelGraph deserializedModels = Deserialize(blueprint);
             IReadOnlyDictionary<int, IState> stateObjects = InstantiateBehaviourElements<IState>(deserializedModels.GetIDStates().Values);
@@ -55,10 +54,10 @@ namespace Code.Runtime.StateMachineElements
             }
         }
         
-        private void InjectDependencies(IEnumerable<IState> states, IEnumerable<ITrigger> triggers, GameObjectContext dependencyContainer)
+        private void InjectDependencies(IEnumerable<IState> states, IEnumerable<ITrigger> triggers, DiContainer dependencyContainer)
         {
-            foreach (IState state in states) dependencyContainer.Container.Inject(state);
-            foreach (ITrigger trigger in triggers) dependencyContainer.Container.Inject(trigger);
+            foreach (IState state in states) dependencyContainer.Inject(state);
+            foreach (ITrigger trigger in triggers) dependencyContainer.Inject(trigger);
         }
         
         private IReadOnlyDictionary<int, T> InstantiateBehaviourElements<T>(IEnumerable<IReadOnlyBehaviourElementModel> models)

@@ -338,6 +338,7 @@ GameObject:
   m_Component:
   - component: {fileID: 941796397}
   - component: {fileID: 941796396}
+  - component: {fileID: 941796398}
   m_Layer: 0
   m_Name: StateMachine
   m_TagString: Untagged
@@ -357,12 +358,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd177a1758014418ba6779d0880a3668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dependencyContainer: {fileID: 0}
-  _behaviourTreeAsset: {fileID: 0}
-  _rootArguments: []
+  BehaviourTreeAsset: {fileID: 11400000, guid: aedbaa7e8a0693a49b2d082b81d1b923, type: 2}
+  _dependencyContainer: {fileID: 941796398}
+  _rootArguments:
+  - PlainObject:
+      rid: -2
+    UnityObject: {fileID: 0}
+    IntValue: 0
+    FloatValue: 12
+    Vector2Value: {x: 0, y: 0}
+    Vector3Value: {x: 0, y: 0, z: 0}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!4 &941796397
 Transform:
   m_ObjectHideFlags: 0
@@ -378,6 +388,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &941796398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941796395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers: []
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

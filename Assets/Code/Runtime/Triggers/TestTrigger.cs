@@ -19,7 +19,11 @@ namespace Code.Runtime.Triggers
             _targetState = target;
             _number = number;
         }
-        
+
+        public TestTrigger()
+        {
+        }
+
         public void Activate()
         {
             _isHit = true;

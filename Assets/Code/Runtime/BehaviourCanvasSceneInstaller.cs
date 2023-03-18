@@ -1,9 +1,9 @@
 ﻿using Code.Runtime.StateMachineElements;
 using Zenject;
 
-namespace Code.Runtime.Initialization
+namespace Code.Runtime
 {
-    internal class BehaviourCanvasSceneInstaller : MonoInstaller<BehaviourCanvasSceneInstaller>
+    public class BehaviourCanvasSceneInstaller : MonoInstaller<BehaviourCanvasSceneInstaller>
     {
         public override void InstallBindings()
         {
