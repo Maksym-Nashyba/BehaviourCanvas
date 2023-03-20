@@ -7,20 +7,20 @@ namespace Code.Runtime.BehaviourGraphSerialization
         public TextAsset BehaviourTreeXML => _behaviourTreeXML;
         
         #if UNITY_EDITOR
-            public TextAsset NodeTreeXML => _nodeTreeXML;
+            public TextAsset MarkupXML => _markupXML;
         #endif
         
         [SerializeField] private TextAsset _behaviourTreeXML;
-        [SerializeField] private TextAsset _nodeTreeXML;
+        [SerializeField] private TextAsset _markupXML;
 
         public void UpdateBehaviourTreeXML(TextAsset behaviourTreeXML)
         {
             _behaviourTreeXML = behaviourTreeXML;
         }
         
-        public void UpdateNodeTreeXML(TextAsset nodeTreeXML)
+        public void UpdateMarkupXML(TextAsset nodeTreeXML)
         {
-            _nodeTreeXML = nodeTreeXML;
+            _markupXML = nodeTreeXML;
         }
     }
 }

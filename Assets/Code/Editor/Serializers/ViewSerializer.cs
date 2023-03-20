@@ -10,6 +10,7 @@ namespace Code.Editor.Serializers
 {
     public sealed class ViewSerializer : EditorSerializer
     {
+
         public ViewSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset)
         {
             ValidateTreeAsset(treeAsset);
@@ -18,13 +19,13 @@ namespace Code.Editor.Serializers
         public void Serialize(IReadOnlyCollection<NodeView> nodeViews)
         {
             TextAsset xml = CreateXML(nodeViews);
-            TreeAsset.UpdateNodeTreeXML(xml);
+            TreeAsset.UpdateMarkupXML(xml);
         }
 
         public Rect GetNodePosition(string nodeID)
         {
             XmlDocument document = new XmlDocument();
-            document.LoadXml(TreeAsset.NodeTreeXML.text);
+            document.LoadXml(TreeAsset.MarkupXML.text);
             XmlNodeList ids = document.GetElementsByTagName("ModelId");
             Rect position = new Rect(0, 0, 500, 250);
             foreach (XmlNode id in ids)
@@ -35,23 +36,22 @@ namespace Code.Editor.Serializers
                 position.y = Convert.ToSingle(id.ParentNode.LastChild.InnerText);
                 break;
             }
-
             return position;
-        } //TODO rewrite?
+        }
         
-        private TextAsset CreateXML(IReadOnlyCollection<NodeView> nodeViews) 
+        private TextAsset CreateXML(IReadOnlyCollection<NodeView> nodeViews)
         {
             XmlDocument document = new XmlDocument();
                     
-            XmlElement nodeTreeXML = document.CreateElement(string.Empty, "NodeTree", string.Empty);
+            XmlElement nodeTreeXML = document.CreateElement(string.Empty, "Markup", string.Empty);
             document.AppendChild(nodeTreeXML);
         
             XmlElement nodesXML = CreateNodesXML(document, nodeViews);
                     
             nodeTreeXML.AppendChild(nodesXML);
         
-            SaveXML("NodeTree", document.OuterXml);
-            TextAsset xml = AssetDatabase.LoadAssetAtPath<TextAsset>(BehaviourCanvasPaths.BehaviourTreeAssets + "/NodeTree.xml");
+            SaveXML($"{TreeAsset.name}Markup", document.OuterXml);
+            TextAsset xml = TreeAsset.MarkupXML;
             return xml;
         }
 
@@ -81,12 +81,12 @@ namespace Code.Editor.Serializers
         {
             try 
             {
-                if (treeAsset.NodeTreeXML.bytes is null) 
+                if (treeAsset.MarkupXML.bytes is null) 
                 {
                     Serialize(new List<NodeView>());
                 }
             }
-            catch (MissingReferenceException ex) 
+            catch (MissingReferenceException) 
             { 
                 Serialize(new List<NodeView>());
             }

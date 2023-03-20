@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BehaviourTreeAsset
   m_EditorClassIdentifier: 
   _behaviourTreeXML: {fileID: 4900000, guid: 0424002e8bc2a76439407be439ce4c56, type: 3}
-  _nodeTreeXML: {fileID: 4900000, guid: 3a7967623948e244ba24ff467ad4a10e, type: 3}
+  _markupXML: {fileID: 4900000, guid: 3a7967623948e244ba24ff467ad4a10e, type: 3}
