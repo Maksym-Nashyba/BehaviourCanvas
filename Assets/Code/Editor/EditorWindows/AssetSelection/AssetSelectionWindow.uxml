@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: space-around; align-items: center;">
+        <ui:Label tabindex="-1" text="Pick Behaviour Asset To Edit" display-tooltip-when-elided="true" style="align-self: center; justify-content: flex-start; align-items: stretch;" />
+        <ui:VisualElement style="align-self: center; justify-content: space-around; align-items: center; background-color: rgba(0, 0, 0, 0.04);">
+            <ui:TextField picking-mode="Ignore" value="New Behaviour Asset Name" />
+            <ui:Button text="Create" display-tooltip-when-elided="true" name="CreateButton" />
+            <ui:Label tabindex="-1" text="OR" display-tooltip-when-elided="true" />
+            <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadButton" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

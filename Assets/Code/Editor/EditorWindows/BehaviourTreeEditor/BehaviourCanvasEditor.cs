@@ -1,5 +1,5 @@
+using System;
 using Code.Editor.Serializers;
-using Code.Runtime;
 using Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -11,15 +11,17 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
     public class BehaviourCanvasEditor : EditorWindow
     {
         [SerializeField] private VisualTreeAsset _visualTreeAsset = default;
-        private ToolbarButton _toolbarButton;
+        private ToolbarButton _saveButton;
         private CanvasController _canvasController;
         private BehaviourCanvasView _canvasView;
+        private BehaviourElementModelsPool _behaviourElementModelsPool;
         
-        [MenuItem("Window/CanvasController/BehaviourCanvasEditor")]
-        public static void OpenWindow()
+        public static void OpenWithAsset(BehaviourTreeAsset asset)
         {
             BehaviourCanvasEditor wnd = GetWindow<BehaviourCanvasEditor>();
             wnd.titleContent = new GUIContent("BehaviourCanvasEditor");
+            if (asset == null) throw new NullReferenceException("Behaviour Canvas Editor was opened with NULL as target asset.");
+            wnd.Initialize(asset);
         }
         
         public void CreateGUI()
@@ -29,10 +31,14 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             AddStylesheets();
             
             _canvasView = root.Q<BehaviourCanvasView>();
-            BehaviourElementModelsPool behaviourElementModelsPool = root.Q<BehaviourElementModelsPool>();
+            _behaviourElementModelsPool = root.Q<BehaviourElementModelsPool>();
+            _saveButton = root.Q<ToolbarButton>();
             
-            string behaviourTreeAssetPath = BehaviourCanvasPaths.BehaviourTreeAssets +"/BehaviourTreeAsset.asset";
-            BehaviourTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(behaviourTreeAssetPath);
+            _saveButton.clicked += OnSaveButtonClicked;
+        }
+
+        private void Initialize(BehaviourTreeAsset treeAsset)
+        {
             EditorModelSerializer editorModelSerializer = new EditorModelSerializer(treeAsset);
             ViewSerializer viewSerializer = new ViewSerializer(treeAsset);
             
@@ -41,20 +47,19 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             
             _canvasView.Initialize(canvasModel, _canvasController, viewSerializer);
             _canvasController.Initialize();
-            behaviourElementModelsPool.Initialize(_canvasController);
-            
-            _toolbarButton = root.Q<ToolbarButton>();
-            _toolbarButton.clicked += () =>
-            {
-                _canvasController.SaveModel();
-                _canvasView.Serialize();
-            };
+            _behaviourElementModelsPool.Initialize(_canvasController);
         }
         
         private void OnDisable()
         {
-            _canvasController.Dispose();
-            _canvasView.Dispose();
+            _canvasController?.Dispose();
+            _canvasView?.Dispose();
+        }
+        
+        private void OnSaveButtonClicked()
+        {
+            _canvasController.SaveModel();
+            _canvasView.Serialize();
         }
         
         private void AddStylesheets()
