@@ -27,9 +27,9 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
         {
             _onAddButton = onAddButtonCallback;
             _modelName.text = model.GetModel().Name;
-            DisplayParameter(_parameterOne, model.GetModel().Parameters[0]);
-            DisplayParameter(_parameterTwo, model.GetModel().Parameters[1]);
-            DisplayParameter(_parameterThree, model.GetModel().Parameters[2]);
+            DisplayParameter(_parameterOne, model.GetModel().Parameters, 0);
+            DisplayParameter(_parameterTwo, model.GetModel().Parameters, 1);
+            DisplayParameter(_parameterThree, model.GetModel().Parameters, 2);
             _addButton.clicked += onAddButtonCallback;
         }
         
@@ -49,8 +49,15 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             _addButton = root.Q<Button>("AddButton");
         }
 
-        private void DisplayParameter(Label label, Parameter parameter)
+        private void DisplayParameter(Label label, ParameterSet parameters, int index)
         {
+            if (index >= parameters.Count)
+            {
+                label.style.display = DisplayStyle.None;
+                return;
+            }
+
+            Parameter parameter = parameters[index];
             label.text = $"{parameter.Type.Name}: {parameter.Name}";
         }
         
