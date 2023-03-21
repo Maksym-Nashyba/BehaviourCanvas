@@ -16,6 +16,8 @@ namespace Code.Runtime.BehaviourGraphSerialization
         public int Count => Parameters.Length;
         
         public readonly Parameter[] Parameters;
+        
+        public Parameter this[int i] => Parameters[i];
 
         #region Constructors
 

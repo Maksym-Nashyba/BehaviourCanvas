@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="ModelPoolElement" src="project://database/Assets/Code/Editor/EditorWindows/BehaviourTreeEditor/ModelPoolElement.uxml?fileID=9197481963319205126&amp;guid=0d4ee030ebfe32d4d9bc431e6b36401c&amp;type=3#ModelPoolElement" />
     <Style src="project://database/Assets/Code/Editor/EditorWindows/BehaviourTreeEditor/BehaviourCanvasEditor.uss?fileID=7433441132597879392&amp;guid=bb679291420b5954f892eb91fe006ba9&amp;type=3#BehaviourCanvasEditor" />
     <uie:Toolbar style="align-items: center; align-self: auto;">
         <ui:Label tabindex="-1" text="SelectedAssetName" display-tooltip-when-elided="true" name="SelectedAssetName" style="align-self: center; justify-content: flex-end; align-items: center; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
@@ -15,7 +16,9 @@
                     <uie:ToolbarToggle focusable="false" label="Triggers" name="TriggersToggle" style="flex-shrink: 1; flex-grow: 1; align-items: center;" />
                 </uie:Toolbar>
                 <ui:VisualElement name="states-visual" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 90%; display: flex; visibility: visible;">
-                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;" />
+                    <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;">
+                        <ui:Instance template="ModelPoolElement" name="ModelPoolElement" />
+                    </ui:ScrollView>
                     <ui:Button text="New State" display-tooltip-when-elided="true" style="flex-grow: 0; height: 10%; width: 80%; align-self: center; margin-bottom: 14px;" />
                 </ui:VisualElement>
                 <ui:VisualElement name="triggers-visual" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 90%; display: none;">
