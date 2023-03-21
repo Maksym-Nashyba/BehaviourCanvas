@@ -7,6 +7,7 @@ using Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Code.Editor.EditorWindows.AssetSelection
 {
@@ -56,7 +57,7 @@ namespace Code.Editor.EditorWindows.AssetSelection
         private void OnLoadButton()
         {
             int controlID = EditorGUIUtility.GetControlID (FocusType.Passive);
-            EditorGUIUtility.ShowObjectPicker<BehaviourTreeAsset> (null, true, "", controlID);
+            EditorGUIUtility.ShowObjectPicker<BehaviourTreeAsset>(null, false, String.Empty, controlID);
         }
         
         private void OnGUI()

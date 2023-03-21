@@ -15,6 +15,7 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
         private CanvasController _canvasController;
         private BehaviourCanvasView _canvasView;
         private BehaviourElementModelsPool _behaviourElementModelsPool;
+        private Label _selectedAssetName;
         
         public static void OpenWithAsset(BehaviourTreeAsset asset)
         {
@@ -33,6 +34,7 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             _canvasView = root.Q<BehaviourCanvasView>();
             _behaviourElementModelsPool = root.Q<BehaviourElementModelsPool>();
             _saveButton = root.Q<ToolbarButton>();
+            _selectedAssetName = root.Q<Label>("SelectedAssetName");
             
             _saveButton.clicked += OnSaveButtonClicked;
         }
@@ -48,6 +50,8 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             _canvasView.Initialize(canvasModel, _canvasController, viewSerializer);
             _canvasController.Initialize();
             _behaviourElementModelsPool.Initialize(_canvasController);
+
+            _selectedAssetName.text = treeAsset.name;
         }
         
         private void OnDisable()
