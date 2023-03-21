@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Code.Editor.EditorWindows.BehaviourTreeEditor;
 using Code.Editor.EditorWindows.Builders.StateBuilder;
 using Code.Editor.EditorWindows.Builders.TriggerBuilder;
 using Code.Runtime;
@@ -43,11 +44,15 @@ namespace Code.Editor
 
         private void UpdateStatesList()
         {
+            foreach (VisualElement element in _statesScrollView.Children())
+            {
+                if(element is IDisposable disposable)disposable.Dispose();
+            }
             _statesScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllStates();
-            List<Button> buttons = CreateBehaviourElementModelsButtons(models, 
+            List<ModelPoolElement> buttons = CreateBehaviourElementModelsButtons(models, 
                 model => _canvasController.CreateState(model));
-            foreach (Button button in buttons)
+            foreach (ModelPoolElement button in buttons)
             {
                 _statesScrollView.Add(button);
             }
@@ -55,24 +60,28 @@ namespace Code.Editor
         
         private void UpdateTriggersList()
         {
+            foreach (VisualElement element in _triggersScrollView.Children())
+            {
+                if(element is IDisposable disposable)disposable.Dispose();
+            }
             _triggersScrollView.Clear();
             IReadOnlyList<Model> models = Reflection.FindAllTriggers();
-            List<Button> buttons = CreateBehaviourElementModelsButtons(models, 
+            List<ModelPoolElement> buttons = CreateBehaviourElementModelsButtons(models, 
                 model => _canvasController.CreateTrigger(model));
-            foreach (Button button in buttons)
+            foreach (ModelPoolElement button in buttons)
             {
                 _triggersScrollView.Add(button);
             }
         }
 
-        private List<Button> CreateBehaviourElementModelsButtons(IReadOnlyList<Model> models, Action<Model> buttonClickEvent)
+        private List<ModelPoolElement> CreateBehaviourElementModelsButtons(IReadOnlyList<Model> models, Action<Model> buttonClickEvent)
         {
-            List<Button> buttons = new List<Button>(models.Count);
+            List<ModelPoolElement> buttons = new List<ModelPoolElement>(models.Count);
             foreach (Model model in models)
             {
-                Button button = new Button(() => buttonClickEvent(model));
-                button.text = model.Name;
-                buttons.Add(button);
+                ModelPoolElement poolElement = new ModelPoolElement();
+                poolElement.Initialize(model,() => buttonClickEvent(model));
+                buttons.Add(poolElement);
             }
             return buttons;
         }

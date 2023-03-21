@@ -23,13 +23,13 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
             QueryElements(root);
         }
 
-        public void Initialize(IReadOnlyBehaviourElementModel model, Action onAddButtonCallback)
+        public void Initialize(Model model, Action onAddButtonCallback)
         {
             _onAddButton = onAddButtonCallback;
-            _modelName.text = model.GetModel().Name;
-            DisplayParameter(_parameterOne, model.GetModel().Parameters, 0);
-            DisplayParameter(_parameterTwo, model.GetModel().Parameters, 1);
-            DisplayParameter(_parameterThree, model.GetModel().Parameters, 2);
+            _modelName.text = model.Name;
+            DisplayParameter(_parameterOne, model.Parameters, 0);
+            DisplayParameter(_parameterTwo, model.Parameters, 1);
+            DisplayParameter(_parameterThree, model.Parameters, 2);
             _addButton.clicked += onAddButtonCallback;
         }
         
