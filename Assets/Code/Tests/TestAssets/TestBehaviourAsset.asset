@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85fee48623b241dfa3e2e0f7953ce725, type: 3}
   m_Name: TestBehaviourAsset
   m_EditorClassIdentifier: 
-  _behaviourTreeXML: {fileID: 4900000, guid: 54aa59455599c0f40abf1315daafe862, type: 3}
+  _graphXML: {fileID: 4900000, guid: 54aa59455599c0f40abf1315daafe862, type: 3}
   _markupXML: {fileID: 4900000, guid: 83a99641a9a349441922010e16772652, type: 3}

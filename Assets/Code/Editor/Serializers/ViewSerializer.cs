@@ -13,7 +13,7 @@ namespace Code.Editor.Serializers
 
         public ViewSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset)
         {
-            ValidateTreeAsset(treeAsset);
+            EnsureXmlExists(treeAsset);
         }
 
         public void Serialize(IReadOnlyCollection<NodeView> nodeViews)
@@ -50,9 +50,7 @@ namespace Code.Editor.Serializers
                     
             nodeTreeXML.AppendChild(nodesXML);
         
-            SaveXML($"{TreeAsset.name}Markup", document.OuterXml);
-            TextAsset xml = TreeAsset.MarkupXML;
-            return xml;
+            return SaveXML($"{TreeAsset.name}Markup", document.OuterXml);
         }
 
         private XmlElement CreateNodesXML(XmlDocument document, IReadOnlyCollection<NodeView> nodes)
@@ -77,11 +75,11 @@ namespace Code.Editor.Serializers
             return nodesXML;
         }
 
-        private protected override void ValidateTreeAsset(BehaviourTreeAsset treeAsset)
+        private protected override void EnsureXmlExists(BehaviourTreeAsset treeAsset)
         {
             try 
             {
-                if (treeAsset.MarkupXML.bytes is null) 
+                if (treeAsset.MarkupXML == null || treeAsset.MarkupXML.bytes is null) 
                 {
                     Serialize(new List<NodeView>());
                 }

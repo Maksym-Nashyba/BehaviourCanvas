@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Code.Editor.EditorWindows.BehaviourTreeEditor;
 using Code.Editor.EditorWindows.PopUpWindow;
 using Code.Runtime.BehaviourGraphSerialization;
@@ -40,7 +41,7 @@ namespace Code.Editor.EditorWindows.AssetSelection
         {
             try
             {
-                ValidateInputs();
+                ValidateInputFields();
             }
             catch (InvalidDataException e)
             {
@@ -75,12 +76,17 @@ namespace Code.Editor.EditorWindows.AssetSelection
 
         private BehaviourTreeAsset CreateAsset(string name)
         {
-            throw new NotImplementedException();
+            BehaviourTreeAsset instance = CreateInstance<BehaviourTreeAsset>();
+            AssetDatabase.CreateAsset(instance, BehaviourCanvasPaths.BehaviourTreeAssets+$"/{name}.asset");
+            return instance;
         }
         
-        private void ValidateInputs()
+        private void ValidateInputFields()
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrWhiteSpace(_nameField.value)) throw new InvalidDataException("New behaviour asset name can't be empty.");
+            Regex validator = new Regex(@"^[a-zA-Z]+$");
+            if (!validator.IsMatch(_nameField.value)) throw new InvalidDataException("Behaviour asset name can only contain following characters: a-z & A-Z.");
+            if (AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(BehaviourCanvasPaths.BehaviourTreeAssets+$"/{_nameField.value}.asset") != null) throw new InvalidDataException("Asset with this name already exists.");
         }
         
         private void OnDestroy()

@@ -80,7 +80,7 @@ namespace Code.Runtime.StateMachineElements
         private ModelGraph Deserialize(BehaviourTreeAsset blueprint)
         {
             if (_cachedModels.ContainsKey(blueprint)) return _cachedModels[blueprint];
-            ModelGraph result = _deserializer.DeserializeModelGraph(blueprint.BehaviourTreeXML);
+            ModelGraph result = _deserializer.DeserializeModelGraph(blueprint.GraphXML);
             _cachedModels.Add(blueprint, result);
             return result;
         }

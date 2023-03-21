@@ -134,7 +134,7 @@ namespace Code.Editor
         private ParameterSet ResolveRootParameters()
         {
             ModelSerializer modelSerializer = new ModelSerializer();
-            ModelGraph graph = modelSerializer.DeserializeModelGraph(_behaviourTreeAsset!.BehaviourTreeXML);
+            ModelGraph graph = modelSerializer.DeserializeModelGraph(_behaviourTreeAsset!.GraphXML);
             IReadOnlyBehaviourElementModel rootState = graph.GetRootState();
             ParameterSet parameters = Reflection.GetStateParameters(rootState.GetModel().Name);
             if (_parametersArrayProperty.arraySize != parameters.Count)

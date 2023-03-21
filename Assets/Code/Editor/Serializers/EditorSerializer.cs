@@ -16,7 +16,7 @@ namespace Code.Editor.Serializers
             TreeAsset = treeAsset;
         }
 
-        private protected abstract void ValidateTreeAsset(BehaviourTreeAsset treeAsset);
+        private protected abstract void EnsureXmlExists(BehaviourTreeAsset treeAsset);
 
         private protected XmlElement CreateElementWithContent(XmlDocument document, string attributeName, string content) 
         {
@@ -25,12 +25,14 @@ namespace Code.Editor.Serializers
             return attribute;
         }
         
-        private protected void SaveXML(string xmlName, string xmlContent)
+        private protected TextAsset SaveXML(string xmlName, string xmlContent)
         {
             string path = Application.dataPath.Replace("/Assets", "") + "/" + BehaviourCanvasPaths.BehaviourTreeAssets;
             File.WriteAllText(path + $"/{xmlName}.xml", xmlContent);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            return AssetDatabase.LoadAssetAtPath<TextAsset>(
+                BehaviourCanvasPaths.BehaviourTreeAssets + $"/{xmlName}.xml");
         }
     }
 }

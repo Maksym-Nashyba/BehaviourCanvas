@@ -17,7 +17,7 @@ namespace Code.Editor.Serializers
         public EditorModelSerializer(BehaviourTreeAsset treeAsset) : base(treeAsset)
         {
             _modelSerializer = new ModelSerializer();
-            ValidateTreeAsset(treeAsset);
+            EnsureXmlExists(treeAsset);
         }
 
         public void Serialize(IReadOnlyCollection<IReadOnlyBehaviourElementModel> states,
@@ -29,7 +29,7 @@ namespace Code.Editor.Serializers
 
         public ModelGraph DeserializeModelGraph()
         {
-            return _modelSerializer.DeserializeModelGraph(TreeAsset.BehaviourTreeXML);
+            return _modelSerializer.DeserializeModelGraph(TreeAsset.GraphXML);
         }
 
         private TextAsset CreateXML(IReadOnlyCollection<IReadOnlyBehaviourElementModel> states,
@@ -37,7 +37,7 @@ namespace Code.Editor.Serializers
         {
             XmlDocument document = new XmlDocument();
 
-            XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "BehaviourTree", string.Empty);
+            XmlElement behaviourCanvasXML = document.CreateElement(string.Empty, "Graph", string.Empty);
             document.AppendChild(behaviourCanvasXML);
 
             XmlElement statesXML = CreateTreeModelsXML(document, states.ToList(), "State");
@@ -46,11 +46,7 @@ namespace Code.Editor.Serializers
             behaviourCanvasXML.AppendChild(statesXML);
             behaviourCanvasXML.AppendChild(triggersXML);
 
-            SaveXML("BehaviourTree", document.OuterXml);
-            TextAsset xml =
-                AssetDatabase.LoadAssetAtPath<TextAsset>(
-                    BehaviourCanvasPaths.BehaviourTreeAssets + "/BehaviourTree.xml");
-            return xml;
+            return SaveXML($"{TreeAsset.name}Graph", document.OuterXml);
         }
 
         private XmlElement CreateTreeModelsXML(XmlDocument document,
@@ -132,11 +128,11 @@ namespace Code.Editor.Serializers
             return parametersXML;
         }
 
-        private protected override void ValidateTreeAsset(BehaviourTreeAsset treeAsset)
+        private protected override void EnsureXmlExists(BehaviourTreeAsset treeAsset)
         {
             try
             {
-                if (treeAsset.BehaviourTreeXML.bytes is null)
+                if (treeAsset.GraphXML == null || treeAsset.GraphXML.bytes is null)
                 {
                     Serialize(new List<StateModel>(), new List<TriggerModel>());
                 }
