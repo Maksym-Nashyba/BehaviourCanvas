@@ -53,9 +53,10 @@ namespace Code.Editor.EditorWindows.BehaviourTreeEditor
 
             _selectedAssetName.text = treeAsset.name;
         }
-        
+
         private void OnDisable()
         {
+            _behaviourElementModelsPool?.Dispose();
             _canvasController?.Dispose();
             _canvasView?.Dispose();
         }

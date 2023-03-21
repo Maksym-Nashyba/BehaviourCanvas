@@ -4,16 +4,15 @@ using Code.Editor.EditorWindows.Builders.StateBuilder;
 using Code.Editor.EditorWindows.Builders.TriggerBuilder;
 using Code.Runtime;
 using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
 using UnityEngine.UIElements;
 
 namespace Code.Editor
 {
-    public class BehaviourElementModelsPool : VisualElement
+    public class BehaviourElementModelsPool : VisualElement, IDisposable
     {
         #region VisualElements
-            private Button _statesSectionButton;
-            private Button _triggersSectionButton;
+            private Toggle _statesSectionToggle;
+            private Toggle _triggersSectionToggle;
         
             private VisualElement _statesVisual;
             private ScrollView _statesScrollView;
@@ -80,8 +79,8 @@ namespace Code.Editor
         
         private void QueryAllVisualElements()
         {
-            _statesSectionButton = this.Q<Button>("states-section-button");
-            _triggersSectionButton = this.Q<Button>("triggers-section-button");
+            _statesSectionToggle = this.Q<Toggle>("StatesToggle");
+            _triggersSectionToggle = this.Q<Toggle>("TriggersToggle");
             
             _statesVisual = this.Q<VisualElement>("states-visual");
             _statesScrollView = _statesVisual.Q<ScrollView>();
@@ -94,20 +93,34 @@ namespace Code.Editor
 
         private void SubscribeButtons()
         {
-            _statesSectionButton.clicked += OnStatesButton;
-            _triggersSectionButton.clicked += OnTriggersButton;
+            _statesSectionToggle.RegisterValueChangedCallback(OnStatesButton);
+            _triggersSectionToggle.RegisterValueChangedCallback(OnTriggersButton);
             _createStateButton.clicked += OnCreateStateButton;
             _createTriggerButton.clicked += OnCreateTriggerButton;
         }
 
-        private void OnStatesButton()
+        private void OnStatesButton(ChangeEvent<bool> evt)
         {
+            if(evt.newValue == true) DisplayStates();
+            else DisplayTriggers();
+        }
+        
+        private void OnTriggersButton(ChangeEvent<bool> evt)
+        {
+            if(evt.newValue == true) DisplayTriggers();
+            else DisplayStates();
+        }
+
+        private void DisplayStates()
+        {
+            _triggersSectionToggle.SetValueWithoutNotify(false);
             _triggersVisual.style.display = DisplayStyle.None;
             _statesVisual.style.display = DisplayStyle.Flex;
         }
-        
-        private void OnTriggersButton()
+
+        private void DisplayTriggers()
         {
+            _statesSectionToggle.SetValueWithoutNotify(false);
             _statesVisual.style.display = DisplayStyle.None;
             _triggersVisual.style.display = DisplayStyle.Flex;
         }
@@ -120,6 +133,14 @@ namespace Code.Editor
         private void OnCreateTriggerButton()
         {
             TriggerBuilder.ShowWindow();
+        }
+
+        public void Dispose()
+        {
+            _statesSectionToggle.UnregisterValueChangedCallback(OnStatesButton);
+            _triggersSectionToggle.UnregisterValueChangedCallback(OnTriggersButton);
+            _createStateButton.clicked -= OnCreateStateButton;
+            _createTriggerButton.clicked -= OnCreateTriggerButton;
         }
     }
 }
