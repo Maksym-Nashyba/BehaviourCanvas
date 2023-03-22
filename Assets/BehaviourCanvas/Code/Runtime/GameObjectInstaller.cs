@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Code.Runtime
+namespace BehaviourCanvas.Code.Runtime
 {
     public class GameObjectInstaller : MonoInstaller<GameObjectInstaller>
     {

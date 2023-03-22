@@ -1,9 +1,9 @@
 using System;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
 using UnityEngine;
 
-namespace Code.Runtime.States
+namespace BehaviourCanvas.Code.Runtime.States
 {
     public class HuitaState : State<Single, GameObject, Model>
     {

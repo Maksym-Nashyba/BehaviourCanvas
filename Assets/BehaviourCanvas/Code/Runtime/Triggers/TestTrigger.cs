@@ -1,9 +1,9 @@
 using System;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
-using Code.Runtime.States;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.States;
 
-namespace Code.Runtime.Triggers
+namespace BehaviourCanvas.Code.Runtime.Triggers
 {
     public class TestTrigger : Trigger<Single>
     {

@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Code.BCTemplates.TriggerTemplate;
-using Code.Editor.EditorWindows.PopUpWindow;
-using Code.Templates.TriggerTemplate;
+using BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow;
+using BehaviourCanvas.Code.Templates.TriggerTemplate;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace Code.Editor.EditorWindows.Builders.TriggerBuilder
+namespace BehaviourCanvas.Code.Editor.EditorWindows.Builders.TriggerBuilder
 {
     public class TriggerBuilder : EditorWindow
     {

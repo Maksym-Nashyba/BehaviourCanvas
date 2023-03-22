@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Code.Runtime.StateMachineElements;
 
-namespace Code.Runtime.BehaviourGraphSerialization
+namespace BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization
 {
     public interface IReadOnlyBehaviourElementModel
     {

@@ -1,15 +1,14 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using Code.Editor.EditorWindows.BehaviourTreeEditor;
-using Code.Editor.EditorWindows.PopUpWindow;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Editor.EditorWindows.BehaviourTreeEditor;
+using BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
-namespace Code.Editor.EditorWindows.AssetSelection
+namespace BehaviourCanvas.Code.Editor.EditorWindows.AssetSelection
 {
     public class AssetSelectionWindow : EditorWindow
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Code.Runtime.StateMachineElements;
-using Code.Runtime.States;
-using Code.Runtime.Triggers;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.States;
+using BehaviourCanvas.Code.Runtime.Triggers;
 using NUnit.Framework;
 
 namespace Code.Tests.BehaviourCanvasEditorTests

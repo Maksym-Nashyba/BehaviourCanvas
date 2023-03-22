@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Editor.EditorWindows.BehaviourTreeEditor;
-using Code.Editor.EditorWindows.Builders.StateBuilder;
-using Code.Editor.EditorWindows.Builders.TriggerBuilder;
-using Code.Runtime;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Editor.EditorWindows.BehaviourTreeEditor;
+using BehaviourCanvas.Code.Editor.EditorWindows.Builders.StateBuilder;
+using BehaviourCanvas.Code.Editor.EditorWindows.Builders.TriggerBuilder;
+using BehaviourCanvas.Code.Runtime;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEngine.UIElements;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public class BehaviourElementModelsPool : VisualElement, IDisposable
     {

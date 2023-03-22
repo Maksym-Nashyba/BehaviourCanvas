@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.Templates;
 
-namespace Code.BCTemplates
+namespace BehaviourCanvas.Code.Templates
 {
     public abstract class TemplateProcessor<TData> where TData : TemplateData
     {

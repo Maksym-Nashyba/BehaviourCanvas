@@ -1,9 +1,9 @@
 using System;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace Code.Editor.EditorWindows.BehaviourTreeEditor
+namespace BehaviourCanvas.Code.Editor.EditorWindows.BehaviourTreeEditor
 {
     public class ModelPoolElement : VisualElement, IDisposable
     {

@@ -1,6 +1,6 @@
-﻿using Code.Runtime.BehaviourGraphSerialization;
+﻿using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 
-namespace Code.Runtime.StateMachineElements
+namespace BehaviourCanvas.Code.Runtime.StateMachineElements
 {
     public interface IState
     {

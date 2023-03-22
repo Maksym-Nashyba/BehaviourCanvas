@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public class InspectorView : VisualElement
     {

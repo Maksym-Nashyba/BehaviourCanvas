@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Code.Editor.EditorWindows.PopUpWindow;
-using Code.Editor.Serializers;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow;
+using BehaviourCanvas.Code.Editor.Serializers;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public class BehaviourCanvasView : GraphView, IDisposable
     {

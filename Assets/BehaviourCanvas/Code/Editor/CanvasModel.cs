@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public class CanvasModel
     {

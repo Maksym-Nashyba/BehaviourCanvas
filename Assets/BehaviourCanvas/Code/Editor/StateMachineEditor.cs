@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using Code.Runtime;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     [CustomEditor(typeof(StateMachine))]
     public class StateMachineEditor : UnityEditor.Editor

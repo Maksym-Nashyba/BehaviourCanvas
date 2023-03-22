@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Code.Runtime;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
-using UnityEditor;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEngine;
 
-namespace Code.Editor.Serializers
+namespace BehaviourCanvas.Code.Editor.Serializers
 {
     public sealed class EditorModelSerializer : EditorSerializer
     {

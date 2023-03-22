@@ -1,5 +1,5 @@
-﻿using Code.Editor;
-using Code.Runtime.StateMachineElements;
+﻿using BehaviourCanvas.Code.Editor;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;

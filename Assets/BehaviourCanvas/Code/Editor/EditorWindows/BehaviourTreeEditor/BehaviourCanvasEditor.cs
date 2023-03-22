@@ -1,12 +1,12 @@
 using System;
-using Code.Editor.Serializers;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Editor.Serializers;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor.EditorWindows.BehaviourTreeEditor
+namespace BehaviourCanvas.Code.Editor.EditorWindows.BehaviourTreeEditor
 {
     public class BehaviourCanvasEditor : EditorWindow
     {

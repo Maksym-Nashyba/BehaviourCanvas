@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Code.Editor.EditorWindows.PopUpWindow;
+using BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow;
 using Unity.Properties;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor.EditorWindows.PathsEditor
+namespace BehaviourCanvas.Code.Editor.EditorWindows.PathsEditor
 {
     public class PathsEditorWindow : EditorWindow
     {

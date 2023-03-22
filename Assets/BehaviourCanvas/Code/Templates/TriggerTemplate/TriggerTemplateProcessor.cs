@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.BCTemplates;
-using Code.BCTemplates.StateTemplate;
-using Code.BCTemplates.TriggerTemplate;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
-using Code.Runtime.Triggers;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.Triggers;
 
-namespace Code.Templates.TriggerTemplate
+namespace BehaviourCanvas.Code.Templates.TriggerTemplate
 {
     public class TriggerTemplateProcessor : TemplateProcessor<TriggerTemplateData>
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Code.Templates
+namespace BehaviourCanvas.Code.Templates
 {
     public static class TemplateLoader
     {

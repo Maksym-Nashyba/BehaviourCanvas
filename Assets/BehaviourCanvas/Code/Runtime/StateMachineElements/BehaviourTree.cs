@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Code.Runtime.StateMachineElements
+namespace BehaviourCanvas.Code.Runtime.StateMachineElements
 {
     public sealed class BehaviourTree
     {

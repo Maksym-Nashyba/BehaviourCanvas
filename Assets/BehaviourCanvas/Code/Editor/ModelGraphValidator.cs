@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public static class ModelGraphValidator
     {

@@ -1,7 +1,6 @@
 ﻿using System;
-using Code.Templates;
 
-namespace Code.BCTemplates.StateTemplate
+namespace BehaviourCanvas.Code.Templates.StateTemplate
 {
     public class StateTemplateData : TemplateData
     {

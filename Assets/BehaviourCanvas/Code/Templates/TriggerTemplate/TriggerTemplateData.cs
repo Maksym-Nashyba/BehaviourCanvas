@@ -1,7 +1,6 @@
 ﻿using System;
-using Code.Templates;
 
-namespace Code.BCTemplates.TriggerTemplate
+namespace BehaviourCanvas.Code.Templates.TriggerTemplate
 {
     public class TriggerTemplateData : TemplateData
     {

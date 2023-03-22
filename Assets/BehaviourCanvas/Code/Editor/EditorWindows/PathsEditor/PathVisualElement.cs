@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace Code.Editor.EditorWindows.PathsEditor
+namespace BehaviourCanvas.Code.Editor.EditorWindows.PathsEditor
 {
     public class PathVisualElement : VisualElement
     {
@@ -58,7 +58,10 @@ namespace Code.Editor.EditorWindows.PathsEditor
         public void Setup(string id, Action callback)
         {
             if (!BehaviourCanvasPaths.Ids.Contains(id)) throw new ArgumentException($"'{id}' isn't a valid path id. It should be added in {nameof(BehaviourCanvasPaths.Ids)}");
-            if (EditorPrefs.HasKey(id)) _textField.value = BehaviourCanvasPaths.GetSavedPath(id).Substring(6).TrimStart('/');
+            if (!String.IsNullOrWhiteSpace(BehaviourCanvasPaths.GetSavedPath(id)))
+            {
+                if (EditorPrefs.HasKey(id)) _textField.value = BehaviourCanvasPaths.GetSavedPath(id).Substring(6).TrimStart('/');
+            }
             _label.text = id;
             _confirmButton.clicked += callback;
         }

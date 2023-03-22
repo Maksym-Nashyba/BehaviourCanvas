@@ -1,10 +1,10 @@
 ﻿using System;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public class NodeView : Node
     {

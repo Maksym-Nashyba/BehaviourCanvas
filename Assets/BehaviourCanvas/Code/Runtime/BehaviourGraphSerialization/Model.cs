@@ -1,4 +1,4 @@
-﻿namespace Code.Runtime.BehaviourGraphSerialization
+﻿namespace BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization
 {
     public struct Model
     {

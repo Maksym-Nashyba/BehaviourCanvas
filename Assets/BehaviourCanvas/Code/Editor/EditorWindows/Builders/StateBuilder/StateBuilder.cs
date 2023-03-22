@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Code.BCTemplates.StateTemplate;
-using Code.Editor.EditorWindows.PopUpWindow;
-using Code.Templates.StateTemplate;
+using BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow;
+using BehaviourCanvas.Code.Templates.StateTemplate;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace Code.Editor.EditorWindows.Builders.StateBuilder
+namespace BehaviourCanvas.Code.Editor.EditorWindows.Builders.StateBuilder
 {
     public class StateBuilder : EditorWindow
     {

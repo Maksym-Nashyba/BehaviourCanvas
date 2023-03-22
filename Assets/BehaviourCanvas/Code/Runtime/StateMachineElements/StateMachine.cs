@@ -1,9 +1,9 @@
-﻿using Code.Runtime.BehaviourGraphSerialization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEngine;
 using Zenject;
 
-namespace Code.Runtime.StateMachineElements
+namespace BehaviourCanvas.Code.Runtime.StateMachineElements
 {
     public class StateMachine : MonoBehaviour
     {

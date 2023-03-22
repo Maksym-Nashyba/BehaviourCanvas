@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Code.Runtime.StateMachineElements
+namespace BehaviourCanvas.Code.Runtime.StateMachineElements
 {
     [Serializable]
     public struct SerializableParameter

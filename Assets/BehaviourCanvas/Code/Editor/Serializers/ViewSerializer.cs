@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Code.Runtime;
-using Code.Runtime.BehaviourGraphSerialization;
-using UnityEditor;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using UnityEngine;
 
-namespace Code.Editor.Serializers
+namespace BehaviourCanvas.Code.Editor.Serializers
 {
     public sealed class ViewSerializer : EditorSerializer
     {

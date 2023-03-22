@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using Code.Editor;
+using BehaviourCanvas.Code.Editor;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.VersionControl;

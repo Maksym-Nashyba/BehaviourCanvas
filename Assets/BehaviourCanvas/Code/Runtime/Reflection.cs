@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
-using Code.Runtime.States;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.States;
 
-namespace Code.Runtime
+namespace BehaviourCanvas.Code.Runtime
 {
     public static class Reflection
     {

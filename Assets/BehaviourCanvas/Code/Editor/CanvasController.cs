@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using Code.Editor.EditorWindows.PopUpWindow;
-using Code.Editor.Serializers;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow;
+using BehaviourCanvas.Code.Editor.Serializers;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 
-namespace Code.Editor
+namespace BehaviourCanvas.Code.Editor
 {
     public class CanvasController : IDisposable
     {

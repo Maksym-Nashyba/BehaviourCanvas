@@ -1,4 +1,4 @@
-﻿namespace Code.Runtime.Triggers
+﻿namespace BehaviourCanvas.Code.Runtime.Triggers
 {
     public sealed class TriggerAssemblyMarker
     {

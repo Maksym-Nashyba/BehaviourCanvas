@@ -1,4 +1,4 @@
-﻿namespace Code.Templates
+﻿namespace BehaviourCanvas.Code.Templates
 {
     public class TemplateData
     {

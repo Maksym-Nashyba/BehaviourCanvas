@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Code.Runtime;
+using BehaviourCanvas.Code.Runtime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor.EditorWindows.Builders
+namespace BehaviourCanvas.Code.Editor.EditorWindows.Builders
 {
     public class ParameterVisualElement : VisualElement
     {

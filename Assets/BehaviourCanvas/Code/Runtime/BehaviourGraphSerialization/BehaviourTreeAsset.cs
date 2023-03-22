@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Code.Runtime.BehaviourGraphSerialization
+namespace BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization
 {
     public class BehaviourTreeAsset : ScriptableObject
     {

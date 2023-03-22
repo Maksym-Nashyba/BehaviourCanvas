@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Code.Editor;
+using BehaviourCanvas.Code.Editor;
 using Unity.Properties;
 using UnityEditor;
 using UnityEngine;

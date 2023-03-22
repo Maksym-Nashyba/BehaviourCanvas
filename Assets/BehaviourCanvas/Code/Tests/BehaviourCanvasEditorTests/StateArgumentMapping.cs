@@ -1,5 +1,5 @@
 ﻿using System;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
 using NUnit.Framework;
 
 namespace Code.Tests.BehaviourCanvasEditorTests

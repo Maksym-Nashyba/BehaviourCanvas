@@ -1,9 +1,9 @@
 using System;
-using Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
 using UnityEngine;
-using Code.Runtime.StateMachineElements;
 
-namespace Code.Runtime.Triggers
+namespace BehaviourCanvas.Code.Runtime.Triggers
 {
     public class OnShitYourselfTrigger : Trigger<Vector2, GameObject, Transform>
     {

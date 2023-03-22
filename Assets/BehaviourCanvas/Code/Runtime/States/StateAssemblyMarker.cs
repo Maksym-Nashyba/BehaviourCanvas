@@ -1,4 +1,4 @@
-﻿namespace Code.Runtime.States
+﻿namespace BehaviourCanvas.Code.Runtime.States
 {
     public sealed class StateAssemblyMarker
     {

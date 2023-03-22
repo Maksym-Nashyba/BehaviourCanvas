@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Code.BCTemplates;
-using Code.BCTemplates.StateTemplate;
-using Code.Runtime.BehaviourGraphSerialization;
-using Code.Runtime.StateMachineElements;
-using Code.Runtime.States;
+using BehaviourCanvas.Code.Runtime.BehaviourGraphSerialization;
+using BehaviourCanvas.Code.Runtime.StateMachineElements;
+using BehaviourCanvas.Code.Runtime.States;
 
-namespace Code.Templates.StateTemplate
+namespace BehaviourCanvas.Code.Templates.StateTemplate
 {
     public class StateTemplateProcessor : TemplateProcessor<StateTemplateData>
     {

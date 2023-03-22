@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Code.Editor.EditorWindows.PopUpWindow
+namespace BehaviourCanvas.Code.Editor.EditorWindows.PopUpWindow
 {
     public class PopUp : EditorWindow
     {

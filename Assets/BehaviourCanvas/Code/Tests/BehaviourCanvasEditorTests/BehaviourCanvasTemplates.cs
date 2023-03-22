@@ -1,9 +1,7 @@
 using System;
-using Code.BCTemplates.StateTemplate;
-using Code.BCTemplates.TriggerTemplate;
-using Code.Templates;
-using Code.Templates.StateTemplate;
-using Code.Templates.TriggerTemplate;
+using BehaviourCanvas.Code.Templates;
+using BehaviourCanvas.Code.Templates.StateTemplate;
+using BehaviourCanvas.Code.Templates.TriggerTemplate;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
