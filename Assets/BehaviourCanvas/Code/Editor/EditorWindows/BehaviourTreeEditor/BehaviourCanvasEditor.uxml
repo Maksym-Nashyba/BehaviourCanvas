@@ -1,15 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Code/Editor/EditorWindows/BehaviourTreeEditor/BehaviourCanvasEditor.uss?fileID=7433441132597879392&amp;guid=bb679291420b5954f892eb91fe006ba9&amp;type=3#BehaviourCanvasEditor" />
+    <Style src="project://database/Assets/BehaviourCanvas/Code/Editor/EditorWindows/BehaviourTreeEditor/BehaviourCanvasEditor.uss?fileID=7433441132597879392&amp;guid=bb679291420b5954f892eb91fe006ba9&amp;type=3#BehaviourCanvasEditor" />
     <uie:Toolbar style="align-items: center; align-self: auto;">
         <ui:Label tabindex="-1" text="SelectedAssetName" display-tooltip-when-elided="true" name="SelectedAssetName" style="align-self: center; justify-content: flex-end; align-items: center; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
         <uie:ToolbarButton text="Save" display-tooltip-when-elided="true" />
     </uie:Toolbar>
-    <Code.Editor.SplitView fixed-pane-initial-dimension="900" style="flex-direction: column;">
+    <BehaviourCanvas.Code.Editor.SplitView fixed-pane-initial-dimension="700">
         <ui:VisualElement name="left-panel" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0); width: auto; flex-shrink: 1;">
-            <Code.Editor.BehaviourCanvasView focusable="true" style="flex-grow: 1; height: auto; width: auto; flex-shrink: 0;" />
+            <BehaviourCanvas.Code.Editor.BehaviourCanvasView focusable="true" style="flex-grow: 1;" />
         </ui:VisualElement>
         <ui:VisualElement name="right-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 30%; flex-shrink: 0; max-width: 30%; align-self: auto; min-width: 20%;">
-            <Code.Editor.BehaviourElementModelsPool style="flex-shrink: 0; flex-grow: 1;">
+            <BehaviourCanvas.Code.Editor.BehaviourElementModelsPool style="flex-grow: 1;">
                 <uie:Toolbar style="justify-content: space-around; height: 29px;">
                     <uie:ToolbarToggle focusable="false" label="States" name="StatesToggle" value="true" style="flex-shrink: 1; align-items: center; justify-content: flex-start; align-self: auto; flex-grow: 1;" />
                     <uie:ToolbarToggle focusable="false" label="Triggers" name="TriggersToggle" style="flex-shrink: 1; flex-grow: 1; align-items: center;" />
@@ -22,7 +22,7 @@
                     <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="height: 90%;" />
                     <ui:Button text="New Trigger" display-tooltip-when-elided="true" style="flex-grow: 0; height: 10%; width: 80%; align-self: center; margin-bottom: 14px;" />
                 </ui:VisualElement>
-            </Code.Editor.BehaviourElementModelsPool>
+            </BehaviourCanvas.Code.Editor.BehaviourElementModelsPool>
         </ui:VisualElement>
-    </Code.Editor.SplitView>
+    </BehaviourCanvas.Code.Editor.SplitView>
 </ui:UXML>

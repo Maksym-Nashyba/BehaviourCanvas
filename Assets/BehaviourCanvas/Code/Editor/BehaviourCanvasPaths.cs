@@ -8,10 +8,10 @@ namespace BehaviourCanvas.Code.Editor
     [CreateAssetMenu(fileName = "FILENAME", menuName = "PATHS", order = 0)]
     public class BehaviourCanvasPaths : ScriptableObject
     {
-        [SerializeField] [HideInInspector] private string _behaviourCanvasRoot;
-        [SerializeField] [HideInInspector] private string _stateScritps;
-        [SerializeField] [HideInInspector] private string _triggerScripts;
-        [SerializeField] [HideInInspector] private string _behaviourTreeAssets;
+        [SerializeField] private string _behaviourCanvasRoot;
+        [SerializeField] private string _stateScritps;
+        [SerializeField] private string _triggerScripts;
+        [SerializeField] private string _behaviourTreeAssets;
 
         private static BehaviourCanvasPaths _instance;
         private static BehaviourCanvasPaths Instance
