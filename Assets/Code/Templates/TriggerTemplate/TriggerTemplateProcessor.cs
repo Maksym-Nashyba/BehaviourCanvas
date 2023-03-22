@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Code.BCTemplates;
 using Code.BCTemplates.StateTemplate;
 using Code.BCTemplates.TriggerTemplate;
+using Code.Runtime.BehaviourGraphSerialization;
+using Code.Runtime.StateMachineElements;
 using Code.Runtime.Triggers;
 
 namespace Code.Templates.TriggerTemplate
@@ -19,20 +21,26 @@ namespace Code.Templates.TriggerTemplate
                 { "TargetStateField", BuildTargetStateField(data) },
                 { "ParameterFields", BuildParameterFields(data) },
                 { "ParameterGetterBody", BuildParameterGetterBody(data) },
-                { "ResetTargetParameters", BuildResetTargetParameters(data) }
+                { "ResetTargetParameters", BuildResetTargetParameters(data) },
+                { "UsingBaseNamepace", BuildBaseNamespace(data) }
             };
         }
-
+        
         #region ChunkProcessors
 
+        private string BuildBaseNamespace(TriggerTemplateData data)
+        {
+            return $"using {typeof(Trigger).Namespace};\nusing {typeof(ParameterSet).Namespace};";
+        }
+        
         private string BuildParameterGetterBody(TriggerTemplateData data)
         {
             if (data.Parameters.Length == 0) return String.Empty;
-            string result = $"                new Parameter(typeof({data.Parameters[^1].Type.Name}), {data.Parameters[^1].NameCamelCase})";
+            string result = $"                new Parameter(typeof({data.Parameters[^1].Type.Name}), \"{data.Parameters[^1].NameCamelCase}\")";
 
             for (int i = data.Parameters.Length-2; i >= 0; i--)
             {
-                result = $"new Parameter(typeof({data.Parameters[i].Type.Name}), {data.Parameters[i].NameCamelCase}),\n" + result;
+                result = $"new Parameter(typeof({data.Parameters[i].Type.Name}), \"{data.Parameters[i].NameCamelCase}\"),\n" + result;
             }
             return result;
         }
@@ -62,7 +70,7 @@ namespace Code.Templates.TriggerTemplate
             
             for (int i = 1; i < data.Parameters.Length; i++)
             {
-                result += $"\n private {data.Parameters[i].Type.Name} _{data.Parameters[i].NameCamelCase};";
+                result += $"\n        private {data.Parameters[i].Type.Name} _{data.Parameters[i].NameCamelCase};";
             }
 
             return result;

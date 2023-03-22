@@ -42,7 +42,8 @@ namespace Code.Tests.BehaviourCanvasEditorTests
             StateTemplateData data = new StateTemplateData("Hunt", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
             string processed = stateTemplateProcessor.Process(data);
             Assert.AreEqual(processed.Replace("\r", ""), 
-                TemplateLoader.GetRawText("StateTemplateTest").Replace("\r", ""));
+                TemplateLoader.GetRawText("StateTemplateTest").Replace("\r", ""),
+                processed);
         }
         
         [Test]
@@ -52,7 +53,8 @@ namespace Code.Tests.BehaviourCanvasEditorTests
             TriggerTemplateData data = new TriggerTemplateData("NoticedKrisa", ("target", typeof(NavMeshAgent)), ("maxDistance", typeof(float)));
             string processed = stateTemplateProcessor.Process(data);
             Assert.AreEqual(processed.Replace("\r", ""), 
-                TemplateLoader.GetRawText("TriggerTemplateTest").Replace("\r", ""));
+                TemplateLoader.GetRawText("TriggerTemplateTest").Replace("\r", ""),
+                processed);
         }
     }
 }

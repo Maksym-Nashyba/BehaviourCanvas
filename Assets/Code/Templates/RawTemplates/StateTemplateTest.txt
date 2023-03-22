@@ -1,17 +1,19 @@
 ﻿using System;
 using UnityEngine;
+using Code.Runtime.StateMachineElements;
+using Code.Runtime.BehaviourGraphSerialization;
 
 namespace Code.Runtime.States
 {
     public class HuntState : State<NavMeshAgent, Single>
     {
         private NavMeshAgent _target;
- private Single _maxDistance;
+        private Single _maxDistance;
     
         public override void ResetStateParameters(NavMeshAgent param0, Single param1)
         {
             _target = param0;
- _maxDistance = param1;
+            _maxDistance = param1;
         }
     
         public override void Start()
@@ -34,8 +36,8 @@ namespace Code.Runtime.States
         public static ParameterSet GetParametersStatic()
         {
             return new ParameterSet(
-                new Parameter(typeof(NavMeshAgent), target),
-                new Parameter(typeof(Single), maxDistance)
+                new Parameter(typeof(NavMeshAgent), "target"),
+                new Parameter(typeof(Single), "maxDistance")
             );
         }
     }

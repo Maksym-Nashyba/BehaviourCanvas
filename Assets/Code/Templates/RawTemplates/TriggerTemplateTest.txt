@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using Code.Runtime.StateMachineElements;
+using Code.Runtime.BehaviourGraphSerialization;
 
 namespace Code.Runtime.Triggers
 {
@@ -7,7 +9,7 @@ namespace Code.Runtime.Triggers
     {
         private State<NavMeshAgent, Single> _targetState;
         private NavMeshAgent _target;
- private Single _maxDistance;
+        private Single _maxDistance;
     
         public override bool IsHit()
         {
@@ -36,8 +38,8 @@ namespace Code.Runtime.Triggers
         public static ParameterSet GetParametersStatic()
         {
             return new ParameterSet(
-                new Parameter(typeof(NavMeshAgent), target),
-                new Parameter(typeof(Single), maxDistance)
+                new Parameter(typeof(NavMeshAgent), "target"),
+                new Parameter(typeof(Single), "maxDistance")
             );
         }
     }

@@ -1,13 +1,16 @@
-﻿using System;
+using System;
+using Code.Runtime.BehaviourGraphSerialization;
 using UnityEngine;
-#UsingBaseNamepace#
+using Code.Runtime.StateMachineElements;
 
-namespace #Namespace#
+namespace Code.Runtime.Triggers
 {
-    public class #Name# : Trigger#BaseClassGenericParameters#
+    public class OnShitYourselfTrigger : Trigger<Vector2, GameObject, Transform>
     {
-        #TargetStateField#
-        #ParameterFields#
+        private State<Vector2, GameObject, Transform> _targetState;
+        private Vector2 _first;
+        private GameObject _second;
+        private Transform _third;
     
         public override bool IsHit()
         {
@@ -23,7 +26,9 @@ namespace #Namespace#
         {
             object[] arguments =
             {
-                #ResetTargetParameters#
+                _first,
+                 _second,
+                 _third
             };
             arguments = GetParameters().MapTo(_targetState.GetParameters(), arguments);
             _targetState.Reset(arguments);
@@ -35,7 +40,9 @@ namespace #Namespace#
         public static ParameterSet GetParametersStatic()
         {
             return new ParameterSet(
-                #ParameterGetterBody#
+                new Parameter(typeof(Vector2), "first"),
+new Parameter(typeof(GameObject), "second"),
+                new Parameter(typeof(Transform), "third")
             );
         }
     }
