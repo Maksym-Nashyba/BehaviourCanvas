@@ -62,7 +62,7 @@ namespace Code.Editor
 
         private void AddStylesheets()
         {
-            StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Code/Editor/EditorWindows/" +
+            StyleSheet stylesheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(BehaviourCanvasPaths.BehaviourCanvasRoot+"/Code/Editor/EditorWindows/" +
                                                                               "BehaviourTreeEditor/BehaviourCanvasEditor.uss");
             styleSheets.Add(stylesheet);
         }
